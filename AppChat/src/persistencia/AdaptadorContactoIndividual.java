@@ -1,4 +1,4 @@
-package Adaptadores;
+package persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,15 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import Class.ContactoIndividual;
-import Class.Mensaje;
-import Class.Usuario;
 import beans.Entidad;
 import beans.Propiedad;
+import modelo.ContactoIndividual;
+import modelo.Mensaje;
+import modelo.Usuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
-public class AdaptadorContactoIndividual {
+public class AdaptadorContactoIndividual implements IAdaptadorContactoIndividualDAO{
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorContactoIndividual unicaInstancia;
 	
@@ -56,8 +56,7 @@ public class AdaptadorContactoIndividual {
 	
 		eCI = servPersistencia.registrarEntidad(eCI);
 		contactoIndividual.setId(eCI.getId());
-	}
-	
+	}	
 	public void borrarContactoIndividual(ContactoIndividual contactoIndividual) {
 		Entidad eCI;
 		AdaptadorMensaje aM = AdaptadorMensaje.getUnicaInstancia();
@@ -97,7 +96,7 @@ public class AdaptadorContactoIndividual {
 		sol.setMensajes((ArrayList<Mensaje>) mensajes);
 		return sol;
 	}
-	public List<ContactoIndividual> recuperarTodosContactosIndividuales(){
+	public List<ContactoIndividual> recuperarTodosContactoIndividuales(){
 		List<ContactoIndividual> cI = new LinkedList<ContactoIndividual>();
 		List<Entidad> eCI = servPersistencia.recuperarEntidades("ContactoIndividual");
 		for(Entidad e : eCI) {
@@ -122,5 +121,6 @@ public class AdaptadorContactoIndividual {
 		}
 		return mensajes;
 	}
+
 }
 

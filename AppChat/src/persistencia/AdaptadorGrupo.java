@@ -1,4 +1,4 @@
-package Adaptadores;
+package persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,16 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import Class.ContactoIndividual;
-import Class.Grupo;
-import Class.Mensaje;
-import Class.Usuario;
 import beans.Entidad;
 import beans.Propiedad;
+import modelo.ContactoIndividual;
+import modelo.Grupo;
+import modelo.Mensaje;
+import modelo.Usuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
-public class AdaptadorGrupo {
+public class AdaptadorGrupo implements IAdaptadorGrupoDAO{
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorGrupo unicaInstancia;
 	

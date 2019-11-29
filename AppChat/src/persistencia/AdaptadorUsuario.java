@@ -1,4 +1,4 @@
-package Adaptadores;
+package persistencia;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,17 +7,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import Class.Contacto;
-import Class.ContactoIndividual;
-import Class.Grupo;
-import Class.Usuario;
 import beans.Entidad;
 import beans.Propiedad;
 import javafx.scene.image.Image;
+import modelo.Contacto;
+import modelo.ContactoIndividual;
+import modelo.Grupo;
+import modelo.Usuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
-public class AdaptadorUsuario {
+public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorUsuario unicaInstancia;
 	

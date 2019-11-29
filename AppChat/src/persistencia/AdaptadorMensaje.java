@@ -1,4 +1,4 @@
-package Adaptadores;
+package persistencia;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -6,16 +6,16 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import Class.ContactoIndividual;
-import Class.Grupo;
-import Class.Mensaje;
-import Class.Usuario;
 import beans.Entidad;
 import beans.Propiedad;
+import modelo.ContactoIndividual;
+import modelo.Grupo;
+import modelo.Mensaje;
+import modelo.Usuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
-public class AdaptadorMensaje {
+public class AdaptadorMensaje implements IAdaptadorMensajeDAO{
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorMensaje unicaInstancia;
 	

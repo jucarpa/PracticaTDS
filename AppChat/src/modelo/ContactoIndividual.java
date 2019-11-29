@@ -1,4 +1,4 @@
-package Class;
+package modelo;
 
 public class ContactoIndividual extends Contacto{
 	private int movil;

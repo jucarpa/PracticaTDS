@@ -1,13 +1,13 @@
-package Adaptadores;
+package persistencia;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 
 public class PoolDAO {
 	private static PoolDAO instance = null;
-	private HashMap<Integer,Object> pool;
+	private Hashtable<Integer,Object> pool;
 	
 	private PoolDAO(){
-		pool = new HashMap<Integer,Object>();
+		pool = new Hashtable<Integer,Object>();
 	}
 	public static PoolDAO getUnicaInstancia(){
 		if(instance == null) instance = new PoolDAO();

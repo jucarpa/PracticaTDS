@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="AppChat/src"/>
+	<classpathentry kind="lib" path="AppChat/lib/DriverPersistencia.jar"/>
+	<classpathentry kind="lib" path="AppChat/lib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="AppChat/lib/h2-1.3.160.jar"/>
+	<classpathentry kind="lib" path="AppChat/lib/javax.persistence_2.0.3.v201010191057.jar"/>
+	<classpathentry kind="output" path="AppChat/bin"/>
+</classpath>

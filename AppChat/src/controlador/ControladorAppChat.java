@@ -28,7 +28,7 @@ public class ControladorAppChat {
 	
 	private Usuario usuarioActual;
 	
-	private ControladorUsuario() {
+	private ControladorAppChat() {
 		inicializarAdaptadores();
 		inicializarCatalogos();
 	}
@@ -62,6 +62,14 @@ public class ControladorAppChat {
 		usuarioActual = usuario;
 	}
 	
+	public boolean loginUsuario(String login, String contrasena) {
+		Usuario u = catalogoUsuarios.getUsuario(login);
+		if(u.getContraseña().equals(contrasena)) {
+			usuarioActual = u;
+			return true;
+		} else return false;
+	}
+	
 	public void registrarGrupo(String nombre) {
 		Grupo grupo = new Grupo(nombre, usuarioActual);
 		adaptadorGrupo.registrarGrupo(grupo);
@@ -83,18 +91,25 @@ public class ControladorAppChat {
 		if(g == null) {
 			ContactoIndividual ci = adaptadorCI.recuperarContactoIndividual(receptor);
 			mensaje = new Mensaje(texto,LocalTime.now(), emoticono, usuarioActual, ci);
+			adaptadorMensaje.registrarMensaje(mensaje);
 			ci.addMensaje(mensaje);
 			adaptadorCI.modificarContactoIndividual(ci);
 			adaptadorUsuario.modificarUsuario(usuarioActual);
 		} else {
 			mensaje = new Mensaje(texto, LocalTime.now(), emoticono, usuarioActual, g);
 			g.addMensaje(mensaje);
+			adaptadorMensaje.registrarMensaje(mensaje);
 			adaptadorGrupo.modificarGrupo(g);
 			for(ContactoIndividual ci : g.getContactos()) {
 				adaptadorUsuario.modificarUsuario(ci.getUsuario());
 			}
 		}
 	}
+	public void recibirMensajeGrupo(Mensaje m) {}
+	public void recibirMensajeCI(Mensaje m) {}
+	public void eliminarGrupo(Grupo g) {}
+	public void eliminarContactoIndividual(ContactoIndividual ci) {}
+	public void salirGrupo(Grupo g) {}
 	
 	public boolean existeUsuario(String login) {
 		return CatalogoUsuarios.getUnicaInstancia().getUsuario(login) != null;

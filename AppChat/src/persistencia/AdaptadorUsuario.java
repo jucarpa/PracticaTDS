@@ -68,12 +68,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 						new Propiedad("fechaNacimiento", usuario.getFechaNacimiento().toString()),
 						new Propiedad("movil", String.valueOf(usuario.getMovil())),
 						new Propiedad("usuario", usuario.getUsuario()),
-						new Propiedad("contraseña", usuario.getContraseña()),
-						new Propiedad("imagen", usuario.getImagen().toString()),
-						new Propiedad("premium", String.valueOf(usuario.isPremium())),
-						new Propiedad("estado", String.valueOf(usuario.getEstado().getId())),
-						new Propiedad("contactos", obtenerIDContactos(usuario.getContactos())),
-						new Propiedad("gruposAdmin", obtenerIDGruposAdmin(usuario.getGruposAdmin())))));
+						new Propiedad("contraseña", usuario.getContraseña()))));
 		
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setIdUsuario(eUsuario.getId());
@@ -131,8 +126,11 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 		int movil = Integer.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "movil"));
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
-		Image imagen = new Image(
+		Image imagen = null;
+		try {
+		imagen = new Image(
 				servPersistencia.recuperarPropiedadEntidad(eUsuario, "imagen"));
+		} catch (Exception e) {		}
 		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
 		
 		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contraseña, imagen, premium);
@@ -146,8 +144,8 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 		List<Grupo> gruposAdmin = obtenerGruposAdminDeId(
 				servPersistencia.recuperarPropiedadEntidad(eUsuario, "gruposAdmin"));
 		
-		usuario.setContactos((ArrayList<Contacto>) contactos);
-		usuario.setGruposAdmin((ArrayList<Grupo>) gruposAdmin);
+		usuario.setContactos(contactos);
+		usuario.setGruposAdmin(gruposAdmin);
 		//Devolver Objeto 
 		return usuario;
 		

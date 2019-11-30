@@ -2,6 +2,7 @@ package modelo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javafx.scene.image.Image;
 
@@ -16,10 +17,10 @@ public class Usuario {
 	private boolean premium;
 
 	private Estado estado;
-	private ArrayList<Contacto> contactos;
+	private List<Contacto> contactos;
 	private HashMap<String, Grupo> gruposPorNombre;
 	private HashMap<String, ContactoIndividual> contactosIndividualesPorNombre;
-	private ArrayList<Grupo> gruposAdmin;
+	private List<Grupo> gruposAdmin;
 		
 	
 	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario,
@@ -67,7 +68,7 @@ public class Usuario {
 	}
 	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String usuario,
 			String contraseña, Image imagen, boolean premium, Estado estado,
-			ArrayList<Contacto> contactos, ArrayList<Grupo> gruposAdmin) {
+			List<Contacto> contactos, List<Grupo> gruposAdmin) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
@@ -96,12 +97,18 @@ public class Usuario {
 	}
 	
 	
-	public Grupo getGrupo(String nombreGrupo) {
+	public Grupo getGrupoPorNombre(String nombreGrupo) {
 		return gruposPorNombre.get(nombreGrupo);
 	}
-	
-	public ContactoIndividual getCI(String nombreCI) {
+	public ContactoIndividual getCIPorNombre(String nombreCI) {
 		return contactosIndividualesPorNombre.get(nombreCI);
+	}
+	
+	public ContactoIndividual getCIPorNumero(int movil) {
+		for(ContactoIndividual ci : contactosIndividualesPorNombre.values()) {
+			if(ci.getMovil() == movil) return ci;
+		}
+		return null;
 	}
 	
 	public void addContacto(Contacto c) {
@@ -167,12 +174,12 @@ public class Usuario {
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
-	public ArrayList<Contacto> getContactos() {
+	public List<Contacto> getContactos() {
 		return contactos;
 		
 	}
 
-	public void setContactos(ArrayList<Contacto> contactos) {
+	public void setContactos(List<Contacto> contactos) {
 		this.contactos = contactos;
 		for(Contacto c : contactos) {
 			if(c.getClass() == Grupo.class) {
@@ -185,10 +192,10 @@ public class Usuario {
 			
 		}
 	}
-	public ArrayList<Grupo> getGruposAdmin() {
+	public List<Grupo> getGruposAdmin() {
 		return gruposAdmin;
 	}
-	public void setGruposAdmin(ArrayList<Grupo> gruposAdmin) {
+	public void setGruposAdmin(List<Grupo> gruposAdmin) {
 		this.gruposAdmin = gruposAdmin;
 	}
 

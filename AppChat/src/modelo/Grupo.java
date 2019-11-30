@@ -1,7 +1,6 @@
 package modelo;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Grupo extends Contacto{
 	
@@ -42,6 +41,14 @@ public class Grupo extends Contacto{
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public void addMensaje(Mensaje m) {
+		mensajes.add(m);
+	}
+	
+	public void addContacto(ContactoIndividual ci) {
+		contactos.add(ci);
 	}
 
 	

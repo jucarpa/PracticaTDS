@@ -95,6 +95,24 @@ public class Usuario {
 		}
 	}
 	
+	
+	public Grupo getGrupo(String nombreGrupo) {
+		return gruposPorNombre.get(nombreGrupo);
+	}
+	
+	public ContactoIndividual getCI(String nombreCI) {
+		return contactosIndividualesPorNombre.get(nombreCI);
+	}
+	
+	public void addContacto(Contacto c) {
+		contactos.add(c);
+		if(c.getClass() == Grupo.class) gruposPorNombre.put(c.getNombre(),(Grupo) c);
+		else contactosIndividualesPorNombre.put(c.getNombre(),(ContactoIndividual)c);
+	}
+	
+	public void addGrupoAdmin(Grupo g) {
+		gruposAdmin.add(g);
+	}
 	public int getIdUsuario() {
 		return idUsuario;
 	}

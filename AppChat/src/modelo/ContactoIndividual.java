@@ -37,5 +37,9 @@ public class ContactoIndividual extends Contacto{
 		this.id = id;
 	}
 	
+	public void addMensaje(Mensaje m) {
+		mensajes.add(m);
+	}
+	
 	
 }

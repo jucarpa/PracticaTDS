@@ -1,5 +1,6 @@
 package persistencia;
 
+import java.awt.Image;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,9 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.ImageIcon;
+
 import beans.Entidad;
 import beans.Propiedad;
-import javafx.scene.image.Image;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
@@ -67,8 +69,15 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 						new Propiedad("nombre", usuario.getNombre()),
 						new Propiedad("fechaNacimiento", usuario.getFechaNacimiento().toString()),
 						new Propiedad("movil", String.valueOf(usuario.getMovil())),
+						new Propiedad("email", usuario.getEmail()),
 						new Propiedad("usuario", usuario.getUsuario()),
-						new Propiedad("contraseña", usuario.getContraseña()))));
+						new Propiedad("contraseña", usuario.getContraseña()),
+						new Propiedad("estado", usuario.getSaludo()),
+						new Propiedad("imagen", usuario.getImagenUrl()),
+						new Propiedad("premium", String.valueOf(usuario.isPremium())),
+						//new Propiedad("estado", String.valueOf(usuario.getEstado().getId())),
+						new Propiedad("contactos", obtenerIDContactos(usuario.getContactos())),
+						new Propiedad("gruposAdmin", obtenerIDGruposAdmin(usuario.getGruposAdmin())))));
 		
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setIdUsuario(eUsuario.getId());
@@ -103,7 +112,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "contraseña");
 		servPersistencia.anadirPropiedadEntidad(eUsuario,"contraseña", usuario.getContraseña());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "imagen");
-		servPersistencia.anadirPropiedadEntidad(eUsuario,"imagen", usuario.getImagen().toString());
+		servPersistencia.anadirPropiedadEntidad(eUsuario,"imagen", usuario.getImagenUrl());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "premium");
 		servPersistencia.anadirPropiedadEntidad(eUsuario,"premium", String.valueOf(usuario.isPremium()));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "estado");
@@ -112,6 +121,10 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 		servPersistencia.anadirPropiedadEntidad(eUsuario,"contactos", obtenerIDContactos(usuario.getContactos()));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "gruposAdmin");
 		servPersistencia.anadirPropiedadEntidad(eUsuario,"gruposAdmin", obtenerIDGruposAdmin(usuario.getGruposAdmin()));
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "email");
+		servPersistencia.anadirPropiedadEntidad(eUsuario,"email", usuario.getEmail());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, "saludo");
+		servPersistencia.anadirPropiedadEntidad(eUsuario,"saludo", usuario.getSaludo());
 	}
 	public Usuario recuperarUsuario(int id) {
 		if(PoolDAO.getUnicaInstancia().contiene(id))
@@ -126,14 +139,12 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 		int movil = Integer.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "movil"));
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
-		Image imagen = null;
-		try {
-		imagen = new Image(
-				servPersistencia.recuperarPropiedadEntidad(eUsuario, "imagen"));
-		} catch (Exception e) {		}
+		String email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
+		String saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
+		String imagen = servPersistencia.recuperarPropiedadEntidad(eUsuario, "imagen");
 		boolean premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
 		
-		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contraseña, imagen, premium);
+		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contraseña, imagen, premium, email);
 		usuario.setIdUsuario(id);
 		
 		//Añadimos el Objeto a Pool
@@ -185,7 +196,10 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 	
 	private List<Contacto> obtenerContactosDeId(String contactosID){
 		List<Contacto> contactos = new LinkedList<Contacto>();
-		StringTokenizer strTok = new StringTokenizer(contactosID, " ");
+		StringTokenizer strTok = null;
+		try {
+			strTok = new StringTokenizer(contactosID, " ");
+		}catch(NullPointerException e) {return contactos;}
 		AdaptadorContactoIndividual aCI = AdaptadorContactoIndividual.getUnicaInstancia();
 		AdaptadorGrupo aG = AdaptadorGrupo.getUnicaInstancia();
 		while(strTok.hasMoreTokens()) {
@@ -199,7 +213,9 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO{
 	
 	private List<Grupo> obtenerGruposAdminDeId(String gruposAdminID) {
 		List<Grupo> gruposAdmin = new LinkedList<Grupo>();
-		StringTokenizer strTok = new StringTokenizer(gruposAdminID, " ");
+		StringTokenizer strTok = null;
+		try {strTok = new StringTokenizer(gruposAdminID, " ");}
+		catch(NullPointerException e) {return gruposAdmin;}
 		AdaptadorGrupo aG = AdaptadorGrupo.getUnicaInstancia();
 		while(strTok.hasMoreTokens()) {
 			int id = Integer.valueOf((String) strTok.nextElement());

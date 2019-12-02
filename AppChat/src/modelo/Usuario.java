@@ -1,47 +1,59 @@
 package modelo;
+import java.awt.Image;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javafx.scene.image.Image;
+import javax.swing.ImageIcon;
+
+import pruebas.prueba;
+
 
 public class Usuario {
 	private int idUsuario;
 	private String nombre;
 	private LocalDate fechaNacimiento;
 	private int movil;
+	private String email = "";
 	private String usuario;
 	private String contraseña;
-	private Image imagen;
+	private ImageIcon imagen;
 	private boolean premium;
+	private String saludo = "Hola AppChat";
 
 	private Estado estado;
 	private List<Contacto> contactos;
 	private HashMap<String, Grupo> gruposPorNombre;
 	private HashMap<String, ContactoIndividual> contactosIndividualesPorNombre;
 	private List<Grupo> gruposAdmin;
+	private String urlImagen = "/imagenes/ImagenUsuarioDef.png";
 		
 	
 	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario,
-			String contraseña, Image imagen, boolean premium) {
+			String contraseña, String urlImagen, boolean premium, String email) {
 		this.nombre = nombre;
 		this.fechaNacimiento = fechaNacimiento;
 		this.movil = movil;
 		this.usuario = usuario;
 		this.contraseña = contraseña;
-		this.imagen = imagen;
+		this.urlImagen = urlImagen;
+		imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
 		this.premium = premium;
+		this.email = email;
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
 	}
-	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario, String contraseña) {
+	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario, String contraseña, String email) {
 		super();
 		this.nombre = nombre;
 		this.fechaNacimiento = fechaNacimiento;
 		this.movil = movil;
 		this.usuario = usuario;
 		this.contraseña = contraseña;
+		this.email = email;
+		premium = false;
+		imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
 		
 		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
@@ -49,7 +61,7 @@ public class Usuario {
 		gruposAdmin = new ArrayList<Grupo>();
 		}
 	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String usuario,
-			String contraseña, Image imagen, boolean premium, Estado estado) {
+			String contraseña, String urlImagen, boolean premium, Estado estado) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
@@ -57,17 +69,19 @@ public class Usuario {
 		this.movil = movil;
 		this.usuario = usuario;
 		this.contraseña = contraseña;
-		this.imagen = imagen;
+		this.urlImagen = urlImagen;
+		this.imagen = new ImageIcon(Usuario.class.getResource(urlImagen));;
 		this.premium = premium;
 		this.estado = estado;
+		
 		
 		contactos = new ArrayList<Contacto>();
 		gruposAdmin = new ArrayList<Grupo>();
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
 	}
-	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String usuario,
-			String contraseña, Image imagen, boolean premium, Estado estado,
+	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String email,String usuario,
+			String contraseña, String urlImagen, boolean premium, Estado estado,
 			List<Contacto> contactos, List<Grupo> gruposAdmin) {
 		super();
 		this.idUsuario = idUsuario;
@@ -76,7 +90,8 @@ public class Usuario {
 		this.movil = movil;
 		this.usuario = usuario;
 		this.contraseña = contraseña;
-		this.imagen = imagen;
+		this.urlImagen = urlImagen;
+		this.imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
 		this.premium = premium;
 		this.estado = estado;
 		this.contactos = contactos;
@@ -97,6 +112,18 @@ public class Usuario {
 	}
 	
 	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getSaludo() {
+		return saludo;
+	}
+	public void setSaludo(String saludo) {
+		this.saludo = saludo;
+	}
 	public Grupo getGrupoPorNombre(String nombreGrupo) {
 		return gruposPorNombre.get(nombreGrupo);
 	}
@@ -156,10 +183,10 @@ public class Usuario {
 	public void setContraseña(String contraseña) {
 		this.contraseña = contraseña;
 	}
-	public Image getImagen() {
+	public ImageIcon getImagen() {
 		return imagen;
 	}
-	public void setImagen(Image imagen) {
+	public void setImagen(ImageIcon imagen) {
 		this.imagen = imagen;
 	}
 	public boolean isPremium() {
@@ -198,6 +225,9 @@ public class Usuario {
 	public void setGruposAdmin(List<Grupo> gruposAdmin) {
 		this.gruposAdmin = gruposAdmin;
 	}
-
+	
+	public String getImagenUrl() {
+		return urlImagen;
+	}
 	
 }

@@ -24,8 +24,8 @@ public class PanelAltaCliente extends JPanel {
 	private Font fuenteGrande = new Font("Arial",Font.BOLD,32);
 	private JLabel rotulo;
 	private JPanel datosCliente;
-	private JLabel lNombre, lfechaNacimiento, lmovil, lUsuario, lcontrasena, lalerta;
-	private JTextField nombre, fechaNacimiento, movil, usuario, contrasena;
+	private JLabel lNombre, lfechaNacimiento, lmovil, lEmail, lUsuario, lcontrasena, lalerta;
+	private JTextField nombre, fechaNacimiento, movil, email, usuario, contrasena;
 	private JButton btnRegistrar, btnCancelar;
 	private VentanaMain ventana;
 	
@@ -61,6 +61,11 @@ public class PanelAltaCliente extends JPanel {
 		movil=new JTextField(); 
 		fixedSize(movil,300,24);
 		
+		lEmail=new JLabel("Email:",JLabel.RIGHT); 
+		fixedSize(lEmail,170,24);
+		email=new JTextField(); 
+		fixedSize(email,300,24); 
+		
 		lUsuario=new JLabel("Usuario:",JLabel.RIGHT); 
 		fixedSize(lUsuario,170,24);
 		usuario=new JTextField(); 
@@ -82,6 +87,7 @@ public class PanelAltaCliente extends JPanel {
 		datosCliente.add(lNombre); datosCliente.add(nombre);
 		datosCliente.add(lfechaNacimiento); datosCliente.add(fechaNacimiento);
 		datosCliente.add(lmovil); datosCliente.add(movil);
+		datosCliente.add(email); datosCliente.add(email);
 		datosCliente.add(lUsuario); datosCliente.add(usuario);
 		datosCliente.add(lcontrasena); datosCliente.add(contrasena);
 		datosCliente.add(Box.createRigidArea(new Dimension(Constantes.x_size,75)));
@@ -101,15 +107,17 @@ public class PanelAltaCliente extends JPanel {
 				String auxMovil = movil.getText().trim();
 				String auxLogin=usuario.getText().trim();	
 				String auxContraseña =contrasena.getText().trim();
+				String auxEmail = email.getText().trim();
 				
 				if (auxNombre.isEmpty()||auxFechaNacimineto.isEmpty() ||auxMovil.isEmpty() ||
-						auxLogin.isEmpty() ||auxContraseña.isEmpty()) lalerta.setVisible(true);
+						auxLogin.isEmpty() ||auxContraseña.isEmpty() || auxEmail.isEmpty()) lalerta.setVisible(true);
 				else { lalerta.setVisible(false);
-					   ControladorAppChat.getUnicaInstancia().registrarUsuario(auxNombre, LocalDate.parse(auxFechaNacimineto), Integer.parseInt(auxMovil), auxLogin, auxContraseña);
+					   ControladorAppChat.getUnicaInstancia().registrarUsuario(auxNombre, LocalDate.parse(auxFechaNacimineto), Integer.parseInt(auxMovil), auxLogin, auxContraseña, auxEmail);
 					   JOptionPane.showMessageDialog(ventana,
 								"Usuario dado de alta correctamente",
 								"Registrar Usuario",JOptionPane.PLAIN_MESSAGE);
 					   usuario.setText(""); contrasena.setText(""); lalerta.setVisible(false); 
+					   ventana.cambioPanelPrincipal();
 				}
 			}	
 		});

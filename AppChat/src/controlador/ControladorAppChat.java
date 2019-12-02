@@ -55,8 +55,8 @@ public class ControladorAppChat {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 
-	public void registrarUsuario(String nombre, LocalDate fechaNacimiento, int movil, String login, String contraseña) {
-		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contraseña);
+	public void registrarUsuario(String nombre, LocalDate fechaNacimiento, int movil, String login, String contraseña, String email) {
+		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contraseña, email);
 		adaptadorUsuario.registrarUsuario(usuario);
 		catalogoUsuarios.addUsuario(usuario);
 		usuarioActual = usuario;
@@ -104,6 +104,9 @@ public class ControladorAppChat {
 				adaptadorUsuario.modificarUsuario(ci.getUsuario());
 			}
 		}
+	}
+	public Usuario getUsuarioActual() {
+		return usuarioActual;
 	}
 	public void recibirMensajeGrupo(Mensaje m) {}
 	public void recibirMensajeCI(Mensaje m) {}

@@ -101,7 +101,7 @@ public class PanelLogin extends JPanel{
 										"Login Usuario",JOptionPane.PLAIN_MESSAGE);
 							   usuario.setText(""); contrasena.setText(""); lalerta.setVisible(false);
 							   
-							   //AQUI PASAMOS A LA VENTANA PRINCIPAL DEL USUARIO
+							   ventana.cambioPanelPrincipal();
 							}
 						}
 				}

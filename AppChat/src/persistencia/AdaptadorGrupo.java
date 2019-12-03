@@ -15,70 +15,70 @@ import modelo.Usuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
-public class AdaptadorGrupo implements IAdaptadorGrupoDAO{
+public class AdaptadorGrupo implements IAdaptadorGrupoDAO {
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorGrupo unicaInstancia;
-	
+
 	public static AdaptadorGrupo getUnicaInstancia() {
 		if (unicaInstancia == null)
-		return new AdaptadorGrupo();
+			return new AdaptadorGrupo();
 		else
-		return unicaInstancia;
+			return unicaInstancia;
 	}
-	
+
 	private AdaptadorGrupo() {
-		servPersistencia =
-		FactoriaServicioPersistencia.getInstance().
-		getServicioPersistencia();
+		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
-	
+
 	public void registrarGrupo(Grupo grupo) {
 		Entidad eGrupo;
 		boolean existe = true;
 		try {
 			eGrupo = servPersistencia.recuperarEntidad(grupo.getId());
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			existe = false;
 		}
-		if (existe) return;
-		AdaptadorMensaje aM= AdaptadorMensaje.getUnicaInstancia();
-		for(Mensaje m : grupo.getMensajes()) {
+		if (existe)
+			return;
+		AdaptadorMensaje aM = AdaptadorMensaje.getUnicaInstancia();
+		for (Mensaje m : grupo.getMensajes()) {
 			aM.registrarMensaje(m);
 		}
-		
+
 		AdaptadorUsuario aU = AdaptadorUsuario.getUnicaInstancia();
 		aU.registrarUsuario(grupo.getAdmin());
-		
+
 		AdaptadorContactoIndividual aCI = AdaptadorContactoIndividual.getUnicaInstancia();
-		for(ContactoIndividual c : grupo.getContactos()) {
+		for (ContactoIndividual c : grupo.getContactos()) {
 			aCI.registrarContactoIndividual(c);
 		}
-		
+
 		eGrupo = new Entidad();
 		eGrupo.setNombre("Grupo");
-		eGrupo.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
-				new Propiedad("nombre", grupo.getNombre()),
+		eGrupo.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", grupo.getNombre()),
 				new Propiedad("admin", String.valueOf(grupo.getAdmin().getIdUsuario())),
 				new Propiedad("mensajes", obtenerIdMensajes(grupo.getMensajes())),
 				new Propiedad("contactos", obtenerIdContactos(grupo.getContactos())))));
 		eGrupo = servPersistencia.registrarEntidad(eGrupo);
 		grupo.setId(eGrupo.getId());
-		
+
 	}
+
 	public void borrarGrupo(Grupo grupo) {
 		Entidad eGrupo;
 		AdaptadorMensaje aM = AdaptadorMensaje.getUnicaInstancia();
-		for(Mensaje m : grupo.getMensajes()) {
+		for (Mensaje m : grupo.getMensajes()) {
 			aM.borrarMensaje(m);
 		}
-		
+
 		AdaptadorContactoIndividual aCI = AdaptadorContactoIndividual.getUnicaInstancia();
-		for(ContactoIndividual c : grupo.getContactos()) {
+		for (ContactoIndividual c : grupo.getContactos()) {
 			aCI.borrarContactoIndividual(c);
 		}
 		eGrupo = servPersistencia.recuperarEntidad(grupo.getId());
 		servPersistencia.borrarEntidad(eGrupo);
 	}
+
 	public void modificarGrupo(Grupo grupo) {
 		Entidad eGrupo = servPersistencia.recuperarEntidad(grupo.getId());
 		servPersistencia.eliminarPropiedadEntidad(eGrupo, "nombre");
@@ -90,71 +90,74 @@ public class AdaptadorGrupo implements IAdaptadorGrupoDAO{
 		servPersistencia.eliminarPropiedadEntidad(eGrupo, "contactos");
 		servPersistencia.anadirPropiedadEntidad(eGrupo, "contactos", obtenerIdContactos(grupo.getContactos()));
 	}
+
 	public Grupo recuperarGrupo(int codigo) {
 		if (PoolDAO.getUnicaInstancia().contiene(codigo))
 			return (Grupo) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 		Entidad eGrupo = servPersistencia.recuperarEntidad(codigo);
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eGrupo, "nombre");
 		Grupo grupo = new Grupo(nombre);
-		
+
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, grupo);
 		AdaptadorUsuario aU = AdaptadorUsuario.getUnicaInstancia();
 		int codAdmin = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eGrupo, "admin"));
 		Usuario admin = aU.recuperarUsuario(codAdmin);
 		grupo.setAdmin(admin);
-		
+
 		List<ContactoIndividual> contactos = obtenerContactosDesdeCodigo(
 				servPersistencia.recuperarPropiedadEntidad(eGrupo, "contactos"));
 		grupo.setContactos((ArrayList<ContactoIndividual>) contactos);
-		
-		
+
 		List<Mensaje> mensajes = obtenerMensajesDesdeCodigo(
 				servPersistencia.recuperarPropiedadEntidad(eGrupo, "mensajes"));
 		grupo.setMensajes((ArrayList<Mensaje>) mensajes);
-		
+
 		return grupo;
 	}
-	public List<Grupo> recuperarTodosGrupos(){
+
+	public List<Grupo> recuperarTodosGrupos() {
 		List<Grupo> grupos = new LinkedList<Grupo>();
 		List<Entidad> eGrupos = servPersistencia.recuperarEntidades("Grupo");
-		for(Entidad eG : eGrupos) {
+		for (Entidad eG : eGrupos) {
 			grupos.add(recuperarGrupo(eG.getId()));
 		}
 		return grupos;
 	}
-	
+
 	public String obtenerIdMensajes(List<Mensaje> mensajes) {
 		String sol = "";
-		for(Mensaje m : mensajes) {
+		for (Mensaje m : mensajes) {
 			sol += m.getId() + " ";
 		}
 		return sol.trim();
 	}
+
 	public String obtenerIdContactos(List<ContactoIndividual> contactos) {
 		String sol = "";
-		for(ContactoIndividual c : contactos) {
+		for (ContactoIndividual c : contactos) {
 			sol += c.getId() + " ";
 		}
 		return sol.trim();
 	}
-	
-	public List<Mensaje> obtenerMensajesDesdeCodigo(String mensajesCod){
+
+	public List<Mensaje> obtenerMensajesDesdeCodigo(String mensajesCod) {
 		List<Mensaje> mensajes = new LinkedList<Mensaje>();
 		StringTokenizer strTok = new StringTokenizer(mensajesCod, " ");
 		AdaptadorMensaje aM = AdaptadorMensaje.getUnicaInstancia();
-		while(strTok.hasMoreTokens()) {
+		while (strTok.hasMoreTokens()) {
 			mensajes.add(aM.recuperarMensaje(Integer.valueOf((String) strTok.nextElement())));
 		}
 		return mensajes;
 	}
+
 	public List<ContactoIndividual> obtenerContactosDesdeCodigo(String contactosCod) {
 		List<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
 		StringTokenizer strTok = new StringTokenizer(contactosCod, " ");
 		AdaptadorContactoIndividual aCI = AdaptadorContactoIndividual.getUnicaInstancia();
-		while(strTok.hasMoreTokens()) {
+		while (strTok.hasMoreTokens()) {
 			contactos.add(aCI.recuperarContactoIndividual(Integer.valueOf((String) strTok.nextElement())));
 		}
 		return contactos;
 	}
-	
+
 }

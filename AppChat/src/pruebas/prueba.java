@@ -38,10 +38,12 @@ public class prueba {
 	 * Create the application.
 	 */
 	public prueba() {
-		/*ServicioPersistencia servPersistencia = FactoriaServicioPersistencia.getInstance().
-				getServicioPersistencia();
-		for(Entidad e: servPersistencia.recuperarEntidades())
-			servPersistencia.borrarEntidad(e);*/
+		/*
+		 * ServicioPersistencia servPersistencia =
+		 * FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
+		 * for(Entidad e: servPersistencia.recuperarEntidades())
+		 * servPersistencia.borrarEntidad(e);
+		 */
 		initialize();
 	}
 
@@ -52,7 +54,7 @@ public class prueba {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setMinimumSize(new Dimension(20, 20));
 		lblNewLabel.setMaximumSize(new Dimension(20, 20));
@@ -62,7 +64,7 @@ public class prueba {
 		Image image = imagen.getImage();
 		imagen = new ImageIcon(image.getScaledInstance(128, 128, Image.SCALE_SMOOTH));
 		lblNewLabel.setIcon(imagen);
-		System.out.println(imagen.getIconHeight() + "," + imagen.getIconWidth()); //256,256
+		System.out.println(imagen.getIconHeight() + "," + imagen.getIconWidth()); // 256,256
 		lblNewLabel.repaint();
 	}
 

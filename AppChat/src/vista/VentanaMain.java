@@ -18,49 +18,50 @@ import javax.swing.JTextArea;
 import modelo.Usuario;
 
 @SuppressWarnings("serial")
-public class VentanaMain extends JFrame{
-	
+public class VentanaMain extends JFrame {
+
 	private JPanel contenedorPrincipal;
-	
+
 	private PanelLogin pantallaLogin;
 	private PanelAltaCliente pantallaRegistro;
 	private PanelVistaPrinciaplScene pantallaPrincipal;
-	
-	public VentanaMain(){
-		setSize(Constantes.ventana_x_size,Constantes.ventana_y_size);
-		setTitle("Aplicacion AppChat");
-		contenedorPrincipal= (JPanel) this.getContentPane();
 
-		/*crear pantallas*/
+	public VentanaMain() {
+		setSize(Constantes.ventana_x_size, Constantes.ventana_y_size);
+		setTitle("Aplicacion AppChat");
+		contenedorPrincipal = (JPanel) this.getContentPane();
+
+		/* crear pantallas */
 		pantallaLogin = new PanelLogin(this);
 		pantallaRegistro = new PanelAltaCliente(this);
 		pantallaPrincipal = new PanelVistaPrinciaplScene(this);
-		
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 
-		//Pantalla inicial
+		// Pantalla inicial
 		setVisible(true);
 		cambioPanelLogin();
 	}
-	
+
 	public static void main(String[] args) {
 		new VentanaMain();
 	}
+
 	public void cambioPanelLogin() {
 		setContentPane(pantallaLogin);
 		validate();
 	}
+
 	public void cambioPanelRegistro() {
 		setContentPane(pantallaRegistro);
 		validate();
 	}
-	
+
 	public void cambioPanelPrincipal() {
 		setContentPane(pantallaPrincipal);
 		pantallaPrincipal.update();
 		validate();
 	}
-	
 
 }

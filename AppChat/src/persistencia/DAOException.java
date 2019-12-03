@@ -7,4 +7,3 @@ public class DAOException extends Exception {
 		super(mensaje);
 	}
 }
-

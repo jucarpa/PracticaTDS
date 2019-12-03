@@ -1,9 +1,9 @@
 package persistencia;
 
 public class TDSFactoriaDAO extends FactoriaDAO {
-	public TDSFactoriaDAO () {
+	public TDSFactoriaDAO() {
 	}
-	
+
 	@Override
 	public IAdaptadorContactoIndividualDAO getCIDAO() {
 		return AdaptadorContactoIndividual.getUnicaInstancia();
@@ -25,4 +25,3 @@ public class TDSFactoriaDAO extends FactoriaDAO {
 	}
 
 }
-

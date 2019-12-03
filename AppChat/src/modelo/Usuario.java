@@ -1,6 +1,7 @@
 package modelo;
 import java.awt.Image;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Usuario {
 	private HashMap<String, ContactoIndividual> contactosIndividualesPorNombre;
 	private List<Grupo> gruposAdmin;
 	private String urlImagen = "/imagenes/ImagenUsuarioDef.png";
+	private List<Contacto> contactosOrdenadorPorTiempo;
 		
 	
 	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario,
@@ -41,8 +43,11 @@ public class Usuario {
 		imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
 		this.premium = premium;
 		this.email = email;
+		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
+		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
+		gruposAdmin = new ArrayList<Grupo>();
 	}
 	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario, String contraseña, String email) {
 		super();
@@ -59,6 +64,7 @@ public class Usuario {
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
 		gruposAdmin = new ArrayList<Grupo>();
+		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 		}
 	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String usuario,
 			String contraseña, String urlImagen, boolean premium, Estado estado) {
@@ -79,6 +85,7 @@ public class Usuario {
 		gruposAdmin = new ArrayList<Grupo>();
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
+		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 	}
 	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String email,String usuario,
 			String contraseña, String urlImagen, boolean premium, Estado estado,
@@ -99,16 +106,8 @@ public class Usuario {
 		
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
-		for(Contacto c : contactos) {
-			if(c.getClass() == Grupo.class) {
-				Grupo aux = (Grupo) c;
-				gruposPorNombre.put(aux.getNombre(), aux);
-			} else {
-				ContactoIndividual aux = (ContactoIndividual) c;
-				contactosIndividualesPorNombre.put(aux.getNombre(), aux);
-			}
-			
-		}
+		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
+		update();
 	}
 	
 	
@@ -230,4 +229,20 @@ public class Usuario {
 		return urlImagen;
 	}
 	
+	public void update() {
+		for(Contacto c : contactos) {
+			if(c.getClass() == Grupo.class) {
+				Grupo aux = (Grupo) c;
+				gruposPorNombre.put(aux.getNombre(), aux);
+			} else {
+				ContactoIndividual aux = (ContactoIndividual) c;
+				contactosIndividualesPorNombre.put(aux.getNombre(), aux);
+			}
+			
+		}
+	}
+	public List<Contacto> getContactosPorTiempo() {
+			return contactosOrdenadorPorTiempo;
+	}
 }
+	

@@ -40,7 +40,7 @@ public class PanelVistaPrinciaplScene extends JPanel{
 	private JMenuBar menuBar;
 	private JMenu mnIconoUsuario, mnEstado, mnOpciones, mnInfoCuenta, mnBusqueda, mnEliminaciones;
 	private JMenuItem mntmImagen, mntmNombreUsuario, mntmSaludo, mntmEstado,
-		mntmCrearContacto, mntmCrearGrupo, mntmModificarGrupo,
+		mntmCrearContacto, mntmCrearGrupo, mntmModificarGrupo, mntmCambiarImagen, mntmCambiarSaludo,
 		mntmMostrarContactos, mntmConvertirseEnPremium, mntmEliminarMensajes, mntmEliminarContacto;
 	private JPanel panel_2;
 	private JPanel panel_3;
@@ -48,7 +48,8 @@ public class PanelVistaPrinciaplScene extends JPanel{
 	private JPanel panel_5;
 	private JPanel panel_6;
 	
-	private PanelUltimosContactos panelUtlimosContactos;
+	private PanelUltimosContactos2 panelUtlimosContactos;
+	private JPanel panel;
 	/**
 	 * Launch the application.
 	 */
@@ -58,9 +59,9 @@ public class PanelVistaPrinciaplScene extends JPanel{
 	 */
 	public PanelVistaPrinciaplScene(VentanaMain ventana) {
 		setBackground(Color.CYAN);
-		initialize();
 		this.ventana = ventana;
-		panelUtlimosContactos = new PanelUltimosContactos();
+		panelUtlimosContactos = new PanelUltimosContactos2();
+		initialize();
 	}
 	
 	/**
@@ -84,10 +85,16 @@ public class PanelVistaPrinciaplScene extends JPanel{
 		mntmNombreUsuario.setFont(new Font("Rockwell Nova Extra Bold", Font.BOLD, 14));
 		mnIconoUsuario.add(mntmNombreUsuario);
 		
+		
 		mntmSaludo = new JMenuItem("Saludo");
 		mntmSaludo.setForeground(new Color(70, 130, 180));
 		mntmSaludo.setFont(new Font("Rockwell", Font.ITALIC, 14));
 		mnIconoUsuario.add(mntmSaludo);
+		
+		mntmCambiarImagen = new JMenuItem("Cambiar Imagen");
+		mnIconoUsuario.add(mntmCambiarImagen);
+		mntmCambiarSaludo = new JMenuItem("Cambiar Saludo");
+		mnIconoUsuario.add(mntmCambiarSaludo);
 		
 		panel_2 = new JPanel();
 		panel_2.setBackground(new Color(51, 204, 102));
@@ -158,16 +165,9 @@ public class PanelVistaPrinciaplScene extends JPanel{
 		splitPane.setMaximumSize(new Dimension(243, 27));
 		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);
 		splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		splitPane.setLeftComponent(panelUtlimosContactos);
 		add(splitPane, BorderLayout.CENTER);
-		
-		
-		splitPane.setLeftComponent(panelUtlimosContactos.getPane());//
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setMinimumSize(new Dimension(243, 27));
-		panel_1.setMaximumSize(new Dimension(243, 27));
-		panel_1.setPreferredSize(new Dimension(243, 27));
-		splitPane.setRightComponent(panel_1);
 		
 		ImageIcon im = new ImageIcon(prueba.class.getResource("/imagenes/ImagenEstado.png"));
 		Image i = im.getImage();
@@ -203,10 +203,12 @@ public class PanelVistaPrinciaplScene extends JPanel{
 		mnIconoUsuario.setIcon(imagen);
 		mnIconoUsuario.setText("");
 		mnIconoUsuario.repaint();
-		
 		mntmNombreUsuario.setText(usuario.getNombre());
 		mntmSaludo.setText("\"" + usuario.getSaludo() + "\""  );
 		
+		panelUtlimosContactos.update();
+		
+		System.out.println(panelUtlimosContactos.getHeight() + ", "  + panelUtlimosContactos.getWidth() );
 		
 		
 		

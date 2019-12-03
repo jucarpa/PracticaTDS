@@ -14,6 +14,7 @@ import beans.Entidad;
 import beans.Propiedad;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
+import modelo.Estado;
 import modelo.Grupo;
 import modelo.Usuario;
 import tds.driver.FactoriaServicioPersistencia;
@@ -62,7 +63,8 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		for (Grupo g : usuario.getGruposAdmin()) {
 			aG.registrarGrupo(g);
 		}
-
+		AdaptadorEstado aE = AdaptadorEstado.getUnicaInstancia();
+		aE.registrarEstado(usuario.getEstado());
 		// Crear Entidad Usuario
 
 		eUsuario = new Entidad();
@@ -71,9 +73,9 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 				new Propiedad("fechaNacimiento", usuario.getFechaNacimiento().toString()),
 				new Propiedad("movil", String.valueOf(usuario.getMovil())), new Propiedad("email", usuario.getEmail()),
 				new Propiedad("usuario", usuario.getUsuario()), new Propiedad("contraseña", usuario.getContraseña()),
-				new Propiedad("estado", usuario.getSaludo()), new Propiedad("imagen", usuario.getImagenUrl()),
+				new Propiedad("saludo", usuario.getSaludo()), new Propiedad("imagen", usuario.getImagenUrl()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
-				// new Propiedad("estado", String.valueOf(usuario.getEstado().getId())),
+				new Propiedad("estado", String.valueOf(usuario.getEstado().getId())),
 				new Propiedad("contactos", obtenerIDContactos(usuario.getContactos())),
 				new Propiedad("gruposAdmin", obtenerIDGruposAdmin(usuario.getGruposAdmin())))));
 
@@ -93,7 +95,9 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		for (Grupo g : usuario.getGruposAdmin()) {
 			aG.borrarGrupo(g);
 		}
-
+		
+		AdaptadorEstado aE = AdaptadorEstado.getUnicaInstancia();
+		aE.borrarEstado(usuario.getEstado());
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getIdUsuario());
 		servPersistencia.borrarEntidad(eUsuario);
 	}
@@ -158,6 +162,9 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 
 		usuario.setContactos(contactos);
 		usuario.setGruposAdmin(gruposAdmin);
+		AdaptadorEstado aE = AdaptadorEstado.getUnicaInstancia();
+		Estado e = aE.recuperarEstado(Integer.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "estado")));
+		usuario.setEstado(e);
 		// Devolver Objeto
 		return usuario;
 

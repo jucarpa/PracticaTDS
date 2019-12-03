@@ -2,20 +2,31 @@ package modelo;
 
 import java.awt.Image;
 
+import javax.swing.ImageIcon;
+
 public class Estado {
 	private String mensaje;
-	private Image imagen;
+	private ImageIcon imagen;
 	private int id;
-
-	public Estado(String mensaje, Image imagen) {
+	private String imagenUrl;
+	
+	public Estado() {
+		mensaje ="";
+		imagenUrl="";
+	}
+	
+	public Estado(String mensaje, String imagenUrl) {
 		super();
 		this.mensaje = mensaje;
-		this.imagen = imagen;
+		this.imagenUrl = imagenUrl;
+		imagen = new ImageIcon(Estado.class.getResource(this.imagenUrl));
 	}
 
-	public Estado(String mensaje, Image imagen, int id) {
+	public Estado(String mensaje, String imagenUrl, int id) {
 		super();
 		this.mensaje = mensaje;
+		this.imagenUrl = imagenUrl;
+		imagen = new ImageIcon(Estado.class.getResource(this.imagenUrl));
 		this.imagen = imagen;
 		this.id = id;
 	}
@@ -36,11 +47,16 @@ public class Estado {
 		this.mensaje = mensaje;
 	}
 
-	public Image getImagen() {
+	public ImageIcon getImagen() {
 		return imagen;
 	}
 
-	public void setImagen(Image imagen) {
-		this.imagen = imagen;
+	public void setImagen(String imagenUrl) {
+		this.imagenUrl = imagenUrl;
+		imagen = new ImageIcon(Estado.class.getResource(this.imagenUrl));
+	}
+	
+	public String getImagenUrl() {
+		return imagenUrl;
 	}
 }

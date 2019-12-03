@@ -47,6 +47,7 @@ public class Usuario {
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
 		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 		gruposAdmin = new ArrayList<Grupo>();
+		estado = new Estado();
 	}
 
 	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario, String contraseña,
@@ -66,6 +67,7 @@ public class Usuario {
 		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
 		gruposAdmin = new ArrayList<Grupo>();
 		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
+		estado = new Estado();
 	}
 
 	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String usuario,

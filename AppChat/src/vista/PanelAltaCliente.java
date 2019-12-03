@@ -84,15 +84,14 @@ public class PanelAltaCliente extends JPanel {
 		lalerta.setForeground(Color.RED);
 		fixedSize(lalerta, Constantes.x_size, 30);
 		lalerta.setVisible(false);
-
-		datosCliente.add(Box.createRigidArea(new Dimension(Constantes.x_size, 75)));
+		
 		datosCliente.add(lNombre);
 		datosCliente.add(nombre);
 		datosCliente.add(lfechaNacimiento);
 		datosCliente.add(fechaNacimiento);
 		datosCliente.add(lmovil);
 		datosCliente.add(movil);
-		datosCliente.add(email);
+		datosCliente.add(lEmail);
 		datosCliente.add(email);
 		datosCliente.add(lUsuario);
 		datosCliente.add(usuario);

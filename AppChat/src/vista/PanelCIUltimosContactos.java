@@ -12,6 +12,8 @@ import modelo.Mensaje;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
 import pruebas.prueba;
+import java.awt.Color;
+import java.awt.Dimension;
 
 public class PanelCIUltimosContactos extends JPanel {
 
@@ -19,13 +21,22 @@ public class PanelCIUltimosContactos extends JPanel {
 	 * Create the panel.
 	 */
 	public PanelCIUltimosContactos(Contacto c) {
+		setPreferredSize(new Dimension(256, 50));
+		setIgnoreRepaint(true);
+		setSize(new Dimension(256, 50));
+		setMinimumSize(new Dimension(256, 50));
+		setMaximumSize(new Dimension(256, 50));
+		setBackground(new Color(153, 255, 102));
 		setLayout(new BorderLayout(0, 0));
 
 		JLabel lblImagen = new JLabel("");
 		add(lblImagen, BorderLayout.WEST);
 		if (c.getClass() == ContactoIndividual.class) {
 			ContactoIndividual aux = (ContactoIndividual) c;
-			lblImagen.setIcon(aux.getUsuario().getImagen());
+			ImageIcon iCI = aux.getUsuario().getImagen();
+			Image i = iCI.getImage();
+			iCI = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+			lblImagen.setIcon(iCI);
 		} else {
 			ImageIcon iU = new ImageIcon(prueba.class.getResource("/imagenes/ImagenGrupoDef.png"));
 			Image i = iU.getImage();
@@ -34,6 +45,7 @@ public class PanelCIUltimosContactos extends JPanel {
 		}
 
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(153, 255, 51));
 		add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
 
@@ -50,7 +62,7 @@ public class PanelCIUltimosContactos extends JPanel {
 			Mensaje ultMensaje = c.getMensajes().get(c.getMensajes().size());
 			lblFecha.setText(ultMensaje.getHora().toString());
 			lblTexto.setText(ultMensaje.getTexto());
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 		}
 
 	}

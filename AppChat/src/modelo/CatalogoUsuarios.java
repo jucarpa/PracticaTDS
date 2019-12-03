@@ -46,7 +46,7 @@ public class CatalogoUsuarios {
 		}
 		return null;
 	}
-
+	
 	public Usuario getUsuario(String login) {
 		return usuarios.get(login);
 	}

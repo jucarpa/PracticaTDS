@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import beans.Entidad;
+import controlador.ControladorAppChat;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -38,12 +39,16 @@ public class prueba {
 	 * Create the application.
 	 */
 	public prueba() {
-		/*
-		 * ServicioPersistencia servPersistencia =
-		 * FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
-		 * for(Entidad e: servPersistencia.recuperarEntidades())
-		 * servPersistencia.borrarEntidad(e);
+		
+		  /*ServicioPersistencia servPersistencia =
+		  FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
+		  for(Entidad e: servPersistencia.recuperarEntidades())
+		  servPersistencia.borrarEntidad(e);
 		 */
+		
+		ControladorAppChat.getUnicaInstancia().loginUsuario("2", "2");
+		System.out.println(ControladorAppChat.getUnicaInstancia().getUsuarioActual().getCIPorNumero(1).getNombre() + ", " + 
+				ControladorAppChat.getUnicaInstancia().getUsuarioActual().getCIPorNumero(1).getMovil());
 		initialize();
 	}
 

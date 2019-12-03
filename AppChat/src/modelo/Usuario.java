@@ -26,7 +26,7 @@ public class Usuario {
 	private Estado estado;
 	private List<Contacto> contactos;
 	private HashMap<String, Grupo> gruposPorNombre;
-	private HashMap<String, ContactoIndividual> contactosIndividualesPorNombre;
+	private HashMap<Integer, ContactoIndividual> contactosIndividualesPorNombre;
 	private List<Grupo> gruposAdmin;
 	private String urlImagen = "/imagenes/ImagenUsuarioDef.png";
 	private List<Contacto> contactosOrdenadorPorTiempo;
@@ -44,7 +44,7 @@ public class Usuario {
 		this.email = email;
 		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
+		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
 		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 		gruposAdmin = new ArrayList<Grupo>();
 		estado = new Estado();
@@ -64,7 +64,7 @@ public class Usuario {
 
 		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
+		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
 		gruposAdmin = new ArrayList<Grupo>();
 		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 		estado = new Estado();
@@ -88,7 +88,7 @@ public class Usuario {
 		contactos = new ArrayList<Contacto>();
 		gruposAdmin = new ArrayList<Grupo>();
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
+		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
 		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 	}
 
@@ -110,7 +110,7 @@ public class Usuario {
 		this.gruposAdmin = gruposAdmin;
 
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<String, ContactoIndividual>();
+		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
 		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 		update();
 	}
@@ -151,8 +151,12 @@ public class Usuario {
 		contactos.add(c);
 		if (c.getClass() == Grupo.class)
 			gruposPorNombre.put(c.getNombre(), (Grupo) c);
-		else
-			contactosIndividualesPorNombre.put(c.getNombre(), (ContactoIndividual) c);
+		else {
+			ContactoIndividual ci = (ContactoIndividual) c;
+			
+			contactosIndividualesPorNombre.put(ci.getMovil(), ci);
+		
+		}
 	}
 
 	public void addGrupoAdmin(Grupo g) {
@@ -244,7 +248,7 @@ public class Usuario {
 				gruposPorNombre.put(aux.getNombre(), aux);
 			} else {
 				ContactoIndividual aux = (ContactoIndividual) c;
-				contactosIndividualesPorNombre.put(aux.getNombre(), aux);
+				contactosIndividualesPorNombre.put(aux.getMovil(), aux);
 			}
 
 		}
@@ -269,7 +273,7 @@ public class Usuario {
 				gruposPorNombre.put(aux.getNombre(), aux);
 			} else {
 				ContactoIndividual aux = (ContactoIndividual) c;
-				contactosIndividualesPorNombre.put(aux.getNombre(), aux);
+				contactosIndividualesPorNombre.put(aux.getMovil(), aux);
 			}
 
 		}

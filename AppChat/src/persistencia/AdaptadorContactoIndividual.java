@@ -96,7 +96,7 @@ public class AdaptadorContactoIndividual implements IAdaptadorContactoIndividual
 
 		List<Mensaje> mensajes = obtenerMensajesDesdeCodigo(
 				servPersistencia.recuperarPropiedadEntidad(eCI, "mensajes"));
-		sol.setMensajes((ArrayList<Mensaje>) mensajes);
+		sol.setMensajes(mensajes);
 		return sol;
 	}
 

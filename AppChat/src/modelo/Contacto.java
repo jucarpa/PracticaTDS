@@ -1,10 +1,11 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Contacto {
 	String nombre;
-	ArrayList<Mensaje> mensajes = new ArrayList<Mensaje>();
+	List<Mensaje> mensajes = new ArrayList<Mensaje>();
 	int id;
 
 	public Contacto(String nombre) {
@@ -12,7 +13,7 @@ public class Contacto {
 		mensajes = new ArrayList<Mensaje>();
 	}
 
-	public Contacto(String nombre, ArrayList<Mensaje> mensajes) {
+	public Contacto(String nombre, List<Mensaje> mensajes) {
 		this.nombre = nombre;
 		this.mensajes = mensajes;
 	}
@@ -33,11 +34,11 @@ public class Contacto {
 		this.nombre = nombre;
 	}
 
-	public ArrayList<Mensaje> getMensajes() {
+	public List<Mensaje> getMensajes() {
 		return mensajes;
 	}
 
-	public void setMensajes(ArrayList<Mensaje> mensajes) {
-		this.mensajes = mensajes;
+	public void setMensajes(List<Mensaje> mensajes2) {
+		this.mensajes = mensajes2;
 	}
 }

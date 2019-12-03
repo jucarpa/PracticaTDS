@@ -19,15 +19,18 @@ public class Estado {
 		super();
 		this.mensaje = mensaje;
 		this.imagenUrl = imagenUrl;
-		imagen = new ImageIcon(Estado.class.getResource(this.imagenUrl));
+		try {
+			imagen = new ImageIcon(Estado.class.getResource(this.imagenUrl));
+			} catch(NullPointerException e) {}
 	}
 
 	public Estado(String mensaje, String imagenUrl, int id) {
 		super();
 		this.mensaje = mensaje;
 		this.imagenUrl = imagenUrl;
+		try {
 		imagen = new ImageIcon(Estado.class.getResource(this.imagenUrl));
-		this.imagen = imagen;
+		} catch(NullPointerException e) {}
 		this.id = id;
 	}
 

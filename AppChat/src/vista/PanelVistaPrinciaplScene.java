@@ -50,6 +50,8 @@ public class PanelVistaPrinciaplScene extends JPanel {
 
 	private PanelUltimosContactos2 panelUtlimosContactos;
 	private JPanel panel;
+	private JSplitPane splitPane;
+	public PanelVistaPrinciaplScene panelPrincipal = this;
 
 	/**
 	 * Launch the application.
@@ -159,7 +161,7 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		mntmEliminarContacto = new JMenuItem("Eliminar Contacto");
 		mnEliminaciones.add(mntmEliminarContacto);
 
-		JSplitPane splitPane = new JSplitPane();
+		splitPane = new JSplitPane();
 		splitPane.setBackground(new Color(51, 204, 102));
 		splitPane.setMaximumSize(new Dimension(243, 27));
 		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -192,6 +194,17 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		i = iA.getImage();
 		iA = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		mnEliminaciones.setIcon(iA);
+		
+		mntmCrearContacto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				splitPane.setRightComponent(new PanelCrearContacto(panelPrincipal));
+			}
+		});
+		mntmCrearGrupo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				splitPane.setRightComponent(new PanelCrearGrupo(panelPrincipal));
+			}
+		});
 	}
 
 	public void update() {
@@ -209,6 +222,11 @@ public class PanelVistaPrinciaplScene extends JPanel {
 
 		System.out.println(panelUtlimosContactos.getHeight() + ", " + panelUtlimosContactos.getWidth());
 
+	}
+	
+	public void cambioPanelContacto() {
+		splitPane.setRightComponent(new JPanel());
+		//Aqui se cambiaria a la ultima conversacion
 	}
 
 }

@@ -23,6 +23,8 @@ public class PanelUltimosContactos2 extends JPanel {
 	/**
 	 * Create the panel.
 	 */
+	private JScrollPane scrollPane;
+	
 	public PanelUltimosContactos2() {
 		setSize(new Dimension(256, 256));
 		setMaximumSize(new Dimension(256, 256));
@@ -37,17 +39,17 @@ public class PanelUltimosContactos2 extends JPanel {
 		lblHolaaaa.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(lblHolaaaa, BorderLayout.NORTH);
 
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setBackground(new Color(102, 204, 51));
 		add(scrollPane, BorderLayout.CENTER);
 	}
 
 	public void update() {
 		Usuario u = ControladorAppChat.getUnicaInstancia().getUsuarioActual();
-		List<Contacto> contactos = u.getContactosPorTiempo();
+		List<Contacto> contactos = u.getContactos();
 		for (Contacto c : contactos) {
 			PanelCIUltimosContactos aux = new PanelCIUltimosContactos(c);
-			add(aux, BorderLayout.CENTER);
+			scrollPane.getViewport().add(aux);
 		}
 
 	}

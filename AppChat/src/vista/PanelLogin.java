@@ -122,8 +122,6 @@ public class PanelLogin extends JPanel {
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ventana.cambioPanelRegistro();
-				// AQUI PASAMOS A LA VENTA DE REGISTRO
-				// setContentPane(new PanelAltaCliente(ventana));
 			}
 		});
 

@@ -82,10 +82,15 @@ public class ControladorAppChat {
 	}
 
 	public void registrarContactoIndividual(String nombre, int movil) {
-		ContactoIndividual ci = new ContactoIndividual(nombre, movil);
+		Usuario u = catalogoUsuarios.getUsuario(movil);
+		ContactoIndividual ci = new ContactoIndividual(nombre, movil,u);
 		adaptadorCI.registrarContactoIndividual(ci);
 		usuarioActual.addContacto(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+	
+	public boolean existeContacto(int movil) {
+		return usuarioActual.getCIPorNumero(movil) != null;
 	}
 
 	public void registrarMensaje(String texto, int emoticono, int receptor) {

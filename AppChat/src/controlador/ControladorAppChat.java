@@ -2,8 +2,13 @@ package controlador;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import modelo.CatalogoUsuarios;
+import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
 import modelo.Mensaje;
@@ -73,20 +78,26 @@ public class ControladorAppChat {
 			return false;
 	}
 
-	public void registrarGrupo(String nombre) {
-		Grupo grupo = new Grupo(nombre, usuarioActual);
+	public void registrarGrupo(String nombre, ArrayList<ContactoIndividual> contactos) {
+		Grupo grupo = new Grupo(nombre, contactos, usuarioActual);
 		adaptadorGrupo.registrarGrupo(grupo);
 		usuarioActual.addContacto(grupo);
 		usuarioActual.addGrupoAdmin(grupo);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		for(ContactoIndividual c : grupo.getContactos()) {
+			Usuario aux = c.getUsuario();
+			aux.addContacto(grupo);
+			adaptadorUsuario.modificarUsuario(aux);
+		}
 	}
 
-	public void registrarContactoIndividual(String nombre, int movil) {
+	public ContactoIndividual registrarContactoIndividual(String nombre, int movil) {
 		Usuario u = catalogoUsuarios.getUsuario(movil);
 		ContactoIndividual ci = new ContactoIndividual(nombre, movil,u);
 		adaptadorCI.registrarContactoIndividual(ci);
 		usuarioActual.addContacto(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return ci;
 	}
 	
 	public boolean existeContacto(int movil) {
@@ -117,7 +128,22 @@ public class ControladorAppChat {
 	public Usuario getUsuarioActual() {
 		return usuarioActual;
 	}
-
+	
+	public void modificarContactoIndividual(ContactoIndividual ci) {
+		adaptadorCI.modificarContactoIndividual(ci);;
+	}
+	
+	public void modificarGrupo(Grupo g, List<ContactoIndividual> contactosEliminados) {
+		for(ContactoIndividual c : g.getContactos()) {
+			for(ContactoIndividual cE : contactosEliminados) {
+				if(c.getId() == cE.getId()) {
+					cE.getUsuario().eliminarContacto(cE);
+					adaptadorUsuario.modificarUsuario(cE.getUsuario());
+				}
+			}
+		}
+		adaptadorGrupo.modificarGrupo(g);
+	}
 	public void recibirMensajeGrupo(Mensaje m) {
 	}
 
@@ -125,16 +151,38 @@ public class ControladorAppChat {
 	}
 
 	public void eliminarGrupo(Grupo g) {
+		for(ContactoIndividual c : g.getContactos()) {
+			Usuario aux = c.getUsuario();
+			aux.eliminarContacto(g);
+			adaptadorUsuario.modificarUsuario(aux);
+		}
+		usuarioActual.eliminarContacto(g);
+		usuarioActual.eliminarGrupoAdmin(g);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+		adaptadorGrupo.borrarGrupo(g);
 	}
 
 	public void eliminarContactoIndividual(ContactoIndividual ci) {
+		usuarioActual.eliminarContacto(ci);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
+		adaptadorCI.borrarContactoIndividual(ci);
 	}
-
+	
+	public void eliminarMensajes(Contacto c) {
+		for(Mensaje m : c.getMensajes()) {
+			adaptadorMensaje.borrarMensaje(m);
+		}
+		c.setMensajes(new LinkedList<Mensaje>());
+		if(c.getClass() == Grupo.class)
+			adaptadorGrupo.modificarGrupo((Grupo) c);
+		else
+			adaptadorCI.modificarContactoIndividual((ContactoIndividual) c);
+	}
 	public void salirGrupo(Grupo g) {
 	}
 
 	public boolean existeUsuario(String login) {
-		return CatalogoUsuarios.getUnicaInstancia().getUsuario(login) != null;
+		return catalogoUsuarios.getUsuario(login) != null;
 
 	}
 

@@ -151,6 +151,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 
 		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contraseña, imagen, premium, email);
 		usuario.setIdUsuario(id);
+		usuario.setSaludo(saludo);
 
 		// Añadimos el Objeto a Pool
 		PoolDAO.getUnicaInstancia().addObjeto(id, usuario);

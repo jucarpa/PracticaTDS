@@ -88,6 +88,7 @@ public class AdaptadorContactoIndividual implements IAdaptadorContactoIndividual
 		int movil = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eCI, "movil"));
 		int codUsuario = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eCI, "usuario"));
 		ContactoIndividual sol = new ContactoIndividual(nombre, movil);
+		sol.setId(codigo);
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, sol);
 
 		AdaptadorUsuario aU = AdaptadorUsuario.getUnicaInstancia();

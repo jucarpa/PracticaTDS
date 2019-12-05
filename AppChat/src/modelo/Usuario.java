@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -281,5 +282,35 @@ public class Usuario {
 
 	public List<Contacto> getContactosPorTiempo() {
 		return contactosOrdenadorPorTiempo;
+	}
+	
+	public Collection<ContactoIndividual> getContactosIndividuales(){
+		return contactosIndividualesPorNombre.values();
+	}
+	
+	public ContactoIndividual getContactoIndividualPorNombre(String nombre) {
+		for(ContactoIndividual c :contactosIndividualesPorNombre.values()) {
+			if(c.getNombre().equals(nombre))
+			return c;
+		}
+		return null;
+	}
+	
+	public void eliminarContacto(Contacto c) {
+		for(int i = 0; i < contactos.size(); i++) {
+			if(contactos.get(i).getId() == c.getId()) {
+				contactos.remove(i);
+				if(c.getClass() == Grupo.class)
+					gruposPorNombre.remove(c.getNombre());
+				else {
+					ContactoIndividual aux = (ContactoIndividual) c;
+					contactosIndividualesPorNombre.remove(aux.getMovil());
+				}
+			}
+		}
+	}
+	
+	public void eliminarGrupoAdmin(Grupo g) {
+		gruposAdmin.remove(g);
 	}
 }

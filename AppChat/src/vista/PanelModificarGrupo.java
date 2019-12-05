@@ -26,21 +26,25 @@ import javax.swing.SwingConstants;
 
 import controlador.ControladorAppChat;
 import modelo.ContactoIndividual;
+import modelo.Grupo;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class PanelCrearGrupo extends JPanel {
+public class PanelModificarGrupo extends JPanel {
 	private JTextField textField;
 	private PanelVistaPrinciaplScene ventana;
 	private JTable table;
 	private JTable table_1;
+	private Grupo grupo;
 	private Map<String, ContactoIndividual>contactosseleccionados =  new HashMap<String, ContactoIndividual>();
+	private List<ContactoIndividual> contactosAntiguos = new LinkedList<ContactoIndividual>();
 	/**
 	 * Create the panel.
 	 */
-	public PanelCrearGrupo(PanelVistaPrinciaplScene ventana) {
+	public PanelModificarGrupo(PanelVistaPrinciaplScene ventana, Grupo grupo) {
+		this.grupo = grupo;
 		setPreferredSize(new Dimension(370, 450));
 		setSize(new Dimension(370, 450));
 		setMinimumSize(new Dimension(370, 450));
@@ -114,17 +118,16 @@ public class PanelCrearGrupo extends JPanel {
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 					if(textField.getText().equals("")) {
-			JOptionPane.showMessageDialog(ventana, "El grupo debe tener un nombre", "Registrar Grupo",
+			JOptionPane.showMessageDialog(ventana, "El grupo debe tener un nombre", "Modificar Grupo",
 					JOptionPane.PLAIN_MESSAGE);
 			} else {
 				ArrayList<ContactoIndividual> contactos = new ArrayList<ContactoIndividual>(contactosseleccionados.values());
-				for(ContactoIndividual c : contactos) {
-					System.out.println(c.getNombre());
-				}
-				ControladorAppChat.getUnicaInstancia().registrarGrupo(textField.getText(), contactos);
-				JOptionPane.showMessageDialog(ventana, "Grupo Registrado", "Registrar Grupo",
+				contactosAntiguos = grupo.getContactos();
+				grupo.setContactos(contactos);
+				grupo.setNombre(textField.getText());
+				ControladorAppChat.getUnicaInstancia().modificarGrupo(grupo, contactosAntiguos);
+				JOptionPane.showMessageDialog(ventana, "Grupo Modificado", "Modificar Grupo",
 						JOptionPane.PLAIN_MESSAGE);
-				
 				}
 			}
 		});
@@ -147,7 +150,6 @@ public class PanelCrearGrupo extends JPanel {
 				model1.addRow(new Object[]{aux});
 				ContactoIndividual c = ControladorAppChat.getUnicaInstancia().getUsuarioActual().getContactoIndividualPorNombre(aux);
 				contactosseleccionados.put(aux, c);
-				System.out.println(c.getNombre());
 			}
 		});
 		
@@ -166,13 +168,20 @@ public class PanelCrearGrupo extends JPanel {
 				
 			}
 		});
+		update();
 	}
 	
 	public void update() {
 		List<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
 		for(ContactoIndividual c : ControladorAppChat.getUnicaInstancia().getUsuarioActual().getContactosIndividuales()) {
-			contactos.add(c);
+			if(!grupo.getContactos().contains(c)) {contactos.add(c);
 			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
+			model.addRow(new Object[]{c.getNombre()});
+			}
+		}
+		for(ContactoIndividual c : grupo.getContactos()) {
+			contactos.add(c);
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			model.addRow(new Object[]{c.getNombre()});
 		}
 	}

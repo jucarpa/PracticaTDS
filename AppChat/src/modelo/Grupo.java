@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Grupo extends Contacto {
 
-	private ArrayList<ContactoIndividual> contactos;
+	private List<ContactoIndividual> contactos;
 	private Map<Integer, List<ContactoIndividual>> contactosPorUsuario;
 	private Usuario admin;
 
@@ -30,8 +30,13 @@ public class Grupo extends Contacto {
 		this.admin = admin;
 		this.id = id;
 	}
+	public Grupo(String nombre, ArrayList<ContactoIndividual> contactos, Usuario admin) {
+		super(nombre);
+		this.contactos = contactos;
+		this.admin = admin;
+	}
 
-	public ArrayList<ContactoIndividual> getContactos() {
+	public List<ContactoIndividual> getContactos() {
 		return contactos;
 	}
 
@@ -39,7 +44,7 @@ public class Grupo extends Contacto {
 		return (ArrayList<ContactoIndividual>) contactosPorUsuario.get(idUsuario);
 	}
 
-	public void setContactos(ArrayList<ContactoIndividual> contactos) {
+	public void setContactos(List<ContactoIndividual> contactos) {
 		this.contactos = contactos;
 	}
 

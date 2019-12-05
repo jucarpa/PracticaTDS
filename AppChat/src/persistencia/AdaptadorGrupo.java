@@ -72,9 +72,6 @@ public class AdaptadorGrupo implements IAdaptadorGrupoDAO {
 		}
 
 		AdaptadorContactoIndividual aCI = AdaptadorContactoIndividual.getUnicaInstancia();
-		for (ContactoIndividual c : grupo.getContactos()) {
-			aCI.borrarContactoIndividual(c);
-		}
 		eGrupo = servPersistencia.recuperarEntidad(grupo.getId());
 		servPersistencia.borrarEntidad(eGrupo);
 	}
@@ -101,16 +98,17 @@ public class AdaptadorGrupo implements IAdaptadorGrupoDAO {
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, grupo);
 		AdaptadorUsuario aU = AdaptadorUsuario.getUnicaInstancia();
 		int codAdmin = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eGrupo, "admin"));
+		grupo.setId(codigo);
 		Usuario admin = aU.recuperarUsuario(codAdmin);
 		grupo.setAdmin(admin);
 
 		List<ContactoIndividual> contactos = obtenerContactosDesdeCodigo(
 				servPersistencia.recuperarPropiedadEntidad(eGrupo, "contactos"));
-		grupo.setContactos((ArrayList<ContactoIndividual>) contactos);
+		grupo.setContactos(contactos);
 
 		List<Mensaje> mensajes = obtenerMensajesDesdeCodigo(
 				servPersistencia.recuperarPropiedadEntidad(eGrupo, "mensajes"));
-		grupo.setMensajes((ArrayList<Mensaje>) mensajes);
+		grupo.setMensajes(mensajes);
 
 		return grupo;
 	}

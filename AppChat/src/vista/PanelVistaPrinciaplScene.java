@@ -9,6 +9,9 @@ import javax.swing.JToolBar;
 
 import controlador.ControladorAppChat;
 import javafx.embed.swing.SwingFXUtils;
+import modelo.Contacto;
+import modelo.ContactoIndividual;
+import modelo.Grupo;
 import modelo.Usuario;
 import pruebas.prueba;
 
@@ -28,6 +31,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenu;
 import java.awt.Font;
@@ -36,6 +40,7 @@ import java.awt.Color;
 public class PanelVistaPrinciaplScene extends JPanel {
 	private VentanaMain ventana;
 	private Usuario usuario;
+	private Contacto contactoActual;
 
 	private JMenuBar menuBar;
 	private JMenu mnIconoUsuario, mnEstado, mnOpciones, mnInfoCuenta, mnBusqueda, mnEliminaciones;
@@ -63,7 +68,8 @@ public class PanelVistaPrinciaplScene extends JPanel {
 	public PanelVistaPrinciaplScene(VentanaMain ventana) {
 		setBackground(Color.CYAN);
 		this.ventana = ventana;
-		panelUtlimosContactos = new PanelUltimosContactos2();
+		panelUtlimosContactos = new PanelUltimosContactos2(this);
+		panelUtlimosContactos.setLayout(new BoxLayout(panelUtlimosContactos, BoxLayout.X_AXIS));
 		initialize();
 	}
 
@@ -120,8 +126,6 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		mntmCrearGrupo = new JMenuItem("Crear Grupo");
 		mnOpciones.add(mntmCrearGrupo);
 
-		mntmModificarGrupo = new JMenuItem("Modificar Grupo");
-		mnOpciones.add(mntmModificarGrupo);
 
 		mntmMostrarContactos = new JMenuItem("Mostrar Contactos");
 		mnOpciones.add(mntmMostrarContactos);
@@ -160,6 +164,9 @@ public class PanelVistaPrinciaplScene extends JPanel {
 
 		mntmEliminarContacto = new JMenuItem("Eliminar Contacto");
 		mnEliminaciones.add(mntmEliminarContacto);
+		
+		mntmModificarGrupo = new JMenuItem("Modificar");
+		mnEliminaciones.add(mntmModificarGrupo);
 
 		splitPane = new JSplitPane();
 		splitPane.setBackground(new Color(51, 204, 102));
@@ -202,7 +209,60 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		});
 		mntmCrearGrupo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				splitPane.setRightComponent(new PanelCrearGrupo(panelPrincipal));
+				PanelCrearGrupo g = new PanelCrearGrupo(panelPrincipal);
+				splitPane.setRightComponent(g);
+				g.update();
+				
+			}
+		});
+		
+		mntmModificarGrupo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(contactoActual != null) {
+					if(contactoActual.getClass() == ContactoIndividual.class)
+					splitPane.setRightComponent(new PanelModificarContacto(panelPrincipal,(ContactoIndividual)contactoActual));	
+					else {
+						Grupo aux = (Grupo) contactoActual;
+						if(aux.getAdmin().getIdUsuario() == usuario.getIdUsuario())
+						splitPane.setRightComponent(new PanelModificarGrupo(panelPrincipal,aux));
+						else JOptionPane.showMessageDialog(ventana, "No eres el administrador del Grupo", "Modificar Grupo",
+								JOptionPane.PLAIN_MESSAGE);
+					}
+				}
+			}
+		});
+		mntmEliminarContacto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(contactoActual != null) {
+					if(contactoActual.getClass() == ContactoIndividual.class) {
+						ControladorAppChat.getUnicaInstancia().eliminarContactoIndividual((ContactoIndividual)contactoActual);
+						contactoActual = null;
+						JOptionPane.showMessageDialog(ventana, "Contacto Eliminado!", "Eliminar Contacto",
+								JOptionPane.PLAIN_MESSAGE);
+					}
+					else {
+						Grupo aux = (Grupo) contactoActual;
+						if(aux.getAdmin().getIdUsuario() == usuario.getIdUsuario()) {
+						ControladorAppChat.getUnicaInstancia().eliminarGrupo(aux);
+						contactoActual = null;
+						JOptionPane.showMessageDialog(ventana, "Grupo Eliminado!", "Eliminar Grupo",
+								JOptionPane.PLAIN_MESSAGE);
+						}
+						else JOptionPane.showMessageDialog(ventana, "No eres el administrador del Grupo", "Modificar Grupo",
+								JOptionPane.PLAIN_MESSAGE);
+					}
+				}
+			}
+		});
+		
+		mntmEliminarMensajes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ControladorAppChat.getUnicaInstancia().eliminarMensajes(contactoActual);
+				JOptionPane.showMessageDialog(ventana, "Mensajes Eliminados !", "Eliminar Mensaje",
+						JOptionPane.PLAIN_MESSAGE);
+				
 			}
 		});
 	}
@@ -224,9 +284,13 @@ public class PanelVistaPrinciaplScene extends JPanel {
 
 	}
 	
+	public void setContactoSeleccionado(Contacto c) {
+		contactoActual = c;
+		cambioPanelContacto();
+	}
 	public void cambioPanelContacto() {
 		splitPane.setRightComponent(new JPanel());
-		//Aqui se cambiaria a la ultima conversacion
+		//Aqui se cambia a la conversacion seleccionada
 	}
 
 }

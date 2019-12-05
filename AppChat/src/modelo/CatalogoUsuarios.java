@@ -39,9 +39,9 @@ public class CatalogoUsuarios {
 		return lista;
 	}
 
-	public Usuario getUsuario(int codigo) {
+	public Usuario getUsuario(int movil) {
 		for (Usuario u : usuarios.values()) {
-			if (u.getMovil() == codigo)
+			if (u.getMovil() == movil)
 				return u;
 		}
 		return null;
@@ -54,7 +54,8 @@ public class CatalogoUsuarios {
 	public void addUsuario(Usuario usuario) {
 		usuarios.put(usuario.getUsuario(), usuario);
 	}
-
+	
+	
 	public void removeUsuario(Usuario usuario) {
 		usuarios.remove(usuario.getUsuario());
 	}

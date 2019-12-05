@@ -19,17 +19,19 @@ import javax.swing.JButton;
 import java.awt.Component;
 import java.awt.Dimension;
 
-public class PanelCrearContacto extends JPanel {
+public class PanelModificarContacto extends JPanel {
 	private JTextField textTelefono;
 	private JTextField textNombre;
 	private JButton btnAceptar;
 	private JButton btnCancelar;
 	private PanelVistaPrinciaplScene ventana;
+	private ContactoIndividual ci;
 	/**
 	 * Create the panel.
 	 */
-	public PanelCrearContacto(PanelVistaPrinciaplScene ventana) {
+	public PanelModificarContacto(PanelVistaPrinciaplScene ventana, ContactoIndividual ci) {
 		this.ventana = ventana;
+		this.ci = ci;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{45, 56, 0, 116, 56, 116, 0};
 		gridBagLayout.rowHeights = new int[]{22, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -45,7 +47,7 @@ public class PanelCrearContacto extends JPanel {
 		gbc_lblNewLabel.gridy = 3;
 		add(lblNewLabel, gbc_lblNewLabel);
 		
-		textNombre = new JTextField();
+		textNombre = new JTextField(ci.getNombre());
 		textNombre.setMaximumSize(new Dimension(170, 24));
 		textNombre.setMinimumSize(new Dimension(170, 24));
 		textNombre.setSize(new Dimension(170, 24));
@@ -67,7 +69,7 @@ public class PanelCrearContacto extends JPanel {
 		gbc_lblNewLabel_1.gridy = 5;
 		add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		textTelefono = new JTextField();
+		textTelefono = new JTextField(String.valueOf(ci.getMovil()));
 		textTelefono.setSize(new Dimension(170, 24));
 		textTelefono.setMaximumSize(new Dimension(170, 24));
 		textTelefono.setMinimumSize(new Dimension(170, 24));
@@ -79,7 +81,7 @@ public class PanelCrearContacto extends JPanel {
 		add(textTelefono, gbc_textTelefono);
 		textTelefono.setColumns(10);
 		
-		btnAceptar = new JButton("Aceptar");
+		btnAceptar = new JButton("Modificar");
 		GridBagConstraints gbc_btnAceptar = new GridBagConstraints();
 		gbc_btnAceptar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnAceptar.gridx = 2;
@@ -95,16 +97,12 @@ public class PanelCrearContacto extends JPanel {
 		
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(!ControladorAppChat.getUnicaInstancia().existeContacto(Integer.valueOf(textTelefono.getText()))) {
-					ContactoIndividual ci = ControladorAppChat.getUnicaInstancia().registrarContactoIndividual(textNombre.getText(), Integer.valueOf(textTelefono.getText()));
-					System.out.println("OK\nID: " + ci.getId());
-					JOptionPane.showMessageDialog(ventana, "Contacto Creado Correctamente", "Contacto Creado Correctamente",
+					ci.setNombre(textNombre.getText());
+					ci.setMovil(Integer.valueOf(textTelefono.getText()));
+					ControladorAppChat.getUnicaInstancia().modificarContactoIndividual(ci);
+					JOptionPane.showMessageDialog(ventana, "Contacto Modificado Correctamente", "Contacto Creado Correctamente",
 							JOptionPane.PLAIN_MESSAGE);
 					ventana.setContactoSeleccionado(ci);
-				}else JOptionPane.showMessageDialog(ventana, "Este numero ya estaba registrado o no existe dicho Usuario", "Registrar Contacto",
-						JOptionPane.PLAIN_MESSAGE);
-				
-				
 			}
 		});
 		

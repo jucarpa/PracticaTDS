@@ -31,14 +31,6 @@ public class ContactoIndividual extends Contacto {
 		this.usuario = usuario;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public void addMensaje(Mensaje m) {
 		mensajes.add(m);
 	}

@@ -2,6 +2,7 @@ package pruebas;
 
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -9,11 +10,18 @@ import javax.swing.JLabel;
 
 import beans.Entidad;
 import controlador.ControladorAppChat;
+import modelo.Contacto;
+import modelo.ContactoIndividual;
+import modelo.Grupo;
+import modelo.Usuario;
+import persistencia.AdaptadorUsuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import javax.swing.JComboBox;
+import javax.swing.JToggleButton;
 
 public class prueba {
 
@@ -40,15 +48,39 @@ public class prueba {
 	 */
 	public prueba() {
 		
-		  /*ServicioPersistencia servPersistencia =
+		 /*ServicioPersistencia servPersistencia =
 		  FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
 		  for(Entidad e: servPersistencia.recuperarEntidades())
 		  servPersistencia.borrarEntidad(e);
-		 */
-		
+		 
+		/*
 		ControladorAppChat.getUnicaInstancia().loginUsuario("2", "2");
 		System.out.println(ControladorAppChat.getUnicaInstancia().getUsuarioActual().getCIPorNumero(1).getNombre() + ", " + 
 				ControladorAppChat.getUnicaInstancia().getUsuarioActual().getCIPorNumero(1).getMovil());
+		
+		ServicioPersistencia servPersistencia =
+				  FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
+		for(Entidad e: servPersistencia.recuperarEntidades()) {
+			//if(e.getNombre().contentEquals("ContactoIndividual"))
+				servPersistencia.borrarEntidad(e);
+			
+		}
+		*/
+		//List<Usuario> usuarios = AdaptadorUsuario.getUnicaInstancia().recuperarTodosUsuarios();
+				
+		ServicioPersistencia servPresistencia = FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
+			for(Entidad e : servPresistencia.recuperarEntidades("Usuario")) {
+				if(servPresistencia.recuperarPropiedadEntidad(e, "nombre").equals("1")) {
+					servPresistencia.eliminarPropiedadEntidad(e, "gruposAdmin");
+					servPresistencia.anadirPropiedadEntidad(e, "gruposAdmin", "");
+				}
+			}
+				/*ContactoIndividual aux = (ContactoIndividual) c;
+				System.out.println(u.getNombre() + ", "+ aux.getId() + ", " + aux.getUsuario().getNombre());
+			*/
+		
+		
+		
 		initialize();
 	}
 
@@ -69,6 +101,12 @@ public class prueba {
 		Image image = imagen.getImage();
 		imagen = new ImageIcon(image.getScaledInstance(128, 128, Image.SCALE_SMOOTH));
 		lblNewLabel.setIcon(imagen);
+		
+		JComboBox comboBox = new JComboBox();
+		frame.getContentPane().add(comboBox, BorderLayout.SOUTH);
+		
+		JToggleButton tglbtnNewToggleButton = new JToggleButton("New toggle button");
+		frame.getContentPane().add(tglbtnNewToggleButton, BorderLayout.EAST);
 		System.out.println(imagen.getIconHeight() + "," + imagen.getIconWidth()); // 256,256
 		lblNewLabel.repaint();
 	}

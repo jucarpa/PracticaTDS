@@ -1,6 +1,5 @@
-/controlador/
-/imagenes/
-/modelo/
 /persistencia/
 /pruebas/
 /vista/
+/modelo/
+/controlador/

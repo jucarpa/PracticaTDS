@@ -106,8 +106,6 @@ public class PanelLogin extends JPanel {
 						if (!ControladorAppChat.getUnicaInstancia().loginUsuario(auxUsuario, auxContrasena))
 							lalerta2.setVisible(true);
 						else {
-							JOptionPane.showMessageDialog(ventana, "Usuario Logueado Correctamente", "Login Usuario",
-									JOptionPane.PLAIN_MESSAGE);
 							usuario.setText("");
 							contrasena.setText("");
 							lalerta.setVisible(false);

@@ -25,7 +25,7 @@ public class VentanaMain extends JFrame {
 	private PanelLogin pantallaLogin;
 	private PanelAltaCliente pantallaRegistro;
 	private PanelVistaPrinciaplScene pantallaPrincipal;
-
+			
 	public VentanaMain() {
 		setSize(Constantes.ventana_x_size, Constantes.ventana_y_size);
 		setTitle("Aplicacion AppChat");
@@ -34,7 +34,6 @@ public class VentanaMain extends JFrame {
 		/* crear pantallas */
 		pantallaLogin = new PanelLogin(this);
 		pantallaRegistro = new PanelAltaCliente(this);
-		pantallaPrincipal = new PanelVistaPrinciaplScene(this);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -58,9 +57,8 @@ public class VentanaMain extends JFrame {
 		validate();
 	}
 
-	public void cambioPanelPrincipal() {
-		setContentPane(pantallaPrincipal);
-		pantallaPrincipal.update();
+	public void cambioPanelPrincipal(int movilUsuarioActual) {
+		setContentPane(new PanelVistaPrinciaplScene(this, movilUsuarioActual));
 		validate();
 	}
 

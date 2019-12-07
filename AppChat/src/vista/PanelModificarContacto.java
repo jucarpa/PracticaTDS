@@ -20,18 +20,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 public class PanelModificarContacto extends JPanel {
-	private JTextField textTelefono;
-	private JTextField textNombre;
-	private JButton btnAceptar;
-	private JButton btnCancelar;
-	private PanelVistaPrinciaplScene ventana;
-	private ContactoIndividual ci;
 	/**
 	 * Create the panel.
 	 */
-	public PanelModificarContacto(PanelVistaPrinciaplScene ventana, ContactoIndividual ci) {
-		this.ventana = ventana;
-		this.ci = ci;
+	private ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
+	public PanelModificarContacto(PanelVistaPrinciaplScene ventana, int movilContacto, int movilUA) {
+		ContactoIndividual ci = controlador.getContactoIndividual(movilContacto, movilUA);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{45, 56, 0, 116, 56, 116, 0};
 		gridBagLayout.rowHeights = new int[]{22, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -47,7 +41,7 @@ public class PanelModificarContacto extends JPanel {
 		gbc_lblNewLabel.gridy = 3;
 		add(lblNewLabel, gbc_lblNewLabel);
 		
-		textNombre = new JTextField(ci.getNombre());
+		JTextField textNombre = new JTextField(ci.getNombre());
 		textNombre.setMaximumSize(new Dimension(170, 24));
 		textNombre.setMinimumSize(new Dimension(170, 24));
 		textNombre.setSize(new Dimension(170, 24));
@@ -69,7 +63,7 @@ public class PanelModificarContacto extends JPanel {
 		gbc_lblNewLabel_1.gridy = 5;
 		add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		textTelefono = new JTextField(String.valueOf(ci.getMovil()));
+		JTextField textTelefono = new JTextField(String.valueOf(ci.getMovil()));
 		textTelefono.setSize(new Dimension(170, 24));
 		textTelefono.setMaximumSize(new Dimension(170, 24));
 		textTelefono.setMinimumSize(new Dimension(170, 24));
@@ -81,14 +75,14 @@ public class PanelModificarContacto extends JPanel {
 		add(textTelefono, gbc_textTelefono);
 		textTelefono.setColumns(10);
 		
-		btnAceptar = new JButton("Modificar");
+		JButton btnAceptar = new JButton("Modificar");
 		GridBagConstraints gbc_btnAceptar = new GridBagConstraints();
 		gbc_btnAceptar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnAceptar.gridx = 2;
 		gbc_btnAceptar.gridy = 7;
 		add(btnAceptar, gbc_btnAceptar);
 		
-		btnCancelar = new JButton("Cancelar");
+		JButton btnCancelar = new JButton("Cancelar");
 		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
 		gbc_btnCancelar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCancelar.gridx = 3;

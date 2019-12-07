@@ -34,22 +34,20 @@ import javax.swing.table.DefaultTableModel;
 
 public class PanelModificarGrupo extends JPanel {
 	private JTextField textField;
-	private PanelVistaPrinciaplScene ventana;
 	private JTable table;
 	private JTable table_1;
-	private Grupo grupo;
+	private ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
 	private Map<String, ContactoIndividual>contactosseleccionados =  new HashMap<String, ContactoIndividual>();
 	private List<ContactoIndividual> contactosAntiguos = new LinkedList<ContactoIndividual>();
 	/**
 	 * Create the panel.
 	 */
-	public PanelModificarGrupo(PanelVistaPrinciaplScene ventana, Grupo grupo) {
-		this.grupo = grupo;
+	public PanelModificarGrupo(PanelVistaPrinciaplScene ventana, String nombreGrupo, int movilUA) {
+		Grupo grupo = controlador.getGrupo(nombreGrupo, movilUA);
 		setPreferredSize(new Dimension(370, 450));
 		setSize(new Dimension(370, 450));
 		setMinimumSize(new Dimension(370, 450));
 		setMaximumSize(new Dimension(370, 450));
-		this.ventana = ventana;
 		setLayout(null);
 		
 		textField = new JTextField();
@@ -125,7 +123,7 @@ public class PanelModificarGrupo extends JPanel {
 				contactosAntiguos = grupo.getContactos();
 				grupo.setContactos(contactos);
 				grupo.setNombre(textField.getText());
-				ControladorAppChat.getUnicaInstancia().modificarGrupo(grupo, contactosAntiguos);
+				controlador.modificarGrupo(grupo, contactosAntiguos);
 				JOptionPane.showMessageDialog(ventana, "Grupo Modificado", "Modificar Grupo",
 						JOptionPane.PLAIN_MESSAGE);
 				}
@@ -148,7 +146,7 @@ public class PanelModificarGrupo extends JPanel {
 				model.removeRow(y);
 				DefaultTableModel model1 = (DefaultTableModel) table.getModel();
 				model1.addRow(new Object[]{aux});
-				ContactoIndividual c = ControladorAppChat.getUnicaInstancia().getUsuarioActual().getContactoIndividualPorNombre(aux);
+				ContactoIndividual c = controlador.getUsuario(movilUA).getContactoIndividualPorNombre(aux);
 				contactosseleccionados.put(aux, c);
 			}
 		});
@@ -168,12 +166,8 @@ public class PanelModificarGrupo extends JPanel {
 				
 			}
 		});
-		update();
-	}
-	
-	public void update() {
 		List<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
-		for(ContactoIndividual c : ControladorAppChat.getUnicaInstancia().getUsuarioActual().getContactosIndividuales()) {
+		for(ContactoIndividual c : controlador.getUsuario(movilUA).getContactosIndividuales()) {
 			if(!grupo.getContactos().contains(c)) {contactos.add(c);
 			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
 			model.addRow(new Object[]{c.getNombre()});

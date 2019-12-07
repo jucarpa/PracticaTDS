@@ -28,7 +28,7 @@ public class PanelCrearContacto extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public PanelCrearContacto(PanelVistaPrinciaplScene ventana) {
+	public PanelCrearContacto(PanelVistaPrinciaplScene ventana, int movilUA) {
 		this.ventana = ventana;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{45, 56, 0, 116, 56, 116, 0};
@@ -95,8 +95,9 @@ public class PanelCrearContacto extends JPanel {
 		
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(!ControladorAppChat.getUnicaInstancia().existeContacto(Integer.valueOf(textTelefono.getText()))) {
-					ContactoIndividual ci = ControladorAppChat.getUnicaInstancia().registrarContactoIndividual(textNombre.getText(), Integer.valueOf(textTelefono.getText()));
+				if(!ControladorAppChat.getUnicaInstancia().existeContacto(Integer.valueOf(textTelefono.getText()), movilUA)) {
+					ContactoIndividual ci = ControladorAppChat.getUnicaInstancia().registrarContactoIndividual(textNombre.getText(),
+							Integer.valueOf(textTelefono.getText()), movilUA);
 					System.out.println("OK\nID: " + ci.getId());
 					JOptionPane.showMessageDialog(ventana, "Contacto Creado Correctamente", "Contacto Creado Correctamente",
 							JOptionPane.PLAIN_MESSAGE);

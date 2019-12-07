@@ -11,7 +11,7 @@ import persistencia.IAdaptadorUsuarioDAO;
 
 public class CatalogoUsuarios {
 	private Map<String, Usuario> usuarios;
-	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
+	private static CatalogoUsuarios unicaInstancia;
 
 	private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
@@ -28,6 +28,8 @@ public class CatalogoUsuarios {
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
+		if(unicaInstancia == null)
+			unicaInstancia = new CatalogoUsuarios();
 		return unicaInstancia;
 	}
 

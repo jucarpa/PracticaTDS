@@ -39,8 +39,9 @@ import java.awt.Color;
 
 public class PanelVistaPrinciaplScene extends JPanel {
 	private VentanaMain ventana;
-	private Usuario usuario;
+	private int movilUA;
 	private Contacto contactoActual;
+	ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
 
 	private JMenuBar menuBar;
 	private JMenu mnIconoUsuario, mnEstado, mnOpciones, mnInfoCuenta, mnBusqueda, mnEliminaciones;
@@ -65,11 +66,10 @@ public class PanelVistaPrinciaplScene extends JPanel {
 	/**
 	 * Create the application.
 	 */
-	public PanelVistaPrinciaplScene(VentanaMain ventana) {
+	public PanelVistaPrinciaplScene(VentanaMain ventana, int movilUA) {
 		setBackground(Color.CYAN);
 		this.ventana = ventana;
-		panelUtlimosContactos = new PanelUltimosContactos2(this);
-		panelUtlimosContactos.setLayout(new BoxLayout(panelUtlimosContactos, BoxLayout.X_AXIS));
+		this.movilUA = movilUA;
 		initialize();
 	}
 
@@ -173,17 +173,24 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		splitPane.setMaximumSize(new Dimension(243, 27));
 		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);
 		splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+		
+		panelUtlimosContactos = new PanelUltimosContactos2(this, movilUA);
+		panelUtlimosContactos.setLayout(new BoxLayout(panelUtlimosContactos, BoxLayout.X_AXIS));
 		splitPane.setLeftComponent(panelUtlimosContactos);
 		add(splitPane, BorderLayout.CENTER);
 
-		ImageIcon im = new ImageIcon(prueba.class.getResource("/imagenes/ImagenEstado.png"));
-		Image i = im.getImage();
-		im = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-		mnEstado.setIcon(im);
+		Usuario usuario = controlador.getUsuario(movilUA);
+		ImageIcon imagen = usuario.getImagen();
+		Image image = imagen.getImage();
+		imagen = new ImageIcon(image.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		mnIconoUsuario.setIcon(imagen);
+		mnIconoUsuario.setText("");
+		mnIconoUsuario.repaint();
+		mntmNombreUsuario.setText(usuario.getNombre());
+		mntmSaludo.setText("\"" + usuario.getSaludo() + "\"");
 
 		ImageIcon iU = new ImageIcon(prueba.class.getResource("/imagenes/ImagenUsuarioDef.png"));
-		i = iU.getImage();
+		Image i = iU.getImage();
 		iU = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		mnIconoUsuario.setIcon(iU);
 
@@ -204,12 +211,12 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		
 		mntmCrearContacto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				splitPane.setRightComponent(new PanelCrearContacto(panelPrincipal));
+				splitPane.setRightComponent(new PanelCrearContacto(panelPrincipal, movilUA));
 			}
 		});
 		mntmCrearGrupo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				PanelCrearGrupo g = new PanelCrearGrupo(panelPrincipal);
+				PanelCrearGrupo g = new PanelCrearGrupo(panelPrincipal, movilUA);
 				splitPane.setRightComponent(g);
 				g.update();
 				
@@ -219,12 +226,13 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		mntmModificarGrupo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(contactoActual != null) {
-					if(contactoActual.getClass() == ContactoIndividual.class)
-					splitPane.setRightComponent(new PanelModificarContacto(panelPrincipal,(ContactoIndividual)contactoActual));	
-					else {
+					if(contactoActual.getClass() == ContactoIndividual.class) {
+						ContactoIndividual ci = (ContactoIndividual) contactoActual;
+						splitPane.setRightComponent(new PanelModificarContacto(panelPrincipal, ci.getMovil(), movilUA));	
+					}else {
 						Grupo aux = (Grupo) contactoActual;
-						if(aux.getAdmin().getIdUsuario() == usuario.getIdUsuario())
-						splitPane.setRightComponent(new PanelModificarGrupo(panelPrincipal,aux));
+						if(aux.getAdmin().getMovil() == movilUA)
+						splitPane.setRightComponent(new PanelModificarGrupo(panelPrincipal,aux.getNombre(), movilUA));
 						else JOptionPane.showMessageDialog(ventana, "No eres el administrador del Grupo", "Modificar Grupo",
 								JOptionPane.PLAIN_MESSAGE);
 					}
@@ -235,15 +243,15 @@ public class PanelVistaPrinciaplScene extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				if(contactoActual != null) {
 					if(contactoActual.getClass() == ContactoIndividual.class) {
-						ControladorAppChat.getUnicaInstancia().eliminarContactoIndividual((ContactoIndividual)contactoActual);
+						controlador.eliminarContactoIndividual((ContactoIndividual)contactoActual, movilUA);
 						contactoActual = null;
 						JOptionPane.showMessageDialog(ventana, "Contacto Eliminado!", "Eliminar Contacto",
 								JOptionPane.PLAIN_MESSAGE);
 					}
 					else {
 						Grupo aux = (Grupo) contactoActual;
-						if(aux.getAdmin().getIdUsuario() == usuario.getIdUsuario()) {
-						ControladorAppChat.getUnicaInstancia().eliminarGrupo(aux);
+						if(aux.getAdmin().getMovil() == movilUA) {
+						controlador.eliminarGrupo(aux, movilUA);
 						contactoActual = null;
 						JOptionPane.showMessageDialog(ventana, "Grupo Eliminado!", "Eliminar Grupo",
 								JOptionPane.PLAIN_MESSAGE);
@@ -259,7 +267,7 @@ public class PanelVistaPrinciaplScene extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ControladorAppChat.getUnicaInstancia().eliminarMensajes(contactoActual);
+				controlador.eliminarMensajes(contactoActual);
 				JOptionPane.showMessageDialog(ventana, "Mensajes Eliminados !", "Eliminar Mensaje",
 						JOptionPane.PLAIN_MESSAGE);
 				
@@ -267,29 +275,15 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		});
 	}
 
-	public void update() {
-		usuario = ControladorAppChat.getUnicaInstancia().getUsuarioActual();
-		ImageIcon imagen = usuario.getImagen();
-		Image image = imagen.getImage();
-		imagen = new ImageIcon(image.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-		mnIconoUsuario.setIcon(imagen);
-		mnIconoUsuario.setText("");
-		mnIconoUsuario.repaint();
-		mntmNombreUsuario.setText(usuario.getNombre());
-		mntmSaludo.setText("\"" + usuario.getSaludo() + "\"");
-
-		panelUtlimosContactos.update();
-
-		System.out.println(panelUtlimosContactos.getHeight() + ", " + panelUtlimosContactos.getWidth());
-
-	}
 	
 	public void setContactoSeleccionado(Contacto c) {
 		contactoActual = c;
 		cambioPanelContacto();
 	}
 	public void cambioPanelContacto() {
-		splitPane.setRightComponent(new JPanel());
+		PanelChat ux = new PanelChat(contactoActual, movilUA);
+		splitPane.setRightComponent(ux);
+		System.out.println(splitPane.getRightComponent().getSize().width + ", " + splitPane.getRightComponent().getSize().height);
 		//Aqui se cambia a la conversacion seleccionada
 	}
 

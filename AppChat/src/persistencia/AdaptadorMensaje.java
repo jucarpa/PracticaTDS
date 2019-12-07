@@ -52,11 +52,14 @@ public class AdaptadorMensaje implements IAdaptadorMensajeDAO {
 
 		eMensaje = new Entidad();
 		eMensaje.setNombre("Mensaje");
-		eMensaje.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("texto", mensaje.getTexto()),
+		eMensaje.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+				new Propiedad("texto", mensaje.getTexto()),
 				new Propiedad("hora", mensaje.getHora().toString()),
 				new Propiedad("emoticono", String.valueOf(mensaje.getEmoticon())),
 				new Propiedad("emisor", String.valueOf(mensaje.getEmisor().getIdUsuario())),
 				new Propiedad("receptor", String.valueOf(mensaje.getReceptor().getId())))));
+		eMensaje = servPersistencia.registrarEntidad(eMensaje);
+		mensaje.setId(eMensaje.getId());
 	}
 
 	public void borrarMensaje(Mensaje mensaje) {
@@ -90,7 +93,7 @@ public class AdaptadorMensaje implements IAdaptadorMensajeDAO {
 
 		Mensaje mensaje = new Mensaje(texto, hora, emoticono);
 		PoolDAO.getUnicaInstancia().addObjeto(codigo, mensaje);
-
+		mensaje.setId(codigo);
 		AdaptadorUsuario aU = AdaptadorUsuario.getUnicaInstancia();
 		Usuario usuario = aU
 				.recuperarUsuario(Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "emisor")));

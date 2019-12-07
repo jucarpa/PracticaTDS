@@ -20,56 +20,46 @@ import controlador.ControladorAppChat;
 
 public class PanelLogin extends JPanel {
 	private Font fuenteGrande = new Font("Arial", Font.BOLD, 32);
-	private JLabel rotulo;
-	private JPanel datosCliente;
-	private JLabel lUsuario, lcontrasena, lalerta, lalerta2, lalerta3;
-	private JTextField usuario, contrasena;
-	private JButton btnLogin, btnRegistrar, btnCancelar;
-	private VentanaMain ventana;
+	private ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
 
-	public PanelLogin(VentanaMain v) {
-		crearPantalla();
-		ventana = v;
-	}
-
-	private void crearPantalla() {
+	public PanelLogin(VentanaMain ventana) {
 		setSize(Constantes.x_size, Constantes.y_size);
 		setLayout(new BorderLayout());
-		rotulo = new JLabel("Login Usuario", JLabel.CENTER);
+		JLabel rotulo = new JLabel("Login Usuario", JLabel.CENTER);
 		fixedSize(rotulo, Constantes.x_size, 60);
 		rotulo.setFont(fuenteGrande);
 		add(rotulo, BorderLayout.NORTH);
 
-		datosCliente = new JPanel();
+		JPanel datosCliente = new JPanel();
 		datosCliente.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		lUsuario = new JLabel("Usuario:", JLabel.RIGHT);
+		JLabel lUsuario = new JLabel("Usuario:", JLabel.RIGHT);
 		fixedSize(lUsuario, 170, 24);
-		usuario = new JTextField();
+		JTextField usuario = new JTextField();
 		fixedSize(usuario, 300, 24);
 
-		lcontrasena = new JLabel("Contraseña:", JLabel.RIGHT);
+		JLabel lcontrasena = new JLabel("Contraseña:", JLabel.RIGHT);
 		fixedSize(lcontrasena, 170, 24);
-		contrasena = new JTextField();
+		JTextField contrasena = new JTextField();
 		fixedSize(contrasena, 300, 24);
-		btnLogin = new JButton("Login");
+		JButton btnLogin = new JButton("Login");
 		fixedSize(btnLogin, 100, 30);
-		btnRegistrar = new JButton("Registrar");
+		JButton btnRegistrar = new JButton("Registrar");
 		fixedSize(btnRegistrar, 100, 30);
-		btnCancelar = new JButton("Cancelar");
+		JButton btnCancelar = new JButton("Cancelar");
 		fixedSize(btnCancelar, 100, 30);
 
-		lalerta = new JLabel("Los campos Usuario y Contraseña son obligatorios", JLabel.CENTER);
+		JLabel lalerta = new JLabel("Los campos Usuario y Contraseña son obligatorios", JLabel.CENTER);
 		lalerta.setForeground(Color.RED);
 		fixedSize(lalerta, Constantes.x_size, 30);
 		lalerta.setVisible(false);
 
-		lalerta2 = new JLabel("Usuario y Contraseña no coinciden. ", JLabel.CENTER);
+		JLabel lalerta2 = new JLabel("Usuario y Contraseña no coinciden. ", JLabel.CENTER);
 		lalerta2.setForeground(Color.RED);
 		fixedSize(lalerta2, Constantes.x_size, 30);
 		lalerta2.setVisible(false);
 
-		lalerta3 = new JLabel("Usuario no existe. ", JLabel.CENTER);
+		JLabel lalerta3 = new JLabel("Usuario no existe. ", JLabel.CENTER);
 		lalerta3.setForeground(Color.RED);
 		fixedSize(lalerta3, Constantes.x_size, 30);
 		lalerta3.setVisible(false);
@@ -100,17 +90,18 @@ public class PanelLogin extends JPanel {
 					lalerta.setVisible(true);
 				else {
 					lalerta.setVisible(false);
-					if (!ControladorAppChat.getUnicaInstancia().existeUsuario(auxUsuario))
+					if (!controlador.existeUsuario(auxUsuario))
 						lalerta3.setVisible(true);
 					else {
-						if (!ControladorAppChat.getUnicaInstancia().loginUsuario(auxUsuario, auxContrasena))
+						int movilUA = controlador.loginUsuario(auxUsuario, auxContrasena); 
+						if (movilUA == -1)
 							lalerta2.setVisible(true);
 						else {
 							usuario.setText("");
 							contrasena.setText("");
 							lalerta.setVisible(false);
 
-							ventana.cambioPanelPrincipal();
+							ventana.cambioPanelPrincipal(movilUA);
 						}
 					}
 				}

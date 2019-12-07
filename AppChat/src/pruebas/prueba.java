@@ -14,6 +14,7 @@ import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
 import modelo.Usuario;
+import persistencia.AdaptadorGrupo;
 import persistencia.AdaptadorUsuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
@@ -69,11 +70,18 @@ public class prueba {
 		//List<Usuario> usuarios = AdaptadorUsuario.getUnicaInstancia().recuperarTodosUsuarios();
 				
 		ServicioPersistencia servPresistencia = FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
-			for(Entidad e : servPresistencia.recuperarEntidades("Usuario")) {
+			for(Entidad e : servPresistencia.recuperarEntidades("Mensaje")) {/*
 				if(servPresistencia.recuperarPropiedadEntidad(e, "nombre").equals("1")) {
 					servPresistencia.eliminarPropiedadEntidad(e, "gruposAdmin");
 					servPresistencia.anadirPropiedadEntidad(e, "gruposAdmin", "");
-				}
+				}*/
+				System.out.println(e.getId());
+				int idReceptor = Integer.valueOf(servPresistencia.recuperarPropiedadEntidad(e, "receptor"));
+				System.out.println(idReceptor);
+				Entidad g = servPresistencia.recuperarEntidad(idReceptor);
+				System.out.println(servPresistencia.recuperarPropiedadEntidad(g, "mensajes"));
+				Grupo g = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(idReceptor);
+				//servPresistencia.borrarEntidad(e);
 			}
 				/*ContactoIndividual aux = (ContactoIndividual) c;
 				System.out.println(u.getNombre() + ", "+ aux.getId() + ", " + aux.getUsuario().getNombre());

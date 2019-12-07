@@ -22,65 +22,55 @@ import controlador.ControladorAppChat;
 @SuppressWarnings("serial")
 public class PanelAltaCliente extends JPanel {
 	private Font fuenteGrande = new Font("Arial", Font.BOLD, 32);
-	private JLabel rotulo;
-	private JPanel datosCliente;
-	private JLabel lNombre, lfechaNacimiento, lmovil, lEmail, lUsuario, lcontrasena, lalerta;
-	private JTextField nombre, fechaNacimiento, movil, email, usuario, contrasena;
-	private JButton btnRegistrar, btnCancelar;
-	private VentanaMain ventana;
+	private ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
 
-	public PanelAltaCliente(VentanaMain v) {
-		ventana = v;
-		crearPantalla();
-	}
-
-	private void crearPantalla() {
+	public PanelAltaCliente(VentanaMain ventana) {
 		setSize(Constantes.x_size, Constantes.y_size);
 		setLayout(new BorderLayout());
-		rotulo = new JLabel("Alta Usuario", JLabel.CENTER);
+		JLabel rotulo = new JLabel("Alta Usuario", JLabel.CENTER);
 		fixedSize(rotulo, Constantes.x_size, 60);
 		rotulo.setFont(fuenteGrande);
 		add(rotulo, BorderLayout.NORTH);
 
-		datosCliente = new JPanel();
+		JPanel datosCliente = new JPanel();
 		datosCliente.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		lNombre = new JLabel("Nombre:", JLabel.RIGHT);
+		JLabel lNombre = new JLabel("Nombre:", JLabel.RIGHT);
 		fixedSize(lNombre, 170, 24);
-		nombre = new JTextField();
+		JTextField nombre = new JTextField();
 		fixedSize(nombre, 300, 24);
 
-		lfechaNacimiento = new JLabel("FechaNacimento:", JLabel.RIGHT);
+		JLabel lfechaNacimiento = new JLabel("FechaNacimento:", JLabel.RIGHT);
 		fixedSize(lfechaNacimiento, 170, 24);
-		fechaNacimiento = new JTextField();
+		JTextField fechaNacimiento = new JTextField();
 		fixedSize(fechaNacimiento, 300, 24);
 
-		lmovil = new JLabel("Movil:", JLabel.RIGHT);
+		JLabel lmovil = new JLabel("Movil:", JLabel.RIGHT);
 		fixedSize(lmovil, 170, 24);
-		movil = new JTextField();
+		JTextField movil = new JTextField();
 		fixedSize(movil, 300, 24);
 
-		lEmail = new JLabel("Email:", JLabel.RIGHT);
+		JLabel lEmail = new JLabel("Email:", JLabel.RIGHT);
 		fixedSize(lEmail, 170, 24);
-		email = new JTextField();
+		JTextField email = new JTextField();
 		fixedSize(email, 300, 24);
 
-		lUsuario = new JLabel("Usuario:", JLabel.RIGHT);
+		JLabel lUsuario = new JLabel("Usuario:", JLabel.RIGHT);
 		fixedSize(lUsuario, 170, 24);
-		usuario = new JTextField();
+		JTextField usuario = new JTextField();
 		fixedSize(usuario, 300, 24);
 
-		lcontrasena = new JLabel("Contraseña:", JLabel.RIGHT);
+		JLabel lcontrasena = new JLabel("Contraseña:", JLabel.RIGHT);
 		fixedSize(lcontrasena, 170, 24);
-		contrasena = new JTextField();
+		JTextField contrasena = new JTextField();
 		fixedSize(contrasena, 300, 24);
 
-		btnRegistrar = new JButton("Registrar");
+		JButton btnRegistrar = new JButton("Registrar");
 		fixedSize(btnRegistrar, 100, 30);
-		btnCancelar = new JButton("Cancelar");
+		JButton btnCancelar = new JButton("Cancelar");
 		fixedSize(btnCancelar, 100, 30);
 
-		lalerta = new JLabel("Todos los campos son obligatorios", JLabel.CENTER);
+		JLabel lalerta = new JLabel("Todos los campos son obligatorios", JLabel.CENTER);
 		lalerta.setForeground(Color.RED);
 		fixedSize(lalerta, Constantes.x_size, 30);
 		lalerta.setVisible(false);
@@ -121,7 +111,7 @@ public class PanelAltaCliente extends JPanel {
 					lalerta.setVisible(true);
 				else {
 					lalerta.setVisible(false);
-					ControladorAppChat.getUnicaInstancia().registrarUsuario(auxNombre,
+					int movilUA = controlador.registrarUsuario(auxNombre,
 							LocalDate.parse(auxFechaNacimineto), Integer.parseInt(auxMovil), auxLogin, auxContraseña,
 							auxEmail);
 					JOptionPane.showMessageDialog(ventana, "Usuario dado de alta correctamente", "Registrar Usuario",
@@ -129,7 +119,7 @@ public class PanelAltaCliente extends JPanel {
 					usuario.setText("");
 					contrasena.setText("");
 					lalerta.setVisible(false);
-					ventana.cambioPanelPrincipal();
+					ventana.cambioPanelPrincipal(movilUA);
 				}
 			}
 		});

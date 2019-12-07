@@ -26,6 +26,7 @@ import javax.swing.SwingConstants;
 
 import controlador.ControladorAppChat;
 import modelo.ContactoIndividual;
+import modelo.Grupo;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,10 +38,12 @@ public class PanelCrearGrupo extends JPanel {
 	private JTable table;
 	private JTable table_1;
 	private Map<String, ContactoIndividual>contactosseleccionados =  new HashMap<String, ContactoIndividual>();
+	private int movilUA;
 	/**
 	 * Create the panel.
 	 */
-	public PanelCrearGrupo(PanelVistaPrinciaplScene ventana) {
+	public PanelCrearGrupo(PanelVistaPrinciaplScene ventana, int movilUA) {
+		this.movilUA = movilUA;
 		setPreferredSize(new Dimension(370, 450));
 		setSize(new Dimension(370, 450));
 		setMinimumSize(new Dimension(370, 450));
@@ -118,12 +121,14 @@ public class PanelCrearGrupo extends JPanel {
 					JOptionPane.PLAIN_MESSAGE);
 			} else {
 				ArrayList<ContactoIndividual> contactos = new ArrayList<ContactoIndividual>(contactosseleccionados.values());
+				ArrayList<Integer> contactosCod = new ArrayList<Integer>();
 				for(ContactoIndividual c : contactos) {
-					System.out.println(c.getNombre());
+					contactosCod.add(c.getId());
 				}
-				ControladorAppChat.getUnicaInstancia().registrarGrupo(textField.getText(), contactos);
+				Grupo c = ControladorAppChat.getUnicaInstancia().registrarGrupo(textField.getText(), contactosCod, movilUA);
 				JOptionPane.showMessageDialog(ventana, "Grupo Registrado", "Registrar Grupo",
 						JOptionPane.PLAIN_MESSAGE);
+				ventana.setContactoSeleccionado(c);
 				
 				}
 			}
@@ -145,9 +150,10 @@ public class PanelCrearGrupo extends JPanel {
 				model.removeRow(y);
 				DefaultTableModel model1 = (DefaultTableModel) table.getModel();
 				model1.addRow(new Object[]{aux});
-				ContactoIndividual c = ControladorAppChat.getUnicaInstancia().getUsuarioActual().getContactoIndividualPorNombre(aux);
+				ContactoIndividual c = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA).getContactoIndividualPorNombre(aux);
 				contactosseleccionados.put(aux, c);
 				System.out.println(c.getNombre());
+				
 			}
 		});
 		
@@ -170,7 +176,7 @@ public class PanelCrearGrupo extends JPanel {
 	
 	public void update() {
 		List<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
-		for(ContactoIndividual c : ControladorAppChat.getUnicaInstancia().getUsuarioActual().getContactosIndividuales()) {
+		for(ContactoIndividual c : ControladorAppChat.getUnicaInstancia().getUsuario(movilUA).getContactosIndividuales()) {
 			contactos.add(c);
 			DefaultTableModel model = (DefaultTableModel) table_1.getModel();
 			model.addRow(new Object[]{c.getNombre()});

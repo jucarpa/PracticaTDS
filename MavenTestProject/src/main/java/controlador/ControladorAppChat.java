@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 import modelo.CatalogoUsuarios;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
@@ -223,5 +225,9 @@ public class ControladorAppChat {
 		adaptadorUsuario.modificarUsuario(u);
 		return u.isPremium();
 	}
-
+	
+	public void actualizarImagen(String urlAbsoluta, int movilUA) {
+		Usuario u = catalogoUsuarios.getUsuario(movilUA);
+		u.setUrlImagen(urlAbsoluta);
+	}
 }

@@ -1,5 +1,6 @@
 package modelo;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,18 +28,18 @@ public class Usuario {
 	private HashMap<String, Grupo> gruposPorNombre;
 	private HashMap<Integer, ContactoIndividual> contactosIndividualesPorNombre;
 	private List<Grupo> gruposAdmin;
-	private String urlImagen = "/imagenes/ImagenUsuarioDef.png";
+	private String urlImagen = "file:/D:/UNIVERSIDAD/CURSO%2019-20/TDS/PRACTICA%20FINAL%20GIT/MavenTestProject/src/main/java/imagenes/ImagenUsuarioDef.png";
 	private List<Contacto> contactosOrdenadorPorTiempo;
 
 	public Usuario(String nombre, Date fechaNacimiento, int movil, String usuario, String contrasenya,
-			String urlImagen, boolean premium, String email) {
+			String imagenURL, boolean premium, String email) {
 		this.nombre = nombre;
 		this.fechaNacimiento = fechaNacimiento;
 		this.movil = movil;
 		this.usuario = usuario;
 		this.contrasenya = contrasenya;
-		this.urlImagen = urlImagen;
-		imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
+		urlImagen = imagenURL;
+		this.imagen = new ImageIcon(urlImagen);
 		this.premium = premium;
 		this.email = email;
 		contactos = new ArrayList<Contacto>();
@@ -59,7 +60,7 @@ public class Usuario {
 		this.contrasenya = contrasenya;
 		this.email = email;
 		premium = false;
-		imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
+		imagen = new ImageIcon(urlImagen);
 
 		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
@@ -79,7 +80,7 @@ public class Usuario {
 		this.usuario = usuario;
 		this.contrasenya = contrasenya;
 		this.urlImagen = urlImagen;
-		this.imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
+		imagen = new ImageIcon(urlImagen);
 		this.premium = premium;
 		this.estado = estado;
 
@@ -101,7 +102,7 @@ public class Usuario {
 		this.usuario = usuario;
 		this.contrasenya = contrasenya;
 		this.urlImagen = urlImagen;
-		this.imagen = new ImageIcon(Usuario.class.getResource(urlImagen));
+		this.imagen = new ImageIcon(urlImagen);
 		this.premium = premium;
 		this.estado = estado;
 		this.contactos = contactos;
@@ -314,6 +315,10 @@ public class Usuario {
 	public boolean realizarPago() {
 		return premium = true;
 		
-		
+	}
+	
+	public void setUrlImagen(String absolutPath) {
+		urlImagen = absolutPath;
+		imagen = new ImageIcon(absolutPath);
 	}
 }

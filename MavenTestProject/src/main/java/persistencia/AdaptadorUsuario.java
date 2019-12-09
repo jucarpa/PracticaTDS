@@ -71,7 +71,6 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		AdaptadorEstado aE = AdaptadorEstado.getUnicaInstancia();
 		aE.registrarEstado(usuario.getEstado());
 		// Crear Entidad Usuario
-
 		eUsuario = new Entidad();
 		eUsuario.setNombre("Usuario");
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", usuario.getNombre()),

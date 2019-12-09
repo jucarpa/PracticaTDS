@@ -44,5 +44,13 @@
      <version>1.4</version>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/com.github.fracpete/jfilechooser-bookmarks -->
+<dependency>
+    <groupId>com.github.fracpete</groupId>
+    <artifactId>jfilechooser-bookmarks</artifactId>
+    <version>0.1.6</version>
+</dependency>
+	
+	
   </dependencies>
 </project>

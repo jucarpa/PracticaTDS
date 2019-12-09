@@ -323,6 +323,16 @@ public class PanelVistaPrinciaplScene extends JPanel {
 				
 			}
 		});
+		
+		mntmCambiarImagen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FramecambiarImagen aux = new FramecambiarImagen(panelPrincipal);
+				aux.setVisible(true);
+				
+			}
+		});
 	}
 
 	
@@ -336,5 +346,8 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		System.out.println(splitPane.getRightComponent().getSize().width + ", " + splitPane.getRightComponent().getSize().height);
 		//Aqui se cambia a la conversacion seleccionada
 	}
-
+	
+	public int getMovilUA() {
+		return movilUA;
+	}
 }

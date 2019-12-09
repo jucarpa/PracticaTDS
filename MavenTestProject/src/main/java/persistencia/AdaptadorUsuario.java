@@ -1,9 +1,14 @@
 package persistencia;
 
 import java.awt.Image;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -70,7 +75,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		eUsuario = new Entidad();
 		eUsuario.setNombre("Usuario");
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", usuario.getNombre()),
-				new Propiedad("fechaNacimiento", usuario.getFechaNacimiento().toString()),
+				new Propiedad("fechaNacimiento", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(usuario.getFechaNacimiento())),
 				new Propiedad("movil", String.valueOf(usuario.getMovil())), new Propiedad("email", usuario.getEmail()),
 				new Propiedad("usuario", usuario.getUsuario()), new Propiedad("contrasenya", usuario.getContrasenya()),
 				new Propiedad("saludo", usuario.getSaludo()), new Propiedad("imagen", usuario.getImagenUrl()),
@@ -108,7 +113,7 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "nombre");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "nombre", usuario.getNombre());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "fechaNacimiento");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaNacimiento", usuario.getFechaNacimiento().toString());
+		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaNacimiento", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(usuario.getFechaNacimiento()));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "movil");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "movil", String.valueOf(usuario.getMovil()));
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "usuario");
@@ -139,8 +144,13 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		// Recuperar Propiedades Que no Son Objetos
 
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		LocalDate fechaNacimiento = LocalDate
-				.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaNacimiento"));
+		Date fechaNacimiento = null;
+		try {
+			fechaNacimiento = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaNacimiento"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		int movil = Integer.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "movil"));
 		String login = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
 		String contrasenya = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contrasenya");

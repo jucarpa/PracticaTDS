@@ -23,7 +23,7 @@ public class VentanaMain extends JFrame {
 	private JPanel contenedorPrincipal;
 
 	private PanelLogin pantallaLogin;
-	private PanelAltaCliente pantallaRegistro;
+	private PanelRegistroUsuariov2 pantallaRegistro;
 	private PanelVistaPrinciaplScene pantallaPrincipal;
 			
 	public VentanaMain() {
@@ -33,7 +33,7 @@ public class VentanaMain extends JFrame {
 
 		/* crear pantallas */
 		pantallaLogin = new PanelLogin(this);
-		pantallaRegistro = new PanelAltaCliente(this);
+		pantallaRegistro = new PanelRegistroUsuariov2(this);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);

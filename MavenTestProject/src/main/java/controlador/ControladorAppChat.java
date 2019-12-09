@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,12 +62,12 @@ public class ControladorAppChat {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 
-	public int registrarUsuario(String nombre, LocalDate fechaNacimiento, int movil, String login, String contrasenya,
+	public Usuario registrarUsuario(String nombre, Date fechaNacimiento, int movil, String login, String contrasenya,
 			String email) {
 		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contrasenya, email);
 		adaptadorUsuario.registrarUsuario(usuario);
 		catalogoUsuarios.addUsuario(usuario);
-		return movil;
+		return usuario;
 	}
 
 	public int loginUsuario(String login, String contrasena) {

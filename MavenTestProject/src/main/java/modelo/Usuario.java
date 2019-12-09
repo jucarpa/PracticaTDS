@@ -3,6 +3,7 @@ package modelo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import javax.swing.ImageIcon;
 public class Usuario {
 	private int idUsuario;
 	private String nombre;
-	private LocalDate fechaNacimiento;
+	private Date fechaNacimiento;
 	private int movil;
 	private String email = "";
 	private String usuario;
@@ -29,7 +30,7 @@ public class Usuario {
 	private String urlImagen = "/imagenes/ImagenUsuarioDef.png";
 	private List<Contacto> contactosOrdenadorPorTiempo;
 
-	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario, String contrasenya,
+	public Usuario(String nombre, Date fechaNacimiento, int movil, String usuario, String contrasenya,
 			String urlImagen, boolean premium, String email) {
 		this.nombre = nombre;
 		this.fechaNacimiento = fechaNacimiento;
@@ -48,7 +49,7 @@ public class Usuario {
 		estado = new Estado();
 	}
 
-	public Usuario(String nombre, LocalDate fechaNacimiento, int movil, String usuario, String contrasenya,
+	public Usuario(String nombre, Date fechaNacimiento, int movil, String usuario, String contrasenya,
 			String email) {
 		super();
 		this.nombre = nombre;
@@ -68,7 +69,7 @@ public class Usuario {
 		estado = new Estado();
 	}
 
-	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String usuario,
+	public Usuario(int idUsuario, String nombre, Date fechaNacimiento, int movil, String usuario,
 			String contrasenya, String urlImagen, boolean premium, Estado estado) {
 		super();
 		this.idUsuario = idUsuario;
@@ -89,7 +90,7 @@ public class Usuario {
 		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
 	}
 
-	public Usuario(int idUsuario, String nombre, LocalDate fechaNacimiento, int movil, String email, String usuario,
+	public Usuario(int idUsuario, String nombre, Date fechaNacimiento, int movil, String email, String usuario,
 			String contrasenya, String urlImagen, boolean premium, Estado estado, List<Contacto> contactos,
 			List<Grupo> gruposAdmin) {
 		super();
@@ -176,11 +177,11 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 
-	public LocalDate getFechaNacimiento() {
+	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
-	public void setFechaNacimiento(LocalDate fechaNacimiento) {
+	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 

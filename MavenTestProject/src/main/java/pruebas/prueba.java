@@ -81,12 +81,12 @@ public class prueba {
 				Entidad g = servPresistencia.recuperarEntidad(idReceptor);
 				System.out.println(servPresistencia.recuperarPropiedadEntidad(g, "mensajes"));
 				Grupo g = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(idReceptor);*/
-				servPresistencia.borrarEntidad(e);
+				//servPresistencia.borrarEntidad(e);
 			}
 				/*ContactoIndividual aux = (ContactoIndividual) c;
 				System.out.println(u.getNombre() + ", "+ aux.getId() + ", " + aux.getUsuario().getNombre());
 			*/
-		
+		//new ActualizarCatalogoUsuarios(ControladorAppChat.getUnicaInstancia());
 		
 		
 		initialize();

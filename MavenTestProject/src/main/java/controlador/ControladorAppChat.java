@@ -107,7 +107,7 @@ public class ControladorAppChat {
 		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
 		usuarioActual.addContacto(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
-		catalogoUsuarios.addUsuario(usuarioActual);
+		//catalogoUsuarios.addUsuario(usuarioActual);
 		return ci;
 	}
 	
@@ -230,4 +230,49 @@ public class ControladorAppChat {
 		Usuario u = catalogoUsuarios.getUsuario(movilUA);
 		u.setUrlImagen(urlAbsoluta);
 	}
+	
+	public CatalogoUsuarios getCatalogo() {
+		return catalogoUsuarios;
+	}
+	
+	public void usuariosUpdated(Usuario u) {
+		catalogoUsuarios.addUsuario(u);
+	}
+	
+	public void contactosUpdated(Usuario u) {
+		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
+		usuarioCatalogo.setContactos(u.getContactos());
+	}
+	
+	public void mensajesCIUpdated(ContactoIndividual ci, Usuario u) {
+		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
+		u.getCIPorNumero(ci.getMovil()).setMensajes(ci.getMensajes());
+		//Llamamos a las ventanas de Chat Para Actualizar
+		//Creamos un array Con todas Las Ventanas de PanelChat y las vamos llamando
+		//Intento raro de Observer
+	}
+	
+	public void mensajesGUpdated(Grupo g, Usuario u) {
+		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
+		u.getGrupoPorNombre(g.getNombre()).setMensajes(g.getMensajes());
+		//Llamamos a las ventanas de Chat Para Actualizar
+		//Creamos un array Con todas Las Ventanas de PanelChat y las vamos llamando
+		//Intento raro de Observer
+	}
+	
+	public void contactosGrupoUpdated(Grupo g, Usuario u) {
+		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
+		u.getGrupoPorNombre(g.getNombre()).setContactos(g.getContactos());
+		//Llamamos a la venta UltimosContactos para actualizar el nombre
+	}
+	
+	public void nombreGrupoUpdated(Grupo g, Usuario u) {
+		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
+		u.getGrupoPorMovilAdmin(g.getAdmin().getMovil()).setNombre(g.getNombre());
+		
+		//Llamamos a la ventana de ultimos Contactos dos
+	}
+	
+	//Falta actualiza estado, actualizar Saludo, actualizar Foto,...
+	
 }

@@ -321,4 +321,18 @@ public class Usuario {
 		urlImagen = absolutPath;
 		imagen = new ImageIcon(absolutPath);
 	}
+	
+	public Collection<Grupo> getGrupos() {
+		return gruposPorNombre.values();
+	}
+	
+	public Grupo getGrupoPorMovilAdmin(int movilAdmin) {
+		for(Grupo g : gruposPorNombre.values()) {
+			if(g.getAdmin().getMovil() == movilAdmin) {
+				return g;
+			}
+		}
+		return null;
+	}
+	
 }

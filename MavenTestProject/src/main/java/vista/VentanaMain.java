@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextArea;
 
+import controlador.ControladorAppChat;
 import modelo.Usuario;
 
 @SuppressWarnings("serial")

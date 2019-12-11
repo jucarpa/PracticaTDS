@@ -157,5 +157,9 @@ public class AdaptadorGrupo implements IAdaptadorGrupoDAO {
 		}
 		return contactos;
 	}
+	
+	public void update() {
+		unicaInstancia = new AdaptadorGrupo();
+	}
 
 }

@@ -1,12 +1,11 @@
-package vista;
+package pruebas;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.MalformedURLException;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,18 +13,30 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controlador.ControladorAppChat;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-
-public class FramecambiarImagen extends JFrame {
+public class PruebaBusquedaImagen extends JFrame {
 
 	private JPanel contentPane;
 
 	/**
 	 * Launch the application.
 	 */
+	/*public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					PruebaBusquedaImagen frame = new PruebaBusquedaImagen();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}*/
 
-	public FramecambiarImagen(PanelVistaPrinciaplScene ventana) {
+	/**
+	 * Create the frame.
+	 */
+	public PruebaBusquedaImagen(PruebasImagen aux) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -33,7 +44,6 @@ public class FramecambiarImagen extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		//Creamos el objeto JFileChooser
 		JFileChooser fc=new JFileChooser();
 		 
 		//Abrimos la ventana, guardamos la opcion seleccionada por el usuario
@@ -48,9 +58,11 @@ public class FramecambiarImagen extends JFrame {
 		    //Ecribe la ruta del fichero seleccionado en el campo de texto
 		    String url = "";
 			url = fichero.toString();
-			//System.out.println(url);
-		    ControladorAppChat.getUnicaInstancia().actualizarImagen(url,ventana.getMovilUA());
-		    setContentPane(ventana);
+			for(int i = 0; i < url.length(); i++) {
+				System.out.print(url.charAt(i));			
+			}
+			System.out.println("");
+			aux.cambiaIMagen(url);
 		}
 		
 		FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.PNG", "png");
@@ -58,4 +70,5 @@ public class FramecambiarImagen extends JFrame {
 		//Le indicamos el filtro
 		fc.setFileFilter(filtro);
 	}
+
 }

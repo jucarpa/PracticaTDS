@@ -28,5 +28,4 @@ public class TDSFactoriaDAO extends FactoriaDAO {
 	public IAdaptadorEstadoDAO getEstadoDAO() {
 		return AdaptadorEstado.getUnicaInstancia();
 	}
-
 }

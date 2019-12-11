@@ -85,5 +85,9 @@ public class AdaptadorEstado implements IAdaptadorEstadoDAO{
 		return estados;
 	}
 	
+	public void update() {
+		unicaInstancia = new AdaptadorEstado();
+	}
+	
 
 }

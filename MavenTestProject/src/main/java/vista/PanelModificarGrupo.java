@@ -124,6 +124,8 @@ public class PanelModificarGrupo extends JPanel {
 				grupo.setContactos(contactos);
 				grupo.setNombre(textField.getText());
 				controlador.modificarGrupo(grupo, contactosAntiguos);
+				ventana.setContactoSeleccionado(grupo, 2);
+				ventana.modificarContacto(grupo, 2);
 				JOptionPane.showMessageDialog(ventana, "Grupo Modificado", "Modificar Grupo",
 						JOptionPane.PLAIN_MESSAGE);
 				}
@@ -132,7 +134,7 @@ public class PanelModificarGrupo extends JPanel {
 		
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ventana.cambioPanelContacto();
+				ventana.cambioPanelContacto(2);
 			}
 		});
 		

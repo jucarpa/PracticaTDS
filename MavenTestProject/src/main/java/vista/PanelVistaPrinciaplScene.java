@@ -197,14 +197,14 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		mnIconoUsuario.repaint();
 		mntmNombreUsuario.setText(usuario.getNombre());
 		mntmSaludo.setText("\"" + usuario.getSaludo() + "\"");
-
+/*
 		ImageIcon iU = new ImageIcon(VentanaMain.class.getResource("/imagenes/ImagenUsuarioDef.png"));
 		Image i = iU.getImage();
 		iU = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-		mnIconoUsuario.setIcon(iU);
+		mnIconoUsuario.setIcon(iU);*/
 
 		ImageIcon iC = new ImageIcon(VentanaMain.class.getResource("/imagenes/ImagenConfiguracion.png"));
-		i = iC.getImage();
+		Image i = iC.getImage();
 		iC = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		mnOpciones.setIcon(iC);
 
@@ -292,7 +292,6 @@ public class PanelVistaPrinciaplScene extends JPanel {
 					mntmEstadisticas.setVisible(true);
 					mntmGenerarPDF.setVisible(true);
 				}
-				System.out.println(controlador.getUsuario(movilUA).isPremium());
 			}
 		});
 		System.out.println(usuario.isPremium());
@@ -336,18 +335,29 @@ public class PanelVistaPrinciaplScene extends JPanel {
 	}
 
 	
-	public void setContactoSeleccionado(Contacto c) {
+	public void setContactoSeleccionado(Contacto c, int i) {
 		contactoActual = c;
-		cambioPanelContacto();
+		cambioPanelContacto(i);
 	}
-	public void cambioPanelContacto() {
-		PanelChat ux = new PanelChat(contactoActual, movilUA);
+	public void cambioPanelContacto(int i ){
+		if(i == 1) {
+		PanelChatCI ux = new PanelChatCI((ContactoIndividual) contactoActual, movilUA);
 		splitPane.setRightComponent(ux);
-		System.out.println(splitPane.getRightComponent().getSize().width + ", " + splitPane.getRightComponent().getSize().height);
-		//Aqui se cambia a la conversacion seleccionada
+		} else {
+			PanelChatGrupo ux = new PanelChatGrupo((Grupo) contactoActual, movilUA);
+			splitPane.setRightComponent(ux);
+		}
 	}
 	
 	public int getMovilUA() {
 		return movilUA;
+	}
+	
+	public void addPanelContacto(Contacto c, int i) {
+		panelUtlimosContactos.addPanelContacto(c, i);
+	}
+	
+	public void modificarContacto(Contacto c, int i) {
+		panelUtlimosContactos.modificarContacto(c,i);
 	}
 }

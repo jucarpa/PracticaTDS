@@ -14,5 +14,7 @@ public interface IAdaptadorEstadoDAO {
 	public Estado recuperarEstado(int codigo);
 
 	public List<Estado> recuperarTodosEstados();
+	
+	public void update();
 
 }

@@ -68,5 +68,8 @@ public class CatalogoUsuarios {
 		for (Usuario usuario : usuariosBD)
 			usuarios.put(usuario.getUsuario(), usuario);
 	}
-
+	
+	public void update() {
+		unicaInstancia = new CatalogoUsuarios();
+	}
 }

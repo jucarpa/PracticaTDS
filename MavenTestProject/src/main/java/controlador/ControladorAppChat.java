@@ -16,6 +16,7 @@ import modelo.ContactoIndividual;
 import modelo.Grupo;
 import modelo.Mensaje;
 import modelo.Usuario;
+import persistencia.AdaptadorEstado;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorContactoIndividualDAO;
@@ -23,6 +24,7 @@ import persistencia.IAdaptadorGrupoDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 import sun.text.UCompactIntArray;
+import vista.PanelChatCI;
 
 public class ControladorAppChat {
 
@@ -32,7 +34,6 @@ public class ControladorAppChat {
 	private IAdaptadorContactoIndividualDAO adaptadorCI;
 	private IAdaptadorGrupoDAO adaptadorGrupo;
 	private IAdaptadorMensajeDAO adaptadorMensaje;
-
 	private CatalogoUsuarios catalogoUsuarios;
 
 
@@ -117,7 +118,6 @@ public class ControladorAppChat {
 	}
 
 	public Mensaje registrarMensajeG(String texto, int emoticono, int receptor, int movilUA) {
-
 		Grupo g = adaptadorGrupo.recuperarGrupo(receptor);
 		Mensaje mensaje = null;
 		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
@@ -132,7 +132,6 @@ public class ControladorAppChat {
 		return mensaje;
 	}
 	public Mensaje registrarMensajeCI(String texto, int emoticono, int movilReceptor, int movilUA) {
-		
 		Mensaje mensaje = null;
 		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
 		ContactoIndividual ci = usuarioActual.getCIPorNumero(movilReceptor);
@@ -141,7 +140,7 @@ public class ControladorAppChat {
 		ci.addMensaje(mensaje);
 		adaptadorCI.modificarContactoIndividual(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
-		Usuario usuarioCI = ci.getUsuario();
+		Usuario usuarioCI = catalogoUsuarios.getUsuario(movilReceptor);
 		ContactoIndividual cIUA = usuarioCI.getCIPorNumero(usuarioActual.getMovil());
 		if(cIUA == null) {
 			cIUA = new ContactoIndividual(String.valueOf(usuarioActual.getMovil()), usuarioActual.getMovil(), usuarioCI);
@@ -219,6 +218,14 @@ public class ControladorAppChat {
 		return catalogoUsuarios.getUsuario(movilUA).getGrupoPorNombre(nombreGrupo);
 	}
 	
+	public Grupo getGrupoPorId(int id, int movilUA) {
+		for(Grupo g :catalogoUsuarios.getUsuario(movilUA).getGrupos()) {
+			if(g.getId() == id)
+				return g;
+		}
+		return null;
+	}
+	
 	public boolean realizarPago(int movilUA) {
 		Usuario u = catalogoUsuarios.getUsuario(movilUA); 
 		u.realizarPago();
@@ -229,50 +236,21 @@ public class ControladorAppChat {
 	public void actualizarImagen(String urlAbsoluta, int movilUA) {
 		Usuario u = catalogoUsuarios.getUsuario(movilUA);
 		u.setUrlImagen(urlAbsoluta);
+		adaptadorUsuario.modificarUsuario(u);
 	}
 	
 	public CatalogoUsuarios getCatalogo() {
 		return catalogoUsuarios;
 	}
 	
-	public void usuariosUpdated(Usuario u) {
-		catalogoUsuarios.addUsuario(u);
-	}
-	
-	public void contactosUpdated(Usuario u) {
-		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
-		usuarioCatalogo.setContactos(u.getContactos());
-	}
-	
-	public void mensajesCIUpdated(ContactoIndividual ci, Usuario u) {
-		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
-		u.getCIPorNumero(ci.getMovil()).setMensajes(ci.getMensajes());
-		//Llamamos a las ventanas de Chat Para Actualizar
-		//Creamos un array Con todas Las Ventanas de PanelChat y las vamos llamando
-		//Intento raro de Observer
-	}
-	
-	public void mensajesGUpdated(Grupo g, Usuario u) {
-		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
-		u.getGrupoPorNombre(g.getNombre()).setMensajes(g.getMensajes());
-		//Llamamos a las ventanas de Chat Para Actualizar
-		//Creamos un array Con todas Las Ventanas de PanelChat y las vamos llamando
-		//Intento raro de Observer
-	}
-	
-	public void contactosGrupoUpdated(Grupo g, Usuario u) {
-		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
-		u.getGrupoPorNombre(g.getNombre()).setContactos(g.getContactos());
-		//Llamamos a la venta UltimosContactos para actualizar el nombre
-	}
-	
-	public void nombreGrupoUpdated(Grupo g, Usuario u) {
-		Usuario usuarioCatalogo = catalogoUsuarios.getUsuario(u.getMovil());
-		u.getGrupoPorMovilAdmin(g.getAdmin().getMovil()).setNombre(g.getNombre());
-		
-		//Llamamos a la ventana de ultimos Contactos dos
-	}
-	
 	//Falta actualiza estado, actualizar Saludo, actualizar Foto,...
 	
+	public void update() {
+		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
+		adaptadorUsuario.update();
+		adaptadorCI.update();
+		adaptadorGrupo.update();
+		adaptadorMensaje.update();
+		unicaInstancia = new ControladorAppChat();
+	}
 }

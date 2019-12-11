@@ -96,13 +96,14 @@ public class PanelModificarContacto extends JPanel {
 					ControladorAppChat.getUnicaInstancia().modificarContactoIndividual(ci);
 					JOptionPane.showMessageDialog(ventana, "Contacto Modificado Correctamente", "Contacto Creado Correctamente",
 							JOptionPane.PLAIN_MESSAGE);
-					ventana.setContactoSeleccionado(ci);
+					ventana.setContactoSeleccionado(ci, 1);
+					ventana.modificarContacto(ci, 1);
 			}
 		});
 		
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ventana.cambioPanelContacto();
+				ventana.cambioPanelContacto(1);
 			}
 		});
 	}

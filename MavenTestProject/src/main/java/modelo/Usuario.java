@@ -28,7 +28,7 @@ public class Usuario {
 	private HashMap<String, Grupo> gruposPorNombre;
 	private HashMap<Integer, ContactoIndividual> contactosIndividualesPorNombre;
 	private List<Grupo> gruposAdmin;
-	private String urlImagen = "file:/D:/UNIVERSIDAD/CURSO%2019-20/TDS/PRACTICA%20FINAL%20GIT/MavenTestProject/src/main/java/imagenes/ImagenUsuarioDef.png";
+	private String urlImagen = "D:\\UNIVERSIDAD\\CURSO 19-20\\TDS\\PRACTICA FINAL GIT\\MavenTestProject\\src\\main\\java\\imagenes\\ImagenUsuarioDef.png";
 	private List<Contacto> contactosOrdenadorPorTiempo;
 
 	public Usuario(String nombre, Date fechaNacimiento, int movil, String usuario, String contrasenya,

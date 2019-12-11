@@ -14,4 +14,6 @@ public interface IAdaptadorGrupoDAO {
 	public Grupo recuperarGrupo(int codigo);
 
 	public List<Grupo> recuperarTodosGrupos();
+	
+	public void update();
 }

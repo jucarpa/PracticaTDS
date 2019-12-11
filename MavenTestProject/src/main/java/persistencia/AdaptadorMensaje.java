@@ -122,4 +122,8 @@ public class AdaptadorMensaje implements IAdaptadorMensajeDAO {
 		}
 		return mensajes;
 	}
+	
+	public void update() {
+		unicaInstancia = new AdaptadorMensaje();
+	}
 }

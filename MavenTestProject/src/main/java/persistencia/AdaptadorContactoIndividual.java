@@ -127,5 +127,8 @@ public class AdaptadorContactoIndividual implements IAdaptadorContactoIndividual
 		}
 		return mensajes;
 	}
-
+	
+	public void update() {
+		unicaInstancia = new AdaptadorContactoIndividual();
+	}
 }

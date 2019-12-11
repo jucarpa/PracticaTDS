@@ -15,4 +15,5 @@ public interface IAdaptadorContactoIndividualDAO {
 
 	public List<ContactoIndividual> recuperarTodosContactoIndividuales();
 
+	public void update();
 }

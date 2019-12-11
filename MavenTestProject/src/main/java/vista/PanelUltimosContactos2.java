@@ -5,7 +5,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.ScrollPane;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,15 +38,20 @@ import javax.swing.JTable;
 public class PanelUltimosContactos2 extends JPanel {
 	private PanelVistaPrinciaplScene ventana;
 	private ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
+	private int movilUA;
+	private JPanel panel;
+	private Map<Integer, PanelCIUC> panelesCI = new HashMap<Integer, PanelCIUC>();
+	private Map<Integer, PanelGUC> panelesG = new HashMap<Integer, PanelGUC>();
 	public PanelUltimosContactos2(PanelVistaPrinciaplScene venatana, int movilUA) {
 		ventana = venatana;
+		this.movilUA = movilUA;
 		setPreferredSize(new Dimension(260, 260));
 		setSize(new Dimension(260, 260));
 		setMaximumSize(new Dimension(260, 260));
 		setMinimumSize(new Dimension(260, 260));
 		setBackground(new Color(204, 255, 153));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setAutoscrolls(true);
 		panel.setBackground(new Color(204, 255, 153));
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -74,17 +81,39 @@ public class PanelUltimosContactos2 extends JPanel {
 				ContactoIndividual ci = (ContactoIndividual) c;
 			PanelCIUC aux = new PanelCIUC(ci.getMovil(),movilUA, this);
 			panel.add(aux);
+			panelesCI.put(ci.getId(), aux);
 			}
 			else {
 				Grupo g = (Grupo) c;
 				PanelGUC aux = new PanelGUC(g.getNombre(), movilUA, this);
 				panel.add(aux);
+				panelesG.put(g.getId(), aux);
 			}
 		}
 		
 	}
 	
-	public void setContactoSeleccionado(Contacto c) {
-		ventana.setContactoSeleccionado(c);
+	public void setContactoSeleccionado(Contacto c, int i) {
+		ventana.setContactoSeleccionado(c, i);
+	}
+	
+	public void addPanelContacto(Contacto c, int i) {
+		if(i == 1) {
+			ContactoIndividual aux = (ContactoIndividual) c;
+			PanelCIUC pCIUC = new PanelCIUC(aux.getMovil(),movilUA, this);
+			panel.add(pCIUC);
+			
+		} else {
+			Grupo g = (Grupo) c;
+			PanelGUC aux = new PanelGUC(g.getNombre(), movilUA, this);
+			panel.add(aux);
+		}
+	}
+	
+	public void modificarContacto(Contacto c,int i) {
+		if(i == 1) {
+			panelesCI.get(c.getId()).update();
+		} else 
+			panelesG.get(c.getId()).update();
 	}
 }

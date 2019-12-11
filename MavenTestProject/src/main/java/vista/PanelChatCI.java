@@ -26,6 +26,7 @@ import java.awt.Component;
 import java.awt.Font;
 import javax.swing.border.LineBorder;
 
+import controlador.ActualizarBBDD;
 import controlador.ControladorAppChat;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -37,14 +38,23 @@ import modelo.Grupo;
 import modelo.Mensaje;
 import modelo.Usuario;
 
-public class PanelChat extends JPanel {
+public class PanelChatCI extends JPanel {
 	private JTextField textField;
-	private ObservableList<Mensaje> mensajes ;
-	private ListView<String> listViewMensajes;
+	private Contacto c;
+	private Mensaje ultMensaje = null;
+	private JPanel panel;
+	private ContactoIndividual contacto ;
+	private int movilUA;
+	private int nMensajes;
 	/**
 	 * Create the panel.
 	 */
-	public PanelChat(Contacto c, int movilUA) {
+	public PanelChatCI(ContactoIndividual c, int movilUA) {
+		
+		ActualizarBBDD.getUnicaInstancia().addPanelChatCI(this);
+		
+		this.contacto = (ContactoIndividual)c;
+		this.movilUA = movilUA;
 		setOpaque(false);
 		setBackground(new Color(0, 0, 0));
 		setMaximumSize(new Dimension(355, 300));
@@ -92,7 +102,7 @@ public class PanelChat extends JPanel {
 		btnEnviar.setPreferredSize(new Dimension(75, 30));
 		panel_1.add(btnEnviar);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		//add(panel);
 		panel.setAutoscrolls(true);
 		panel.setOpaque(false);
@@ -118,68 +128,51 @@ public class PanelChat extends JPanel {
 		add(label);
 		label.setIcon(chat);
 		
-		
-		
-		
-		btnEnviar.addActionListener(new ActionListener() {
-			
+		btnEnviar.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!textField.getText().equals("")) {
 					Mensaje aux = null;
-					if(c.getClass() == Grupo.class)
-					aux = ControladorAppChat.getUnicaInstancia().registrarMensajeG(textField.getText(),
-							0, c.getId(), movilUA);
-					else {
-						ContactoIndividual ci = (ContactoIndividual) c;
 						aux = ControladorAppChat.getUnicaInstancia().registrarMensajeCI(textField.getText(),
-								0, ci.getMovil(), movilUA);
-					}
+								0, c.getMovil(), movilUA);
+						contacto.addMensaje(aux);
 					BubbleText mensaje = new BubbleText(panel, textField.getText(), Color.GREEN,
 							"", BubbleText.SENT);
 					panel.add(mensaje);
+					ultMensaje = aux;
 					textField.setText("");
-				}
-				
-			}
-		});
-		
-		
-		
-		if(c.getClass() == Grupo.class) {
-			Grupo g = (Grupo) c;
-			Usuario actual = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA);
-			for(Mensaje m : g.getMensajes()) {
-				BubbleText mensaje;
-				if(m.getEmisor().getIdUsuario() == actual.getIdUsuario()) {
-					 mensaje = new BubbleText(panel, m.getTexto(),
-							Color.GREEN, "", BubbleText.SENT);
-				} else {
-					ContactoIndividual aux = ControladorAppChat.getUnicaInstancia().
-						getUsuario(movilUA).getCIPorNumero(m.getEmisor().getMovil());
-						if(aux != null) {
-							mensaje = new BubbleText(panel, m.getTexto(),
-						Color.GREEN, aux.getNombre(), BubbleText.RECEIVED);
-						}else
-							mensaje = new BubbleText(panel, m.getTexto(),
-							Color.GREEN, String.valueOf(m.getEmisor().getMovil()), BubbleText.RECEIVED);
-						
-				}
-				panel.add(mensaje);
-			}
-		} else {
-			ContactoIndividual ci = (ContactoIndividual) c;
-			Usuario uA = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA);
-			for(Mensaje m : ci.getMensajes()) {
-				BubbleText mensaje;
-				if(m.getEmisor().getIdUsuario() == uA.getIdUsuario()) {
-					mensaje = new BubbleText(panel, m.getTexto(),
-							Color.GREEN, "", BubbleText.SENT);
-				}else 
-					mensaje = new BubbleText(panel, m.getTexto(),
-							Color.GREEN,"", BubbleText.RECEIVED);
-				panel.add(mensaje);
-			}
+				}}});
+		nMensajes = c.getMensajes().size();
+		Usuario uA = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA);
+		for(Mensaje m : c.getMensajes()) {
+			ultMensaje = m;
+			BubbleText mensaje;
+			if(m.getEmisor().getIdUsuario() == uA.getIdUsuario()) {
+				mensaje = new BubbleText(panel, m.getTexto(),
+						Color.GREEN, "", BubbleText.SENT);
+			}else 
+				mensaje = new BubbleText(panel, m.getTexto(),
+						Color.GREEN,"", BubbleText.RECEIVED);
+			panel.add(mensaje);
 		}
-	}	
+	}
+	
+	public void update() {
+		ContactoIndividual aux = ControladorAppChat.getUnicaInstancia().getContactoIndividual(contacto.getMovil(), movilUA);
+		if(aux.getMensajes().size() != nMensajes) {
+		boolean nuevo = false;
+		for(Mensaje m : aux.getMensajes()) {
+			if(nuevo) {
+				BubbleText mensaje = new BubbleText(panel, m.getTexto(),
+						Color.GREEN,"", BubbleText.RECEIVED);
+				panel.add(mensaje);
+				ultMensaje = m;
+				nMensajes++;
+			}
+			if(m.getId() == ultMensaje.getId())
+				nuevo = true;
+		}
+		
+		}
+	}
 }

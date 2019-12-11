@@ -14,4 +14,6 @@ public interface IAdaptadorMensajeDAO {
 	public Mensaje recuperarMensaje(int codigo);
 
 	public List<Mensaje> recuperarTodosMensajes();
+	
+	public void update();
 }

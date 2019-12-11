@@ -41,5 +41,9 @@ public abstract class FactoriaDAO {
 	public abstract IAdaptadorUsuarioDAO getUsuarioDAO();
 	
 	public abstract IAdaptadorEstadoDAO getEstadoDAO();
+	
+	public static void update() throws DAOException{
+		unicaInstancia = getInstancia(FactoriaDAO.DAO_TDS);
+	}
 
 }

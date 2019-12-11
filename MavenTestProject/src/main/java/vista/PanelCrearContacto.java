@@ -98,10 +98,10 @@ public class PanelCrearContacto extends JPanel {
 				if(!ControladorAppChat.getUnicaInstancia().existeContacto(Integer.valueOf(textTelefono.getText()), movilUA)) {
 					ContactoIndividual ci = ControladorAppChat.getUnicaInstancia().registrarContactoIndividual(textNombre.getText(),
 							Integer.valueOf(textTelefono.getText()), movilUA);
-					System.out.println("OK\nID: " + ci.getId());
 					JOptionPane.showMessageDialog(ventana, "Contacto Creado Correctamente", "Contacto Creado Correctamente",
 							JOptionPane.PLAIN_MESSAGE);
-					ventana.setContactoSeleccionado(ci);
+					ventana.setContactoSeleccionado(ci, 1);
+					ventana.addPanelContacto(ci, 1);
 				}else JOptionPane.showMessageDialog(ventana, "Este numero ya estaba registrado o no existe dicho Usuario", "Registrar Contacto",
 						JOptionPane.PLAIN_MESSAGE);
 				
@@ -111,7 +111,7 @@ public class PanelCrearContacto extends JPanel {
 		
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ventana.cambioPanelContacto();
+				ventana.cambioPanelContacto(1);
 			}
 		});
 	}

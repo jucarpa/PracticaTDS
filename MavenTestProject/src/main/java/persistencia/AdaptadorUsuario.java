@@ -75,9 +75,12 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 		eUsuario.setNombre("Usuario");
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", usuario.getNombre()),
 				new Propiedad("fechaNacimiento", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(usuario.getFechaNacimiento())),
-				new Propiedad("movil", String.valueOf(usuario.getMovil())), new Propiedad("email", usuario.getEmail()),
-				new Propiedad("usuario", usuario.getUsuario()), new Propiedad("contrasenya", usuario.getContrasenya()),
-				new Propiedad("saludo", usuario.getSaludo()), new Propiedad("imagen", usuario.getImagenUrl()),
+				new Propiedad("movil", String.valueOf(usuario.getMovil())), 
+				new Propiedad("email", usuario.getEmail()),
+				new Propiedad("usuario", usuario.getUsuario()), 
+				new Propiedad("contrasenya", usuario.getContrasenya()),
+				new Propiedad("saludo", usuario.getSaludo()), 
+				new Propiedad("imagen", usuario.getImagenUrl()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
 				new Propiedad("estado", String.valueOf(usuario.getEstado().getId())),
 				new Propiedad("contactos", obtenerIDContactos(usuario.getContactos())),
@@ -247,5 +250,10 @@ public class AdaptadorUsuario implements IAdaptadorUsuarioDAO {
 			gruposAdmin.add(aG.recuperarGrupo(id));
 		}
 		return gruposAdmin;
+	}
+	
+	public void update() {
+		unicaInstancia = new AdaptadorUsuario();
+		PoolDAO.getUnicaInstancia().update();
 	}
 }

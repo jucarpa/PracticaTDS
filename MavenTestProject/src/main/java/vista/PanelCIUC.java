@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,11 +23,15 @@ import javax.swing.BoxLayout;
 import java.awt.ComponentOrientation;
 import javax.swing.border.LineBorder;
 
+import controlador.ActualizarBBDD;
 import controlador.ControladorAppChat;
 
 import javax.swing.JButton;
+import java.awt.Component;
+import javax.swing.Box;
+import java.awt.Font;
 
-public class PanelCIUC extends JPanel implements Observer{
+public class PanelCIUC extends JPanel {
 
 	/**
 	 * Create the panel.
@@ -37,8 +42,12 @@ public class PanelCIUC extends JPanel implements Observer{
 	private JLabel lblNombre ;
 	private JLabel lblFecha;
 	private JLabel lblTexto;
+	private int movilUA;
+	private Component horizontalStrut;
 	public PanelCIUC(int movilContacto, int movilUsuario, PanelUltimosContactos2 ventana) {
 		c = controlador.getContactoIndividual(movilContacto, movilUsuario);
+		movilUA = movilUsuario;
+		ActualizarBBDD.getUnicaInstancia().addPanelCIUC(this);
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		setPreferredSize(new Dimension(260, 50));
 		setIgnoreRepaint(true);
@@ -64,14 +73,22 @@ public class PanelCIUC extends JPanel implements Observer{
 		panel.setBackground(Color.WHITE);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JPanel panel_1 = new JPanel();
+		panel_1.setOpaque(false);
 		panel.add(panel_1);
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
+		lblNombre = new JLabel(c.getNombre());
+		lblNombre.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblNombre.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel_1.add(lblNombre);
+		lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		horizontalStrut = Box.createHorizontalStrut(20);
+		panel_1.add(horizontalStrut);
 		lblFecha = new JLabel("");
+		lblFecha.setForeground(Color.LIGHT_GRAY);
+		lblFecha.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel_1.add(lblFecha);
 		lblFecha.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNombre = new JLabel(c.getNombre());
-		panel_1.add(lblNombre);
-		lblNombre.setHorizontalAlignment(SwingConstants.LEFT);
 						
 		lblTexto = new JLabel("");
 		lblTexto.setHorizontalAlignment(SwingConstants.CENTER);
@@ -82,13 +99,15 @@ public class PanelCIUC extends JPanel implements Observer{
 		btnNewButton.setBorder(null);
 		btnNewButton.setBounds(0, 0, 260, 50);
 		add(btnNewButton);
-			ImageIcon iCI = c.getUsuario().getImagen();
-			Image i = iCI.getImage();
-			iCI = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-			lblImagen.setIcon(iCI);
+		ImageIcon imagen = c.getUsuario().getImagen();
+		System.out.println(c.getUsuario().getImagenUrl());
+		Image image = imagen.getImage();
+		imagen = new ImageIcon(image.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		lblImagen.setIcon(imagen);
 		try {
-			Mensaje ultMensaje = c.getMensajes().get(c.getMensajes().size());			
-			lblFecha.setText(ultMensaje.getHora().toString());
+			Mensaje ultMensaje = c.getMensajes().get(c.getMensajes().size() - 1);			
+			lblFecha.setText(ultMensaje.getHora().
+					format(DateTimeFormatter.ofPattern("HH:mm")));
 			lblTexto.setText(ultMensaje.getTexto());
 		} catch (Exception e) {}
 
@@ -96,12 +115,23 @@ public class PanelCIUC extends JPanel implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Has clickado en " + c.getNombre() + "\n ID: " + c.getId());
-				ventana.setContactoSeleccionado(c);
+				ventana.setContactoSeleccionado(c, 1);
 			}
 		});
-
 	}
-	@Override
-	public void update(Observable arg0, Object arg1) {}
+	
+	public void update() {
+		c = ControladorAppChat.getUnicaInstancia().getContactoIndividual(c.getMovil(), movilUA);
+		lblNombre.setText(c.getNombre());
+		ImageIcon iCI = c.getUsuario().getImagen();
+		Image i = iCI.getImage();
+		iCI = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		lblImagen.setIcon(iCI);
+		try {
+			Mensaje ultMensaje = c.getMensajes().get(c.getMensajes().size() - 1);			
+			lblFecha.setText(ultMensaje.getHora().
+					format(DateTimeFormatter.ofPattern("HH:mm")));
+			lblTexto.setText(ultMensaje.getTexto());
+		} catch (Exception e) {}
+	}
 }

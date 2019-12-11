@@ -123,12 +123,13 @@ public class PanelCrearGrupo extends JPanel {
 				ArrayList<ContactoIndividual> contactos = new ArrayList<ContactoIndividual>(contactosseleccionados.values());
 				ArrayList<Integer> contactosCod = new ArrayList<Integer>();
 				for(ContactoIndividual c : contactos) {
-					contactosCod.add(c.getId());
+					contactosCod.add(c.getMovil());
 				}
 				Grupo c = ControladorAppChat.getUnicaInstancia().registrarGrupo(textField.getText(), contactosCod, movilUA);
 				JOptionPane.showMessageDialog(ventana, "Grupo Registrado", "Registrar Grupo",
 						JOptionPane.PLAIN_MESSAGE);
-				ventana.setContactoSeleccionado(c);
+				ventana.setContactoSeleccionado(c, 2);
+				ventana.addPanelContacto(c, 2);
 				
 				}
 			}
@@ -136,7 +137,7 @@ public class PanelCrearGrupo extends JPanel {
 		
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ventana.cambioPanelContacto();
+				ventana.cambioPanelContacto(2);
 			}
 		});
 		

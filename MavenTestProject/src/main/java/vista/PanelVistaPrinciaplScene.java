@@ -7,7 +7,10 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JToolBar;
 
+import com.itextpdf.text.DocumentException;
+
 import controlador.ControladorAppChat;
+import controlador.ManejadorPDF;
 import javafx.embed.swing.SwingFXUtils;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
@@ -26,6 +29,7 @@ import javax.swing.JSplitPane;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
@@ -46,7 +50,7 @@ public class PanelVistaPrinciaplScene extends JPanel {
 	private JMenu mnIconoUsuario, mnEstado, mnOpciones, mnInfoCuenta, mnBusqueda, mnEliminaciones;
 	private JMenuItem mntmImagen, mntmNombreUsuario, mntmSaludo, mntmEstado, mntmCrearContacto, mntmCrearGrupo,
 			mntmModificarGrupo, mntmCambiarImagen, mntmCambiarSaludo, mntmMostrarContactos, mntmConvertirseEnPremium,
-			mntmEliminarMensajes, mntmEliminarContacto, mntmEstadisticas, mntmGenerarPDF;
+			mntmEliminarMensajes, mntmEliminarContacto, mntmEstadisticas, mntmGenerarPDF, mntmInfoMovilusuario;
 	private JPanel panel_2;
 	private JPanel panel_3;
 	private JPanel panel_4;
@@ -150,7 +154,11 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		mnInfoCuenta = new JMenu("Info Cuenta");
 		mnInfoCuenta.setActionCommand("Info Cuenta");
 		menuBar.add(mnInfoCuenta);
-
+		mntmInfoMovilusuario = new JMenuItem();
+		mnInfoCuenta.add(mntmInfoMovilusuario);
+		mntmInfoMovilusuario.setVisible(false);
+		
+		
 		panel_5 = new JPanel();
 		panel_5.setMaximumSize(new Dimension(10, 10));
 		panel_5.setBackground(new Color(51, 204, 102));
@@ -187,6 +195,8 @@ public class PanelVistaPrinciaplScene extends JPanel {
 		panelUtlimosContactos.setLayout(new BoxLayout(panelUtlimosContactos, BoxLayout.X_AXIS));
 		splitPane.setLeftComponent(panelUtlimosContactos);
 		add(splitPane, BorderLayout.CENTER);
+		JPanel pAux = new JPanel();
+		splitPane.setRightComponent(pAux);
 
 		Usuario usuario = controlador.getUsuario(movilUA);
 		ImageIcon imagen = usuario.getImagen();
@@ -318,8 +328,15 @@ public class PanelVistaPrinciaplScene extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Generador PDF!!");
+				try {
+					ManejadorPDF.getUnicaInstancia().printContactos(movilUA);
+				} catch (DocumentException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
+				JOptionPane.showMessageDialog(ventana, "PDF Con Contctos Creado!", "Generar PDF",
+						JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 		
@@ -338,6 +355,18 @@ public class PanelVistaPrinciaplScene extends JPanel {
 	public void setContactoSeleccionado(Contacto c, int i) {
 		contactoActual = c;
 		cambioPanelContacto(i);
+		if(ContactoIndividual.class == c.getClass()) {
+			ContactoIndividual aux = (ContactoIndividual) c;
+			ImageIcon iC = aux.getUsuario().getImagen();
+			Image im = iC.getImage();
+			iC = new ImageIcon(im.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+			mnInfoCuenta.setIcon(iC);
+			mnInfoCuenta.setText(aux.getNombre());
+			mntmInfoMovilusuario.setText(aux.getMovil() + "");
+			mntmInfoMovilusuario.setVisible(true);
+		}
+		
+		
 	}
 	public void cambioPanelContacto(int i ){
 		if(i == 1) {

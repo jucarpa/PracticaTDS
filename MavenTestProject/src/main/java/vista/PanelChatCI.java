@@ -24,6 +24,8 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+
 import javax.swing.border.LineBorder;
 
 import controlador.ActualizarBBDD;
@@ -46,6 +48,8 @@ public class PanelChatCI extends JPanel {
 	private ContactoIndividual contacto ;
 	private int movilUA;
 	private int nMensajes;
+	private Image chatI;
+	private ImageIcon chat;
 	/**
 	 * Create the panel.
 	 */
@@ -62,9 +66,10 @@ public class PanelChatCI extends JPanel {
 		setPreferredSize(new Dimension(355, 406));
 		setLayout(null);
 		
-		ImageIcon chat = new ImageIcon(VentanaMain.class.getResource("/imagenes/imageneFondo.png"));
+		chat = new ImageIcon(VentanaMain.class.getResource("/imagenes/imageneFondo.png"));
 		Image i = chat.getImage();
-		chat = new ImageIcon(i.getScaledInstance(353, 660, Image.SCALE_SMOOTH));
+		chatI = i.getScaledInstance(353, 660, Image.SCALE_SMOOTH);
+		chat = new ImageIcon(chatI);
 		ImageIcon emoji= new ImageIcon(VentanaMain.class.getResource("/imagenes/ImagenEmojiDef.png"));
 		i = emoji.getImage();
 		emoji= new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
@@ -122,11 +127,12 @@ public class PanelChatCI extends JPanel {
 		scrollPane.setMaximumSize(new Dimension(351, 375));
 		add(scrollPane);
 		
-		JLabel label = new JLabel("");
-		label.setOpaque(true);
-		label.setBounds(0, 0, 353, 403);
-		add(label);
-		label.setIcon(chat);
+		JPanel panelAux = new JPanel();
+		panelAux.setBounds(0, 0, 353, 403);
+		//add(panelAux);
+	    //paintComponent(panelAux.getGraphics());            
+		
+		
 		
 		btnEnviar.addActionListener(new ActionListener() {	
 			@Override
@@ -159,7 +165,19 @@ public class PanelChatCI extends JPanel {
 	
 	public void update() {
 		ContactoIndividual aux = ControladorAppChat.getUnicaInstancia().getContactoIndividual(contacto.getMovil(), movilUA);
-		if(aux.getMensajes().size() != nMensajes) {
+		
+		if(aux.getMensajes().size() == 0) {
+			nMensajes = 0;
+			panel.removeAll();
+		} else if(aux.getMensajes().size() > 0 && nMensajes == 0) {
+			nMensajes = 1;
+			ultMensaje = aux.getMensajes().get(0);
+			BubbleText mensaje = new BubbleText(panel, ultMensaje.getTexto(),
+					Color.GREEN,"", BubbleText.RECEIVED);
+			panel.add(mensaje);
+		}
+		
+		if(aux.getMensajes().size() > nMensajes) {
 		boolean nuevo = false;
 		for(Mensaje m : aux.getMensajes()) {
 			if(nuevo) {
@@ -175,4 +193,9 @@ public class PanelChatCI extends JPanel {
 		
 		}
 	}
+	/*@Override
+	protected void paintComponent(Graphics g) {
+        //super.paintComponent(g);
+        g.drawImage(chatI, 0, 0, this); // see javadoc for more info on the parameters            
+    }*/
 }

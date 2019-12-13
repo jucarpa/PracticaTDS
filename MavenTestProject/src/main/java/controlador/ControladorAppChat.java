@@ -192,9 +192,6 @@ public class ControladorAppChat {
 	}
 	
 	public void eliminarMensajes(Contacto c) {
-		for(Mensaje m : c.getMensajes()) {
-			adaptadorMensaje.borrarMensaje(m);
-		}
 		c.setMensajes(new LinkedList<Mensaje>());
 		if(c.getClass() == Grupo.class)
 			adaptadorGrupo.modificarGrupo((Grupo) c);

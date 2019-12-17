@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import beans.Entidad;
@@ -20,29 +21,25 @@ import persistencia.AdaptadorMensaje;
 import persistencia.AdaptadorUsuario;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
+import persistencia.PoolDAO;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
-import vista.PanelCIUC;
-import vista.PanelChatCI;
-import vista.PanelChatGrupo;
-import vista.PanelGUC;
+import vista.PCIUC;
+import vista.PChatCI;
+import vista.PChatG;
+import vista.PGUC;
+import vista.PListaContactos;
 
 
 public class ActualizarBBDD {
 
-	private CatalogoUsuarios catalogo;
 	ControladorAppChat controlador;
-	private AdaptadorUsuario adaptadorUsuarios = AdaptadorUsuario.getUnicaInstancia();
-	private AdaptadorContactoIndividual adaptadorCI =AdaptadorContactoIndividual.getUnicaInstancia();
-	private AdaptadorGrupo adaptadorGrupo = AdaptadorGrupo.getUnicaInstancia();
-	private AdaptadorEstado adaptadorEstado = AdaptadorEstado.getUnicaInstancia();
-	private AdaptadorMensaje adaptadorMensaje = AdaptadorMensaje.getUnicaInstancia();
-	
 	private static ActualizarBBDD unicaInstancia;
-	private List<PanelChatCI> panelesCI = new LinkedList<PanelChatCI>();
-	private List<PanelChatGrupo> panelesG = new LinkedList<PanelChatGrupo>();
-	private List<PanelCIUC> panelesCIUC = new LinkedList<PanelCIUC>();
-	private List<PanelGUC> panelesGUC = new LinkedList<PanelGUC>();
+	private List<PChatCI> panelesCI = new LinkedList<PChatCI>();
+	private List<PChatG> panelesG = new LinkedList<PChatG>();
+	private List<PCIUC> panelesCIUC = new LinkedList<PCIUC>();
+	private List<PGUC> panelesGUC = new LinkedList<PGUC>();
+	private List<PListaContactos> panelContactos = new LinkedList<PListaContactos>();
 	
 	
 	
@@ -56,8 +53,8 @@ public class ActualizarBBDD {
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {	
+		    	PoolDAO.getUnicaInstancia().update();
 		    	CatalogoUsuarios.getUnicaInstancia().update();
-		    	ControladorAppChat.getUnicaInstancia().update();
 		    	update();
 		     }
 		});
@@ -66,37 +63,62 @@ public class ActualizarBBDD {
 		
 	}
 	
-	public void addPanelChatCI(PanelChatCI pC) {
+	public void addPanelChatCI(PChatCI pC) {
 		panelesCI.add(pC);
 	}
-	public void addPanelChatG(PanelChatGrupo pC) {
+	
+	public void deletePanelChatCI(PChatCI pC) {
+		panelesCI.remove(pC);
+	}
+	
+	public void addPanelChatG(PChatG pC) {
 		panelesG.add(pC);
 	}
 	
-	public void addPanelCIUC(PanelCIUC pC) {
+	public void deletePanelChatG(PChatG pC) {
+		panelesG.remove(pC);
+	}
+	
+	public void addPanelCIUC(PCIUC pC) {
 		panelesCIUC.add(pC);
 	}
 	
-	public void addPanelGUC(PanelGUC pC) {
+	public void deletePanelCIUC(PCIUC pC) {
+		panelesCIUC.remove(pC);
+	}
+	
+	public void addPanelGUC(PGUC pC) {
 		panelesGUC.add(pC);
 	}
 	
+	public void deletePanelGUC(PGUC pC) {
+		panelesGUC.remove(pC);
+	}
+	
+	public void addPanelUltimosContactos(PListaContactos pU) {
+		panelContactos.add(pU);
+	}
+	
 	private void update() {
-		for(PanelChatCI pC : panelesCI) {
+		for(PChatCI pC : panelesCI) {
 			pC.update();
 		}
 		
-		for(PanelChatGrupo pC : panelesG) {
+		for(PChatG pC : panelesG) {
 			pC.update();
 		}
 		
-		for(PanelCIUC pC : panelesCIUC) {
+		for(PCIUC pC : panelesCIUC) {
 			pC.update();
 		}
 		
-		for(PanelGUC pC : panelesGUC) {
+		for(PGUC pC : panelesGUC) {
 			pC.update();
 		}
+		for (PListaContactos pC :panelContactos) {
+			pC.update();
+		}
+			
 	}
 	
 }

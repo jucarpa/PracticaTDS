@@ -24,7 +24,7 @@ import persistencia.IAdaptadorGrupoDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 import sun.text.UCompactIntArray;
-import vista.PanelChatCI;
+import vista.PChatCI;
 
 public class ControladorAppChat {
 
@@ -34,12 +34,10 @@ public class ControladorAppChat {
 	private IAdaptadorContactoIndividualDAO adaptadorCI;
 	private IAdaptadorGrupoDAO adaptadorGrupo;
 	private IAdaptadorMensajeDAO adaptadorMensaje;
-	private CatalogoUsuarios catalogoUsuarios;
 
 
 	private ControladorAppChat() {
 		inicializarAdaptadores();
-		inicializarCatalogos();
 	}
 
 	public static ControladorAppChat getUnicaInstancia() {
@@ -61,20 +59,16 @@ public class ControladorAppChat {
 		adaptadorMensaje = factoria.getMensajeDAO();
 	}
 
-	public void inicializarCatalogos() {
-		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
-	}
-
 	public Usuario registrarUsuario(String nombre, Date fechaNacimiento, int movil, String login, String contrasenya,
 			String email) {
 		Usuario usuario = new Usuario(nombre, fechaNacimiento, movil, login, contrasenya, email);
 		adaptadorUsuario.registrarUsuario(usuario);
-		catalogoUsuarios.addUsuario(usuario);
+		CatalogoUsuarios.getUnicaInstancia().addUsuario(usuario);
 		return usuario;
 	}
 
 	public int loginUsuario(String login, String contrasena) {
-		Usuario u = catalogoUsuarios.getUsuario(login);
+		Usuario u = CatalogoUsuarios.getUnicaInstancia().getUsuario(login);
 		if (u.getContrasenya().equals(contrasena)) {
 			return u.getMovil();
 		} else
@@ -82,7 +76,7 @@ public class ControladorAppChat {
 	}
 
 	public Grupo registrarGrupo(String nombre, ArrayList<Integer> contactos, int movilUA) {
-		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
+		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		Grupo grupo = new Grupo(nombre, usuarioActual);
 		for(int movil : contactos) {
 			ContactoIndividual aux = usuarioActual.getCIPorNumero(movil);
@@ -97,30 +91,30 @@ public class ControladorAppChat {
 			aux.addContacto(grupo);
 			adaptadorUsuario.modificarUsuario(aux);
 		}
-		catalogoUsuarios.addUsuario(usuarioActual);
+		CatalogoUsuarios.getUnicaInstancia().addUsuario(usuarioActual);
 		return grupo;
 	}
 
 	public ContactoIndividual registrarContactoIndividual(String nombre, int movil, int movilUA) {
-		Usuario u = catalogoUsuarios.getUsuario(movil);
+		Usuario u = CatalogoUsuarios.getUnicaInstancia().getUsuario(movil);
 		ContactoIndividual ci = new ContactoIndividual(nombre, movil,u);
 		adaptadorCI.registrarContactoIndividual(ci);
-		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
+		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		usuarioActual.addContacto(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
-		//catalogoUsuarios.addUsuario(usuarioActual);
+		//CatalogoUsuarios.getUnicaInstancia().addUsuario(usuarioActual);
 		return ci;
 	}
 	
 	public boolean existeContacto(int movil, int movilUA) {
-		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
+		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		return usuarioActual.getCIPorNumero(movil) != null;
 	}
 
-	public Mensaje registrarMensajeG(String texto, int emoticono, int receptor, int movilUA) {
-		Grupo g = adaptadorGrupo.recuperarGrupo(receptor);
+	public Mensaje registrarMensajeG(String texto, int emoticono, int iDReceptor, int movilUA) {
+		Grupo g = adaptadorGrupo.recuperarGrupo(iDReceptor);
 		Mensaje mensaje = null;
-		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
+		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		mensaje = new Mensaje(texto, LocalTime.now(), emoticono, usuarioActual, g);
 		adaptadorMensaje.registrarMensaje(mensaje);
 		g.addMensaje(mensaje);
@@ -133,25 +127,23 @@ public class ControladorAppChat {
 	}
 	public Mensaje registrarMensajeCI(String texto, int emoticono, int movilReceptor, int movilUA) {
 		Mensaje mensaje = null;
-		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
+		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		ContactoIndividual ci = usuarioActual.getCIPorNumero(movilReceptor);
 		mensaje = new Mensaje(texto, LocalTime.now(), emoticono, usuarioActual, ci);
 		adaptadorMensaje.registrarMensaje(mensaje);
 		ci.addMensaje(mensaje);
 		adaptadorCI.modificarContactoIndividual(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
-		Usuario usuarioCI = catalogoUsuarios.getUsuario(movilReceptor);
-		ContactoIndividual cIUA = usuarioCI.getCIPorNumero(usuarioActual.getMovil());
+		Usuario usuarioCI = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilReceptor);
+		ContactoIndividual cIUA = usuarioCI.getCIPorNumero(movilUA);
 		if(cIUA == null) {
-			cIUA = new ContactoIndividual(String.valueOf(usuarioActual.getMovil()), usuarioActual.getMovil(), usuarioCI);
+			cIUA = new ContactoIndividual(String.valueOf(movilUA), movilUA, usuarioActual);
 			adaptadorCI.registrarContactoIndividual(cIUA);
 			usuarioCI.addContacto(cIUA);
 			adaptadorUsuario.modificarUsuario(usuarioCI);
 		}
 		cIUA.addMensaje(mensaje);
 		adaptadorCI.modificarContactoIndividual(cIUA);
-		adaptadorUsuario.modificarUsuario(usuarioCI);
-		
 		return mensaje;
 	}
 
@@ -172,7 +164,7 @@ public class ControladorAppChat {
 	}
 
 	public void eliminarGrupo(Grupo g, int movilUA) {
-		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
+		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		for(ContactoIndividual c : g.getContactos()) {
 			Usuario aux = c.getUsuario();
 			aux.eliminarContacto(g);
@@ -185,7 +177,7 @@ public class ControladorAppChat {
 	}
 
 	public void eliminarContactoIndividual(ContactoIndividual ci, int movilUA) {
-		Usuario usuarioActual = catalogoUsuarios.getUsuario(movilUA);
+		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		usuarioActual.eliminarContacto(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 		adaptadorCI.borrarContactoIndividual(ci);
@@ -200,23 +192,23 @@ public class ControladorAppChat {
 	}
 
 	public boolean existeUsuario(String login) {
-		return catalogoUsuarios.getUsuario(login) != null;
+		return CatalogoUsuarios.getUnicaInstancia().getUsuario(login) != null;
 	}
 	
 	public Usuario getUsuario(int movilUA) {
-		return catalogoUsuarios.getUsuario(movilUA);
+		return CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 	}
 	
 	public ContactoIndividual getContactoIndividual(int movilContacto, int movilUA) {
-		return catalogoUsuarios.getUsuario(movilUA).getCIPorNumero(movilContacto);
+		return CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA).getCIPorNumero(movilContacto);
 	}
 	
 	public Grupo getGrupo(String nombreGrupo, int movilUA) {
-		return catalogoUsuarios.getUsuario(movilUA).getGrupoPorNombre(nombreGrupo);
+		return CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA).getGrupoPorNombre(nombreGrupo);
 	}
 	
 	public Grupo getGrupoPorId(int id, int movilUA) {
-		for(Grupo g :catalogoUsuarios.getUsuario(movilUA).getGrupos()) {
+		for(Grupo g :CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA).getGrupos()) {
 			if(g.getId() == id)
 				return g;
 		}
@@ -224,30 +216,16 @@ public class ControladorAppChat {
 	}
 	
 	public boolean realizarPago(int movilUA) {
-		Usuario u = catalogoUsuarios.getUsuario(movilUA); 
+		Usuario u = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA); 
 		u.realizarPago();
 		adaptadorUsuario.modificarUsuario(u);
 		return u.isPremium();
 	}
 	
 	public void actualizarImagen(String urlAbsoluta, int movilUA) {
-		Usuario u = catalogoUsuarios.getUsuario(movilUA);
+		Usuario u = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		u.setUrlImagen(urlAbsoluta);
 		adaptadorUsuario.modificarUsuario(u);
 	}
 	
-	public CatalogoUsuarios getCatalogo() {
-		return catalogoUsuarios;
-	}
-	
-	//Falta actualiza estado, actualizar Saludo, actualizar Foto,...
-	
-	public void update() {
-		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
-		adaptadorUsuario.update();
-		adaptadorCI.update();
-		adaptadorGrupo.update();
-		adaptadorMensaje.update();
-		unicaInstancia = new ControladorAppChat();
-	}
 }

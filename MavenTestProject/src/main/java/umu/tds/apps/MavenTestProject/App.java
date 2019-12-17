@@ -1,7 +1,7 @@
 package umu.tds.apps.MavenTestProject;
 
 import controlador.ActualizarBBDD;
-import vista.VentanaMain;
+import vista.VMain;
 
 /**
  * Hello world!
@@ -10,7 +10,7 @@ import vista.VentanaMain;
 public class App 
 {
 	public static void main(String[] args) {
-		new VentanaMain();
+		new VMain();
 		ActualizarBBDD.getUnicaInstancia();
 	}
 }

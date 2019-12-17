@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.itextpdf.text.DocumentException;
 
-import controlador.ManejadorPDF;
+import manejadores.ManejadorPDF;
 import modelo.CatalogoUsuarios;
 import modelo.Usuario;
 

@@ -43,6 +43,9 @@ import modelo.Grupo;
 import modelo.Mensaje;
 import modelo.Usuario;
 
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+
 public class PChatCI extends JPanel {
 	private JTextField textField;
 	private JPanel panel;
@@ -51,6 +54,8 @@ public class PChatCI extends JPanel {
 	private int nMensajes;
 	private Image chatI;
 	private ImageIcon chat;
+	private int on;
+	private VentanaEmoticonos ventanaEmoticonos;
 	/**
 	 * Create the panel.
 	 */
@@ -72,6 +77,11 @@ public class PChatCI extends JPanel {
 		ImageIcon emoji= new ImageIcon(VMain.class.getResource("/imagenes/ImagenEmojiDef.png"));
 		i = emoji.getImage();
 		emoji= new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		
+		ventanaEmoticonos = new VentanaEmoticonos(this);
+		ventanaEmoticonos.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		ventanaEmoticonos.setBounds(0, 174, 133, 200);
+		add(ventanaEmoticonos);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
@@ -129,14 +139,14 @@ public class PChatCI extends JPanel {
 		panelAux.setBounds(0, 0, 353, 403);         
 		
 		//Inicialización del Chat
-		nMensajes = ManejadorChatCI.getUnicaInstancia().initChat(c.getMovil(), movilUA, panel);
+		nMensajes = ManejadorChatCI.getUnicaInstancia().initChat(movilContacto, movilUA, panel);
 		
 		
 		//Oyente
 		btnEnviar.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ManejadorChatCI.getUnicaInstancia().addBubbleText(textField.getText(), c.getMovil(), movilUA, panel);
+				ManejadorChatCI.getUnicaInstancia().addBubbleText(textField.getText(), movilContacto, movilUA, panel);
 				nMensajes += 1;
 				textField.setText("");
 			}});
@@ -145,7 +155,7 @@ public class PChatCI extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					ManejadorChatCI.getUnicaInstancia().addBubbleText(textField.getText(), c.getMovil(), movilUA, panel);
+					ManejadorChatCI.getUnicaInstancia().addBubbleText(textField.getText(), movilContacto, movilUA, panel);
 					nMensajes += 1;
 					textField.setText("");
 				}
@@ -164,6 +174,22 @@ public class PChatCI extends JPanel {
 				
 			}
 		});
+		ventanaEmoticonos.setVisible(false);
+		on = 0;
+		btnEmoji.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(on == 0) {
+					on = 1;
+					ventanaEmoticonos.setVisible(true);
+					
+				} else {
+					on = 0;
+					ventanaEmoticonos.setVisible(false);
+				}
+				
+			}
+		});
 		
 	}
 	//Actualización de BBDD
@@ -174,5 +200,12 @@ public class PChatCI extends JPanel {
 	
 	public void removeUpdate() {
 		ActualizarBBDD.getUnicaInstancia().deletePanelChatCI(this);
+	}
+	
+	public void sendEmoji(int emoji) {
+		ManejadorChatCI.getUnicaInstancia().addBubbleText(emoji, movilContacto, movilUA, panel);
+		ventanaEmoticonos.setVisible(false);
+		on = 0;
+		nMensajes += 1;
 	}
 }

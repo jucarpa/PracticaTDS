@@ -49,6 +49,8 @@ public class PChatG extends JPanel {
 	private int movilUA;
 	private int nMensajes;
 	private int idG;
+	private int on;
+	private VentanaEmoticonos ventanaEmoticonos;
 	/**
 	 * Create the panel.
 	 */
@@ -70,6 +72,10 @@ public class PChatG extends JPanel {
 		ImageIcon emoji= new ImageIcon(VMain.class.getResource("/imagenes/ImagenEmojiDef.png"));
 		i = emoji.getImage();
 		emoji= new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		
+		ventanaEmoticonos = new VentanaEmoticonos();
+		ventanaEmoticonos.setBounds(0, 180, 118, 194);
+		add(ventanaEmoticonos);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
@@ -166,6 +172,23 @@ public class PChatG extends JPanel {
 			}
 		});
 		
+		
+		ventanaEmoticonos.setVisible(false);
+		on = 0;
+		btnEmoji.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(on == 0) {
+					on = 1;
+					ventanaEmoticonos.setVisible(true);
+					
+				} else {
+					on = 0;
+					ventanaEmoticonos.setVisible(false);
+				}
+				
+			}
+		});
 	}
 	
 	public void update() {
@@ -175,5 +198,13 @@ public class PChatG extends JPanel {
 	
 	public void removeUpdate() {
 		ActualizarBBDD.getUnicaInstancia().deletePanelChatG(this);
+	}
+	
+	public void sendEmoji(int emoji) {
+		ManejadorChatG.getUnicaInstancia().addBubbleText(emoji, idG, movilUA, panel);
+		
+		ventanaEmoticonos.setVisible(false);
+		on = 0;
+		nMensajes +=1;
 	}
 }

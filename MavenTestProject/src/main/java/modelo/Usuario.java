@@ -29,7 +29,7 @@ public class Usuario {
 	private HashMap<Integer, ContactoIndividual> contactosIndividualesPorNombre;
 	private List<Grupo> gruposAdmin;
 	private String urlImagen = "D:\\UNIVERSIDAD\\CURSO 19-20\\TDS\\PRACTICA FINAL GIT\\MavenTestProject\\src\\main\\java\\imagenes\\ImagenUsuarioDef.png";
-	private List<Contacto> contactosOrdenadorPorTiempo;
+	private List<Contacto> contactosOrdenadosPorTiempo;
 
 	public Usuario(String nombre, Date fechaNacimiento, int movil, String usuario, String contrasenya,
 			String imagenURL, boolean premium, String email) {
@@ -45,7 +45,7 @@ public class Usuario {
 		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
-		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
+		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 		gruposAdmin = new ArrayList<Grupo>();
 		estado = new Estado();
 	}
@@ -66,7 +66,7 @@ public class Usuario {
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
 		gruposAdmin = new ArrayList<Grupo>();
-		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
+		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 		estado = new Estado();
 	}
 
@@ -88,7 +88,7 @@ public class Usuario {
 		gruposAdmin = new ArrayList<Grupo>();
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
-		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
+		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 	}
 
 	public Usuario(int idUsuario, String nombre, Date fechaNacimiento, int movil, String email, String usuario,
@@ -110,7 +110,7 @@ public class Usuario {
 
 		gruposPorNombre = new HashMap<String, Grupo>();
 		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
-		contactosOrdenadorPorTiempo = new ArrayList<Contacto>();
+		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 		update();
 	}
 
@@ -279,7 +279,7 @@ public class Usuario {
 	}
 
 	public List<Contacto> getContactosPorTiempo() {
-		return contactosOrdenadorPorTiempo;
+		return contactosOrdenadosPorTiempo;
 	}
 	
 	public Collection<ContactoIndividual> getContactosIndividuales(){

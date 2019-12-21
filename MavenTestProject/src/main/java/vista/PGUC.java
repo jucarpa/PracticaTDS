@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import modelo.Mensaje;
+import tds.BubbleText;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
@@ -108,7 +109,10 @@ public class PGUC extends JPanel{
 			Mensaje ultMensaje = c.getMensajes().get(c.getMensajes().size() - 1);			
 			lblFecha.setText(ultMensaje.getHora().
 					format(DateTimeFormatter.ofPattern("HH:mm")));
+			if(!ultMensaje.getTexto().equals(""))
 			lblTexto.setText(ultMensaje.getTexto());
+			else
+				lblTexto.setIcon(new ImageIcon(BubbleText.getEmoji(ultMensaje.getEmoticon()).getImage().getScaledInstance(15,15, Image.SCALE_SMOOTH)));
 		} catch (Exception e) {}
 
 		btnNewButton.addActionListener(new ActionListener() {
@@ -127,7 +131,10 @@ public class PGUC extends JPanel{
 		try {
 			Mensaje ultMensaje = c.getMensajes().get(c.getMensajes().size());			
 			lblFecha.setText(ultMensaje.getHora().toString());
-			lblTexto.setText(ultMensaje.getTexto());
+			if(!ultMensaje.getTexto().equals(""))
+				lblTexto.setText(ultMensaje.getTexto());
+				else
+					lblTexto.setIcon(new ImageIcon(BubbleText.getEmoji(ultMensaje.getEmoticon()).getImage().getScaledInstance(15,15, Image.SCALE_SMOOTH)));
 		} catch (Exception e) {}
 		
 	}

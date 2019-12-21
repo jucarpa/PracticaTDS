@@ -42,14 +42,15 @@ public class PListaContactos extends JPanel {
 	ManejadorListaContactos manejador;
 	private JPanel panel;
 	
-	public PListaContactos(int movilUA) {
+	public PListaContactos(int movilUA, PVistaPrincipal pVP) {
+		ventana = pVP;
 		ActualizarBBDD.getUnicaInstancia().addPanelUltimosContactos(this);
 		setPreferredSize(new Dimension(260, 260));
 		setSize(new Dimension(260, 260));
 		setMaximumSize(new Dimension(260, 260));
 		setMinimumSize(new Dimension(260, 260));
 		setBackground(new Color(204, 255, 153));
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		panel = new JPanel();
 		panel.setAutoscrolls(true);
 		panel.setBackground(new Color(204, 255, 153));
@@ -64,19 +65,11 @@ public class PListaContactos extends JPanel {
 		scrollPane.setMaximumSize(new Dimension(260, 32767));
 		add(scrollPane);
 		
-		JLabel lblHolaaaa = new JLabel("Ultimas Conversaciones");
-		lblHolaaaa.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel.add(lblHolaaaa);
-		lblHolaaaa.setAlignmentY(Component.TOP_ALIGNMENT);
-		lblHolaaaa.setBackground(new Color(204, 255, 153));
-		lblHolaaaa.setFont(new Font("Nirmala UI", Font.BOLD, 15));
-		lblHolaaaa.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHolaaaa.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
 		manejador = new ManejadorListaContactos(this, movilUA, panel);
 	}
 	
 	public void setContactoSeleccionado(Contacto c, int i) {
+		System.out.println(i);
 		ventana.setContactoSeleccionado(c, i);
 	}
 	

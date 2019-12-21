@@ -1,6 +1,7 @@
 package manejadores;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import controlador.ControladorAppChat;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
+import pruebas.OrdenarContactos;
 import vista.PCIUC;
 import vista.PGUC;
 import vista.PListaContactos;
@@ -21,14 +23,16 @@ public class ManejadorListaContactos {
 	private Map<Integer, PCIUC> panelesCI = new HashMap<Integer, PCIUC>();
 	private Map<Integer, PGUC> panelesG = new HashMap<Integer, PGUC>();
 	private int nContactos;
-	
+	private List<Contacto> contactosOrdenadosOld = new LinkedList<Contacto>();
 	public ManejadorListaContactos(PListaContactos lC, int movilUA, JPanel panel) {
 		listaContactos = lC;
 		this.movilUA = movilUA;
 		this.panel = panel;
 		
-		
-		for(Contacto c : ControladorAppChat.getUnicaInstancia().getUsuario(movilUA).getContactos()) {
+		List <Contacto> cAOrdenar = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA).getContactos();
+		List<Contacto> cOrdenados = OrdenarContactos.getUnicaInstancia().Bubble(cAOrdenar);
+		contactosOrdenadosOld = cOrdenados;
+		for(Contacto c : cOrdenados) {
 			
 			if(c.getClass() == ContactoIndividual.class) {
 				ContactoIndividual ci = (ContactoIndividual) c;
@@ -86,16 +90,14 @@ public class ManejadorListaContactos {
 	}
 	
 	public void update() {
-		List <Contacto> contactos = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA).getContactos();
-		if(nContactos < contactos.size()) {
-			for(int i = nContactos; i < contactos.size(); i++) {
-				Contacto aux = contactos.get(i);
-				int g_CI = 1;
-				if(aux.getClass() == Grupo.class)
-					g_CI = 2;
-				addPanelContacto(aux, g_CI);
+		List <Contacto> cAOrdenar = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA).getContactos();
+		List<Contacto> cOrdenados = OrdenarContactos.getUnicaInstancia().Bubble(cAOrdenar);
+		panel.removeAll();
+		for(Contacto c : cOrdenados) {
+			if(c.getClass() == Grupo.class) {
+				addPanelContacto(c, 2);
+			} else {addPanelContacto(c, 1);
 			}
 		}
-		nContactos = contactos.size();
 	}
 }

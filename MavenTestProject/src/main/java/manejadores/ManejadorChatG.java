@@ -47,6 +47,14 @@ public class ManejadorChatG {
 		}
 	}
 	
+	public void addBubbleText(int emoji, int movilReceptor, int movilEmisor, JPanel panel) {
+		ControladorAppChat.getUnicaInstancia().registrarMensajeCI("",
+					emoji, movilReceptor,movilEmisor);	
+		BubbleText mensaje = new BubbleText(panel, emoji, Color.GREEN,
+				"", BubbleText.SENT,18);
+		panel.add(mensaje);
+}
+	
 	public int initChat(int idGrupo, int movilUA, JPanel panel) {
 		Grupo g = ControladorAppChat.getUnicaInstancia().getGrupoPorId(idGrupo, movilUA);
 		for(Mensaje m : g.getMensajes()) {
@@ -54,20 +62,31 @@ public class ManejadorChatG {
 			if(emisor.getMovil() != movilUA) {
 				ContactoIndividual ci = ControladorAppChat.getUnicaInstancia().getContactoIndividual(emisor.getMovil(), movilUA);
 				BubbleText mensaje = null;
-				if(ci != null)
+				if(ci != null) {
+					if(!m.getTexto().equals(""))
 				mensaje = new BubbleText(panel, m.getTexto(),
 						Color.GREEN,ci.getNombre(), BubbleText.RECEIVED);
-				
 				else
+					mensaje = new BubbleText(panel, m.getEmoticon(),
+							Color.GREEN,ci.getNombre(), BubbleText.RECEIVED,18);
+				}else {
+					if(!m.getTexto().equals(""))
 				mensaje = new BubbleText(panel, m.getTexto(),
 						Color.GREEN,String.valueOf(emisor.getMovil()), BubbleText.RECEIVED);
-				
+				else
+					mensaje = new BubbleText(panel, Integer.valueOf(m.getTexto()),
+							Color.GREEN,String.valueOf(emisor.getMovil()), BubbleText.RECEIVED, 18);
+				}
 				
 				panel.add(mensaje);
 			} else {
-				
-				BubbleText mensaje = new BubbleText(panel, m.getTexto(),
+				BubbleText mensaje = null;
+				if(!m.getTexto().equals(""))
+				mensaje = new BubbleText(panel, m.getTexto(),
 						Color.GREEN, "", BubbleText.SENT);
+				else 
+					mensaje = new BubbleText(panel, m.getEmoticon(),
+							Color.GREEN, "", BubbleText.SENT, 18);
 				panel.add(mensaje);
 			}
 		}
@@ -83,15 +102,22 @@ public class ManejadorChatG {
 						getContactoIndividual(m.getEmisor().getMovil(), movilUA);
 				
 				BubbleText mensaje = null;
-				if(ci != null)
-				mensaje = new BubbleText(panel, m.getTexto(),
-						Color.GREEN,ci.getNombre(), BubbleText.RECEIVED);
-				
-				else
+				if(ci != null) {
+					if(!m.getTexto().equals(""))
+						mensaje = new BubbleText(panel, m.getTexto(),
+								Color.GREEN,ci.getNombre(), BubbleText.RECEIVED);
+					else
+						mensaje = new BubbleText(panel, m.getEmoticon(),
+								Color.GREEN,ci.getNombre(), BubbleText.RECEIVED, 18);
+				}
+				else {
+					if(!m.getTexto().equals(""))
 				mensaje = new BubbleText(panel, m.getTexto(),
 						Color.GREEN,String.valueOf(m.getEmisor().getMovil()), BubbleText.RECEIVED);
-				
-				
+					else
+						mensaje = new BubbleText(panel, m.getEmoticon(),
+								Color.GREEN,String.valueOf(m.getEmisor().getMovil()), BubbleText.RECEIVED, 18);
+				}
 				panel.add(mensaje);
 				 
 			}

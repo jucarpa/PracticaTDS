@@ -46,17 +46,35 @@ public class ManejadorChatCI {
 		}
 	}
 	
+	public void addBubbleText(int emoji, int movilReceptor, int movilEmisor, JPanel panel) {
+			ControladorAppChat.getUnicaInstancia().registrarMensajeCI("",
+						emoji, movilReceptor,movilEmisor);	
+			BubbleText mensaje = new BubbleText(panel, emoji, Color.GREEN,
+					"", BubbleText.SENT,18);
+			panel.add(mensaje);
+	}
+	
 	public int initChat(int movilCI, int movilUA, JPanel panel) {
 		ContactoIndividual ci = ControladorAppChat.getUnicaInstancia().getContactoIndividual(movilCI, movilUA);
 		for(Mensaje m : ci.getMensajes()) {
 			ContactoIndividual receptor = (ContactoIndividual) m.getReceptor();
 			if(receptor.getMovil() == movilUA) {
-				BubbleText mensaje = new BubbleText(panel, m.getTexto(),
+				BubbleText mensaje = null;
+				if(!m.getTexto().equals(""))
+				mensaje = new BubbleText(panel, m.getTexto(),
 						Color.GREEN,"", BubbleText.RECEIVED);
+				else
+					mensaje = new BubbleText(panel, m.getEmoticon(),
+							Color.GREEN,"", BubbleText.RECEIVED, 18);
 				panel.add(mensaje);
 			} else {
-				BubbleText mensaje = new BubbleText(panel, m.getTexto(),
+				BubbleText mensaje = null;
+				if(!m.getTexto().equals(""))
+				mensaje = new BubbleText(panel, m.getTexto(),
 						Color.GREEN, "", BubbleText.SENT);
+				else
+					mensaje = new BubbleText(panel, m.getEmoticon(),
+							Color.GREEN, "", BubbleText.SENT, 18);
 				panel.add(mensaje);
 			}
 		}
@@ -68,8 +86,13 @@ public class ManejadorChatCI {
 		if(ultnMensajes < mensajesActualizados.size()) {
 			for(int i = ultnMensajes; i < mensajesActualizados.size(); i++) {
 				Mensaje m = mensajesActualizados.get(i);
-				BubbleText mensaje = new BubbleText(panel, m.getTexto(),
+				BubbleText mensaje = null;
+				if(!m.getTexto().equals(""))
+				mensaje = new BubbleText(panel, m.getTexto(),
 						Color.GREEN,"", BubbleText.RECEIVED);
+				else
+					mensaje = new BubbleText(panel, m.getEmoticon(),
+							Color.GREEN,"", BubbleText.RECEIVED, 18);
 				panel.add(mensaje);
 			}
 		}

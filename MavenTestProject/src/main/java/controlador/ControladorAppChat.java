@@ -107,6 +107,8 @@ public class ControladorAppChat {
 	}
 	
 	public boolean existeContacto(int movil, int movilUA) {
+		if(CatalogoUsuarios.getUnicaInstancia().getUsuario(movil) == null)
+			return true;
 		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		return usuarioActual.getCIPorNumero(movil) != null;
 	}
@@ -225,6 +227,12 @@ public class ControladorAppChat {
 	public void actualizarImagen(String urlAbsoluta, int movilUA) {
 		Usuario u = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		u.setUrlImagen(urlAbsoluta);
+		adaptadorUsuario.modificarUsuario(u);
+	}
+	
+	public void setSaludo(String saludo, int movilUA) {
+		Usuario u = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
+		u.setSaludo(saludo);
 		adaptadorUsuario.modificarUsuario(u);
 	}
 	

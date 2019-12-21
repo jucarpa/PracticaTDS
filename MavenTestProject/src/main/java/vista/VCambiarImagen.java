@@ -17,7 +17,7 @@ import controlador.ControladorAppChat;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
-public class VCambiarImagen extends JFrame {
+public class VCambiarImagen extends JPanel{
 
 	private JPanel contentPane;
 
@@ -26,12 +26,6 @@ public class VCambiarImagen extends JFrame {
 	 */
 
 	public VCambiarImagen(PVistaPrincipal ventana) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
 		
 		//Creamos el objeto JFileChooser
 		JFileChooser fc=new JFileChooser();
@@ -48,9 +42,8 @@ public class VCambiarImagen extends JFrame {
 		    //Ecribe la ruta del fichero seleccionado en el campo de texto
 		    String url = "";
 			url = fichero.toString();
-			//System.out.println(url);
 		    ControladorAppChat.getUnicaInstancia().actualizarImagen(url,ventana.getMovilUA());
-		    setContentPane(ventana);
+		    ventana.cambiarImagenPerfil();
 		}
 		
 		FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.PNG", "png");

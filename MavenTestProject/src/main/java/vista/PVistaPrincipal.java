@@ -9,6 +9,7 @@ import javax.swing.JToolBar;
 
 import com.itextpdf.text.DocumentException;
 
+import controlador.ActualizarBBDD;
 import controlador.ControladorAppChat;
 import javafx.embed.swing.SwingFXUtils;
 import manejadores.ManejadorPDF;
@@ -81,6 +82,7 @@ public class PVistaPrincipal extends JPanel {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		ActualizarBBDD.getUnicaInstancia().addPanelPVP(this);
 		setSize(Constantes.x_size, Constantes.y_size);
 		setLayout(new BorderLayout(0, 0));
 
@@ -167,6 +169,7 @@ public class PVistaPrincipal extends JPanel {
 
 		mnBusqueda = new JMenu("");
 		menuBar.add(mnBusqueda);
+		mnBusqueda.add(new PBuscar(this));
 
 		panel_6 = new JPanel();
 		panel_6.setMaximumSize(new Dimension(10, 10));
@@ -192,7 +195,7 @@ public class PVistaPrincipal extends JPanel {
 		splitPane.setAlignmentY(Component.CENTER_ALIGNMENT);
 		splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		panelUtlimosContactos = new PListaContactos(movilUA);
+		panelUtlimosContactos = new PListaContactos(movilUA, this);
 		panelUtlimosContactos.setLayout(new BoxLayout(panelUtlimosContactos, BoxLayout.X_AXIS));
 		splitPane.setLeftComponent(panelUtlimosContactos);
 		add(splitPane, BorderLayout.CENTER);
@@ -208,11 +211,6 @@ public class PVistaPrincipal extends JPanel {
 		mnIconoUsuario.repaint();
 		mntmNombreUsuario.setText(usuario.getNombre());
 		mntmSaludo.setText("\"" + usuario.getSaludo() + "\"");
-/*
-		ImageIcon iU = new ImageIcon(VentanaMain.class.getResource("/imagenes/ImagenUsuarioDef.png"));
-		Image i = iU.getImage();
-		iU = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-		mnIconoUsuario.setIcon(iU);*/
 
 		ImageIcon iC = new ImageIcon(VMain.class.getResource("/imagenes/ImagenConfiguracion.png"));
 		Image i = iC.getImage();
@@ -358,10 +356,21 @@ public class PVistaPrincipal extends JPanel {
 				
 			}
 		});
+		
+		mntmCambiarSaludo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PCambiarSaludo aux = new PCambiarSaludo(panelPrincipal);
+				aux.setVisible(true);
+				
+			}
+		});
 	}
 
 	
 	public void setContactoSeleccionado(Contacto c, int i) {
+		System.out.println(c);
 		contactoActual = c;
 		cambioPanelContacto(i);
 		if(ContactoIndividual.class == c.getClass()) {
@@ -399,5 +408,33 @@ public class PVistaPrincipal extends JPanel {
 	
 	public void modificarContacto(Contacto c, int i) {
 		panelUtlimosContactos.modificarContacto(c,i);
+	}
+	
+	public void update() {
+		if(contactoActual != null && contactoActual.getClass() == ContactoIndividual.class) {
+			ContactoIndividual aux = (ContactoIndividual) contactoActual;
+			contactoActual = aux = ControladorAppChat.getUnicaInstancia().getContactoIndividual(aux.getMovil(), movilUA);
+			ImageIcon iC = aux.getUsuario().getImagen();
+			Image im = iC.getImage();
+			iC = new ImageIcon(im.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+			
+		}
+	}
+	
+	public void cambiarImagenPerfil() {
+		Usuario u = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA);
+		ImageIcon imagen = u.getImagen();
+		Image image = imagen.getImage();
+		imagen = new ImageIcon(image.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		mnIconoUsuario.setIcon(imagen);
+	}
+	
+	public void setSaludo(String texto) {
+		mntmSaludo.setText("\"" + texto + "\"");
+		ControladorAppChat.getUnicaInstancia().setSaludo(texto,  movilUA);
+	}
+	
+	public void busqueda(String texto) {
+		splitPane.setRightComponent(new PBusqueda(texto, movilUA));
 	}
 }

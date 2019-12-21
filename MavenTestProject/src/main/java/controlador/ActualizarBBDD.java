@@ -29,6 +29,7 @@ import vista.PChatCI;
 import vista.PChatG;
 import vista.PGUC;
 import vista.PListaContactos;
+import vista.PVistaPrincipal;
 
 
 public class ActualizarBBDD {
@@ -40,6 +41,7 @@ public class ActualizarBBDD {
 	private List<PCIUC> panelesCIUC = new LinkedList<PCIUC>();
 	private List<PGUC> panelesGUC = new LinkedList<PGUC>();
 	private List<PListaContactos> panelContactos = new LinkedList<PListaContactos>();
+	private List<PVistaPrincipal> pVP = new LinkedList<PVistaPrincipal>();
 	
 	
 	
@@ -99,6 +101,10 @@ public class ActualizarBBDD {
 		panelContactos.add(pU);
 	}
 	
+	public void addPanelPVP(PVistaPrincipal pVp) {
+		pVP.add(pVp);
+	}
+	
 	private void update() {
 		for(PChatCI pC : panelesCI) {
 			pC.update();
@@ -118,6 +124,9 @@ public class ActualizarBBDD {
 		for (PListaContactos pC :panelContactos) {
 			pC.update();
 		}
+		
+		for(PVistaPrincipal pVp : pVP)
+			pVp.update();
 			
 	}
 	

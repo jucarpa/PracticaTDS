@@ -1,15 +1,22 @@
 package controlador;
 
+import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import componentes.IMensajeListener;
+import componentes.MensajeEvent;
+import componentes.parserwpp.modeloParse.MensajeWhatsApp;
+import componentes.parserwpp.modeloParse.Plataforma;
 import modelo.CatalogoUsuarios;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
@@ -26,7 +33,7 @@ import persistencia.IAdaptadorUsuarioDAO;
 import sun.text.UCompactIntArray;
 import vista.PChatCI;
 
-public class ControladorAppChat {
+public class ControladorAppChat implements IMensajeListener{
 
 	private static ControladorAppChat unicaInstancia;
 
@@ -37,6 +44,8 @@ public class ControladorAppChat {
 
 
 	private ControladorAppChat() {
+		ControladorCargadorMensaje.getUnicaInstancia().addMensajeListener(this);
+		
 		inicializarAdaptadores();
 	}
 
@@ -102,7 +111,6 @@ public class ControladorAppChat {
 		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		usuarioActual.addContacto(ci);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
-		//CatalogoUsuarios.getUnicaInstancia().addUsuario(usuarioActual);
 		return ci;
 	}
 	
@@ -117,7 +125,7 @@ public class ControladorAppChat {
 		Grupo g = adaptadorGrupo.recuperarGrupo(iDReceptor);
 		Mensaje mensaje = null;
 		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
-		mensaje = new Mensaje(texto, LocalTime.now(), emoticono, usuarioActual, g);
+		mensaje = new Mensaje(texto, LocalDateTime.now(), emoticono, usuarioActual, g);
 		adaptadorMensaje.registrarMensaje(mensaje);
 		g.addMensaje(mensaje);
 		adaptadorGrupo.modificarGrupo(g);
@@ -131,7 +139,7 @@ public class ControladorAppChat {
 		Mensaje mensaje = null;
 		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		ContactoIndividual ci = usuarioActual.getCIPorNumero(movilReceptor);
-		mensaje = new Mensaje(texto, LocalTime.now(), emoticono, usuarioActual, ci);
+		mensaje = new Mensaje(texto, LocalDateTime.now(), emoticono, usuarioActual, ci);
 		adaptadorMensaje.registrarMensaje(mensaje);
 		ci.addMensaje(mensaje);
 		adaptadorCI.modificarContactoIndividual(ci);
@@ -144,8 +152,11 @@ public class ControladorAppChat {
 			usuarioCI.addContacto(cIUA);
 			adaptadorUsuario.modificarUsuario(usuarioCI);
 		}
+		Mensaje mensaje2 = new Mensaje(texto, LocalDateTime.now(), emoticono, usuarioActual, cIUA);
+		adaptadorMensaje.registrarMensaje(mensaje2);
 		cIUA.addMensaje(mensaje);
 		adaptadorCI.modificarContactoIndividual(cIUA);
+		adaptadorUsuario.modificarUsuario(usuarioCI);
 		return mensaje;
 	}
 
@@ -153,15 +164,23 @@ public class ControladorAppChat {
 		adaptadorCI.modificarContactoIndividual(ci);
 	}
 	
-	public void modificarGrupo(Grupo g, List<ContactoIndividual> contactosEliminados) {
-		for(ContactoIndividual c : g.getContactos()) {
-			for(ContactoIndividual cE : contactosEliminados) {
-				if(c.getId() == cE.getId()) {
-					cE.getUsuario().eliminarContacto(cE);
-					adaptadorUsuario.modificarUsuario(cE.getUsuario());
-				}
+	public void modificarGrupo(Grupo g, List<ContactoIndividual> contactosAntiguos) {
+		for(ContactoIndividual ci : contactosAntiguos) {
+			if(!g.getContactos().contains(ci)) {
+				Usuario aux = CatalogoUsuarios.getUnicaInstancia().getUsuario(ci.getMovil());
+				aux.eliminarContacto(g);
+				adaptadorUsuario.modificarUsuario(aux);
 			}
 		}
+		
+		for(ContactoIndividual ci : g.getContactos()){
+			if(!contactosAntiguos.contains(ci)) {
+				Usuario aux = CatalogoUsuarios.getUnicaInstancia().getUsuario(ci.getMovil());
+				aux.addContacto(g);
+				adaptadorUsuario.modificarUsuario(aux);
+			}
+		}
+		
 		adaptadorGrupo.modificarGrupo(g);
 	}
 
@@ -180,9 +199,10 @@ public class ControladorAppChat {
 
 	public void eliminarContactoIndividual(ContactoIndividual ci, int movilUA) {
 		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
-		usuarioActual.eliminarContacto(ci);
+		ContactoIndividual ciAUX = usuarioActual.getCIPorNumero(ci.getMovil());
+		usuarioActual.eliminarContacto(ciAUX);
+		adaptadorCI.borrarContactoIndividual(ciAUX);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
-		adaptadorCI.borrarContactoIndividual(ci);
 	}
 	
 	public void eliminarMensajes(Contacto c) {
@@ -236,4 +256,30 @@ public class ControladorAppChat {
 		adaptadorUsuario.modificarUsuario(u);
 	}
 	
+	
+	public void cargarMensajes(String flRuta, Plataforma p, int movilUA, int movilCI) {
+		ControladorCargadorMensaje.getUnicaInstancia().setFichero(flRuta, p, movilUA, movilCI);
+	}
+	
+	
+	@Override
+	public void mensajesNuevos(EventObject e) {
+		MensajeEvent event = (MensajeEvent) e;
+		int movilUA = event.getMovilUA();
+		int movilCI = event.getMovilCI();
+		List<MensajeWhatsApp> mensajesNuevos = event.getMensajes();
+		Usuario usuarioUA = getUsuario(movilUA);
+		ContactoIndividual ci = getContactoIndividual(movilCI, movilUA);
+		if(ci != null) {
+			for(MensajeWhatsApp m : mensajesNuevos) {
+				if(m.getAutor().equals(usuarioUA.getNombre()))
+					registrarMensajeCI(m.getTexto(), 0, movilUA , movilCI);
+				else if(m.getAutor().equals(ci.getNombre()))
+						registrarMensajeCI(m.getTexto(), 0, movilCI, movilUA);
+					
+			}
+		}
+		
+		
+	}
 }

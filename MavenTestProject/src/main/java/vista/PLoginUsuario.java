@@ -90,13 +90,14 @@ public class PLoginUsuario extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				String auxUsuario = usuario.getText().trim();
 				String auxContrasena = contrasena.getText().trim();
+				System.out.println("Falluco?");
 				if (auxUsuario.isEmpty() || auxContrasena.isEmpty())
 					lalerta.setVisible(true);
 				else {
 					lalerta.setVisible(false);
-					if (!controlador.existeUsuario(auxUsuario))
+					if (!controlador.existeUsuario(auxUsuario)) {
 						lalerta3.setVisible(true);
-					else {
+					}else {
 						int movilUA = controlador.loginUsuario(auxUsuario, auxContrasena); 
 						if (movilUA == -1)
 							lalerta2.setVisible(true);

@@ -98,6 +98,7 @@ public class PModificarContacto extends JPanel {
 							JOptionPane.PLAIN_MESSAGE);
 					ventana.setContactoSeleccionado(ci, 1);
 					ventana.modificarContacto(ci, 1);
+					ventana.showOpcionesContacto();
 			}
 		});
 		

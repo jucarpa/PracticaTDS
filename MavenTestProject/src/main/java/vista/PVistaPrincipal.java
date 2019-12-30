@@ -9,6 +9,7 @@ import javax.swing.JToolBar;
 
 import com.itextpdf.text.DocumentException;
 
+import componentes.Luz;
 import controlador.ActualizarBBDD;
 import controlador.ControladorAppChat;
 import javafx.embed.swing.SwingFXUtils;
@@ -40,12 +41,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JMenu;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.Box;
 
 public class PVistaPrincipal extends JPanel {
 	private VMain ventana;
 	private int movilUA;
 	private Contacto contactoActual;
-	ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
 
 	private JMenuBar menuBar;
 	private JMenu mnIconoUsuario, mnEstado, mnOpciones, mnInfoCuenta, mnBusqueda, mnEliminaciones;
@@ -55,7 +56,6 @@ public class PVistaPrincipal extends JPanel {
 	private JPanel panel_2;
 	private JPanel panel_3;
 	private JPanel panel_4;
-	private JPanel panel_5;
 	private JPanel panel_6;
 
 	private PListaContactos panelUtlimosContactos;
@@ -63,7 +63,9 @@ public class PVistaPrincipal extends JPanel {
 	private JSplitPane splitPane;
 	public PVistaPrincipal panelPrincipal = this;
 	private JPanel panelActual;
-
+	private Luz luz;
+	private Component horizontalStrut;
+	private JPanel panel_1;
 	/**
 	 * Launch the application.
 	 */
@@ -153,6 +155,9 @@ public class PVistaPrincipal extends JPanel {
 		menuBar.add(panel_4);
 		panel_4.setMaximumSize(new Dimension(250, 10));
 		panel_4.setBackground(new Color(51, 204, 102));
+		
+		horizontalStrut = Box.createHorizontalStrut(300);
+		menuBar.add(horizontalStrut);
 
 		mnInfoCuenta = new JMenu("Info Cuenta");
 		mnInfoCuenta.setActionCommand("Info Cuenta");
@@ -160,12 +165,6 @@ public class PVistaPrincipal extends JPanel {
 		mntmInfoMovilusuario = new JMenuItem();
 		mnInfoCuenta.add(mntmInfoMovilusuario);
 		mntmInfoMovilusuario.setVisible(false);
-		
-		
-		panel_5 = new JPanel();
-		panel_5.setMaximumSize(new Dimension(10, 10));
-		panel_5.setBackground(new Color(51, 204, 102));
-		menuBar.add(panel_5);
 
 		mnBusqueda = new JMenu("");
 		menuBar.add(mnBusqueda);
@@ -179,6 +178,7 @@ public class PVistaPrincipal extends JPanel {
 		mnEliminaciones = new JMenu("");
 		mnEliminaciones.setActionCommand("Eliminaciones");
 		menuBar.add(mnEliminaciones);
+		
 
 		mntmEliminarMensajes = new JMenuItem("Eliminar Mensajes");
 		mnEliminaciones.add(mntmEliminarMensajes);
@@ -188,7 +188,10 @@ public class PVistaPrincipal extends JPanel {
 		
 		mntmModificarGrupo = new JMenuItem("Modificar");
 		mnEliminaciones.add(mntmModificarGrupo);
-
+		
+		luz = new Luz(movilUA);
+		menuBar.add(luz);
+		
 		splitPane = new JSplitPane();
 		splitPane.setBackground(new Color(51, 204, 102));
 		splitPane.setMaximumSize(new Dimension(243, 27));
@@ -202,7 +205,7 @@ public class PVistaPrincipal extends JPanel {
 		JPanel pAux = new JPanel();
 		splitPane.setRightComponent(pAux);
 
-		Usuario usuario = controlador.getUsuario(movilUA);
+		Usuario usuario = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA);
 		ImageIcon imagen = usuario.getImagen();
 		Image image = imagen.getImage();
 		imagen = new ImageIcon(image.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
@@ -227,9 +230,28 @@ public class PVistaPrincipal extends JPanel {
 		iA = new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		mnEliminaciones.setIcon(iA);
 		
+		mnInfoCuenta.setEnabled(false);
+		mnBusqueda.setEnabled(false);
+		mnEliminaciones.setEnabled(false);
+		luz.setEnabled(false);
+		
+		panel_1 = new JPanel();
+		panel_1.setMaximumSize(new Dimension(10, 10));
+		panel_1.setBackground(new Color(51, 204, 102));
+		menuBar.add(panel_1);
+		
+		
+		
+		
+		
 		mntmCrearContacto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				splitPane.setRightComponent(new PCrearContacto(panelPrincipal, movilUA));
+
+				mnInfoCuenta.setEnabled(false);
+				mnBusqueda.setEnabled(false);
+				mnEliminaciones.setEnabled(false);
+				luz.setEnabled(false);
 			}
 		});
 		mntmCrearGrupo.addActionListener(new ActionListener() {
@@ -237,12 +259,22 @@ public class PVistaPrincipal extends JPanel {
 				PCrearGrupo g = new PCrearGrupo(panelPrincipal, movilUA);
 				splitPane.setRightComponent(g);
 				g.update();
-				
+
+				mnInfoCuenta.setEnabled(false);
+				mnBusqueda.setEnabled(false);
+				mnEliminaciones.setEnabled(false);
+				luz.setEnabled(false);
 			}
 		});
 		
 		mntmModificarGrupo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				mnInfoCuenta.setEnabled(false);
+				mnBusqueda.setEnabled(false);
+				mnEliminaciones.setEnabled(false);
+				luz.setEnabled(false);
+				
 				if(contactoActual != null) {
 					if(contactoActual.getClass() == ContactoIndividual.class) {
 						ContactoIndividual ci = (ContactoIndividual) contactoActual;
@@ -259,33 +291,43 @@ public class PVistaPrincipal extends JPanel {
 		});
 		mntmEliminarContacto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(contactoActual != null) {
 					if(contactoActual.getClass() == ContactoIndividual.class) {
-						JOptionPane.showMessageDialog(ventana, "Contacto Eliminado!", "Eliminar Contacto",
-								JOptionPane.PLAIN_MESSAGE);
 						panelUtlimosContactos.removeCI((ContactoIndividual)contactoActual);
 						PChatCI aux = (PChatCI) panelActual;
 						aux.removeUpdate();
 						aux.setVisible(false);
-						controlador.eliminarContactoIndividual((ContactoIndividual)contactoActual, movilUA);
+						ControladorAppChat.getUnicaInstancia().eliminarContactoIndividual((ContactoIndividual)contactoActual, movilUA);
 						contactoActual = null;
+					
+						mnInfoCuenta.setEnabled(false);
+						mnBusqueda.setEnabled(false);
+						mnEliminaciones.setEnabled(false);
+						luz.setEnabled(false);
+						
+						JOptionPane.showMessageDialog(ventana, "Contacto Eliminado!", "Eliminar Contacto",
+								JOptionPane.PLAIN_MESSAGE);
 					}
 					else {
 						Grupo aux = (Grupo) contactoActual;
 						if(aux.getAdmin().getMovil() == movilUA) {
-						controlador.eliminarGrupo(aux, movilUA);
-						contactoActual = null;
+							
 						panelUtlimosContactos.removeG((Grupo)contactoActual);
 						PChatG pG = (PChatG) panelActual;
 						pG.removeUpdate();
 						pG.setVisible(false);
 						JOptionPane.showMessageDialog(ventana, "Grupo Eliminado!", "Eliminar Grupo",
 								JOptionPane.PLAIN_MESSAGE);
+						
+						mnInfoCuenta.setEnabled(false);
+						mnBusqueda.setEnabled(false);
+						mnEliminaciones.setEnabled(false);
+						luz.setEnabled(false);
+						ControladorAppChat.getUnicaInstancia().eliminarGrupo((Grupo) contactoActual, movilUA);
+						contactoActual = null;
 						}
 						else JOptionPane.showMessageDialog(ventana, "No eres el administrador del Grupo", "Modificar Grupo",
 								JOptionPane.PLAIN_MESSAGE);
 					}
-				}
 			}
 		});
 		
@@ -293,7 +335,7 @@ public class PVistaPrincipal extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlador.eliminarMensajes(contactoActual);
+				ControladorAppChat.getUnicaInstancia().eliminarMensajes(contactoActual);
 				JOptionPane.showMessageDialog(ventana, "Mensajes Eliminados !", "Eliminar Mensaje",
 						JOptionPane.PLAIN_MESSAGE);
 				
@@ -304,7 +346,7 @@ public class PVistaPrincipal extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(controlador.realizarPago(movilUA) == true) {
+				if(ControladorAppChat.getUnicaInstancia().realizarPago(movilUA) == true) {
 					mntmConvertirseEnPremium.setVisible(false);
 					mntmEstadisticas.setVisible(true);
 					mntmGenerarPDF.setVisible(true);
@@ -351,7 +393,7 @@ public class PVistaPrincipal extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VCambiarImagen aux = new VCambiarImagen(panelPrincipal);
+				PCambiarImagen aux = new PCambiarImagen(panelPrincipal);
 				aux.setVisible(true);
 				
 			}
@@ -366,13 +408,22 @@ public class PVistaPrincipal extends JPanel {
 				
 			}
 		});
+		
+		mntmMostrarContactos.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PMostrarContactos pMC = new PMostrarContactos(panelPrincipal, movilUA);
+				splitPane.setLeftComponent(pMC);
+				
+			}
+		});
 	}
 
 	
 	public void setContactoSeleccionado(Contacto c, int i) {
 		System.out.println(c);
 		contactoActual = c;
-		cambioPanelContacto(i);
 		if(ContactoIndividual.class == c.getClass()) {
 			ContactoIndividual aux = (ContactoIndividual) c;
 			ImageIcon iC = aux.getUsuario().getImagen();
@@ -382,19 +433,51 @@ public class PVistaPrincipal extends JPanel {
 			mnInfoCuenta.setText(aux.getNombre());
 			mntmInfoMovilusuario.setText(aux.getMovil() + "");
 			mntmInfoMovilusuario.setVisible(true);
+			
+			luz.setContacto(aux.getMovil());
+		} else {
+			mnInfoCuenta.setIcon(null);
+			mnInfoCuenta.setText(c.getNombre());
+			panelActual = new PChatG((Grupo)c, movilUA);
+			splitPane.setRightComponent(panelActual);
 		}
+		cambioPanelContacto(i);
+		mnInfoCuenta.setEnabled(true);
+		mnBusqueda.setEnabled(true);
+		mnEliminaciones.setEnabled(true);
+		luz.setEnabled(true);
 		
 		
 	}
 	public void cambioPanelContacto(int i ){
+		
 		if(i == 1) {
-		 PChatCI ux = new PChatCI((ContactoIndividual) contactoActual, movilUA);
-		splitPane.setRightComponent(ux);
-		panelActual = ux;
+			PChatCI pAc = null;
+			ContactoIndividual cIa = (ContactoIndividual) contactoActual;
+			if(panelActual == null || panelActual.getClass() != PChatCI.class) {
+				PChatCI ux = new PChatCI(cIa, movilUA);
+				splitPane.setRightComponent(ux);
+				panelActual = ux;
+			}
+			pAc = (PChatCI) panelActual;
+			if(pAc.getmovilCI() != cIa.getMovil()) {
+				PChatCI ux = new PChatCI(cIa, movilUA);
+				splitPane.setRightComponent(ux);
+				panelActual = ux;
+			}
 		} else {
-			PChatG ux = new PChatG((Grupo) contactoActual, movilUA);
-			splitPane.setRightComponent(ux);
-			panelActual = ux;
+			PChatG pAg = (PChatG) panelActual;
+			Grupo cGa = (Grupo) contactoActual;
+			if(panelActual == null) {
+				PChatG ux = new PChatG(cGa, movilUA);
+				splitPane.setRightComponent(ux);
+				panelActual = ux;
+			}
+			else if(pAg.getIDG() != cGa.getId()) {
+				PChatG ux = new PChatG(cGa, movilUA);
+				splitPane.setRightComponent(ux);
+				panelActual = ux;
+			}
 		}
 	}
 	
@@ -403,10 +486,22 @@ public class PVistaPrincipal extends JPanel {
 	}
 	
 	public void addPanelContacto(Contacto c, int i) {
+		
+		mnInfoCuenta.setEnabled(false);
+		mnBusqueda.setEnabled(false);
+		mnEliminaciones.setEnabled(false);
+		luz.setEnabled(false);
+		
 		panelUtlimosContactos.addPanelContacto(c, i);
 	}
 	
 	public void modificarContacto(Contacto c, int i) {
+		
+		mnInfoCuenta.setEnabled(false);
+		mnBusqueda.setEnabled(false);
+		mnEliminaciones.setEnabled(false);
+		luz.setEnabled(false);
+		
 		panelUtlimosContactos.modificarContacto(c,i);
 	}
 	
@@ -436,5 +531,29 @@ public class PVistaPrincipal extends JPanel {
 	
 	public void busqueda(String texto) {
 		splitPane.setRightComponent(new PBusqueda(texto, movilUA));
+	}
+	
+	public void pGUCEliminado(int id) {
+		if(contactoActual == null || contactoActual.getId() == id) {
+			PChatG aux = (PChatG)panelActual;
+			aux.setVisible(false);
+			aux.removeUpdate();
+			
+			mnInfoCuenta.setEnabled(false);
+			mnBusqueda.setEnabled(false);
+			mnEliminaciones.setEnabled(false);
+			luz.setEnabled(false);
+		}
+	}
+	
+	public void showOpcionesContacto() {
+		mnInfoCuenta.setEnabled(true);
+		mnBusqueda.setEnabled(true);
+		mnEliminaciones.setEnabled(true);
+		luz.setEnabled(true);
+	}
+	
+	public void cambiarListaUltimosContactos() {
+		splitPane.setLeftComponent(panelUtlimosContactos);
 	}
 }

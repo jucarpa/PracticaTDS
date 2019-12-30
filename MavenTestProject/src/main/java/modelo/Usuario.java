@@ -26,7 +26,7 @@ public class Usuario {
 	private Estado estado;
 	private List<Contacto> contactos;
 	private HashMap<String, Grupo> gruposPorNombre;
-	private HashMap<Integer, ContactoIndividual> contactosIndividualesPorNombre;
+	private HashMap<Integer, ContactoIndividual> contactosIndividualesPorMovil;
 	private List<Grupo> gruposAdmin;
 	private String urlImagen = "D:\\UNIVERSIDAD\\CURSO 19-20\\TDS\\PRACTICA FINAL GIT\\MavenTestProject\\src\\main\\java\\imagenes\\ImagenUsuarioDef.png";
 	private List<Contacto> contactosOrdenadosPorTiempo;
@@ -44,7 +44,7 @@ public class Usuario {
 		this.email = email;
 		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
+		contactosIndividualesPorMovil = new HashMap<Integer, ContactoIndividual>();
 		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 		gruposAdmin = new ArrayList<Grupo>();
 		estado = new Estado();
@@ -64,7 +64,7 @@ public class Usuario {
 
 		contactos = new ArrayList<Contacto>();
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
+		contactosIndividualesPorMovil = new HashMap<Integer, ContactoIndividual>();
 		gruposAdmin = new ArrayList<Grupo>();
 		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 		estado = new Estado();
@@ -87,7 +87,7 @@ public class Usuario {
 		contactos = new ArrayList<Contacto>();
 		gruposAdmin = new ArrayList<Grupo>();
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
+		contactosIndividualesPorMovil = new HashMap<Integer, ContactoIndividual>();
 		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 	}
 
@@ -109,7 +109,7 @@ public class Usuario {
 		this.gruposAdmin = gruposAdmin;
 
 		gruposPorNombre = new HashMap<String, Grupo>();
-		contactosIndividualesPorNombre = new HashMap<Integer, ContactoIndividual>();
+		contactosIndividualesPorMovil = new HashMap<Integer, ContactoIndividual>();
 		contactosOrdenadosPorTiempo = new ArrayList<Contacto>();
 		update();
 	}
@@ -134,16 +134,8 @@ public class Usuario {
 		return gruposPorNombre.get(nombreGrupo);
 	}
 
-	public ContactoIndividual getCIPorNombre(String nombreCI) {
-		return contactosIndividualesPorNombre.get(nombreCI);
-	}
-
 	public ContactoIndividual getCIPorNumero(int movil) {
-		for (ContactoIndividual ci : contactosIndividualesPorNombre.values()) {
-			if (ci.getMovil() == movil)
-				return ci;
-		}
-		return null;
+		return contactosIndividualesPorMovil.get(movil);
 	}
 
 	public void addContacto(Contacto c) {
@@ -153,7 +145,7 @@ public class Usuario {
 		else {
 			ContactoIndividual ci = (ContactoIndividual) c;
 			
-			contactosIndividualesPorNombre.put(ci.getMovil(), ci);
+			contactosIndividualesPorMovil.put(ci.getMovil(), ci);
 		
 		}
 	}
@@ -247,7 +239,7 @@ public class Usuario {
 				gruposPorNombre.put(aux.getNombre(), aux);
 			} else {
 				ContactoIndividual aux = (ContactoIndividual) c;
-				contactosIndividualesPorNombre.put(aux.getMovil(), aux);
+				contactosIndividualesPorMovil.put(aux.getMovil(), aux);
 			}
 
 		}
@@ -272,7 +264,7 @@ public class Usuario {
 				gruposPorNombre.put(aux.getNombre(), aux);
 			} else {
 				ContactoIndividual aux = (ContactoIndividual) c;
-				contactosIndividualesPorNombre.put(aux.getMovil(), aux);
+				contactosIndividualesPorMovil.put(aux.getMovil(), aux);
 			}
 
 		}
@@ -283,11 +275,11 @@ public class Usuario {
 	}
 	
 	public Collection<ContactoIndividual> getContactosIndividuales(){
-		return contactosIndividualesPorNombre.values();
+		return contactosIndividualesPorMovil.values();
 	}
 	
 	public ContactoIndividual getContactoIndividualPorNombre(String nombre) {
-		for(ContactoIndividual c :contactosIndividualesPorNombre.values()) {
+		for(ContactoIndividual c :contactosIndividualesPorMovil.values()) {
 			if(c.getNombre().equals(nombre))
 			return c;
 		}
@@ -297,13 +289,13 @@ public class Usuario {
 	public void eliminarContacto(Contacto c) {
 		for(int i = 0; i < contactos.size(); i++) {
 			if(contactos.get(i).getId() == c.getId()) {
-				contactos.remove(i);
 				if(c.getClass() == Grupo.class)
 					gruposPorNombre.remove(c.getNombre());
 				else {
 					ContactoIndividual aux = (ContactoIndividual) c;
-					contactosIndividualesPorNombre.remove(aux.getMovil());
+					contactosIndividualesPorMovil.remove(aux.getMovil());
 				}
+				contactos.remove(i);
 			}
 		}
 	}

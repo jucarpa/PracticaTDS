@@ -95,7 +95,9 @@ public class ManejadorChatCI {
 							Color.GREEN,"", BubbleText.RECEIVED, 18);
 				panel.add(mensaje);
 			}
-		}
+		} else if(mensajesActualizados.size() == 0)
+			panel.removeAll();
+			panel.repaint();
 		return mensajesActualizados.size();
 	}
 }

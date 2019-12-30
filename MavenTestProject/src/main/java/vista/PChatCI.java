@@ -55,7 +55,7 @@ public class PChatCI extends JPanel {
 	private Image chatI;
 	private ImageIcon chat;
 	private int on;
-	private VentanaEmoticonos ventanaEmoticonos;
+	private PEmoticonos ventanaEmoticonos;
 	/**
 	 * Create the panel.
 	 */
@@ -78,7 +78,7 @@ public class PChatCI extends JPanel {
 		i = emoji.getImage();
 		emoji= new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		
-		ventanaEmoticonos = new VentanaEmoticonos(this);
+		ventanaEmoticonos = new PEmoticonos(this);
 		ventanaEmoticonos.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		ventanaEmoticonos.setBounds(0, 174, 133, 200);
 		add(ventanaEmoticonos);
@@ -207,5 +207,9 @@ public class PChatCI extends JPanel {
 		ventanaEmoticonos.setVisible(false);
 		on = 0;
 		nMensajes += 1;
+	}
+	
+	public int getmovilCI() {
+		return movilContacto;
 	}
 }

@@ -2,6 +2,10 @@ package pruebas;
 
 import java.awt.EventQueue;
 import java.awt.Image;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -13,8 +17,11 @@ import controlador.ControladorAppChat;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
+import modelo.Mensaje;
 import modelo.Usuario;
+import persistencia.AdaptadorContactoIndividual;
 import persistencia.AdaptadorGrupo;
+import persistencia.AdaptadorMensaje;
 import persistencia.AdaptadorUsuario;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
@@ -32,16 +39,7 @@ public class prueba {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					prueba window = new prueba();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		prueba p = new prueba();
 	}
 
 	/**
@@ -49,47 +47,39 @@ public class prueba {
 	 */
 	public prueba() {
 		
-		 /*ServicioPersistencia servPersistencia =
-		  FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
-		  for(Entidad e: servPersistencia.recuperarEntidades())
-		  servPersistencia.borrarEntidad(e);
-		 
-		/*
-		ControladorAppChat.getUnicaInstancia().loginUsuario("2", "2");
-		System.out.println(ControladorAppChat.getUnicaInstancia().getUsuarioActual().getCIPorNumero(1).getNombre() + ", " + 
-				ControladorAppChat.getUnicaInstancia().getUsuarioActual().getCIPorNumero(1).getMovil());
-		
-		ServicioPersistencia servPersistencia =
-				  FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
-		for(Entidad e: servPersistencia.recuperarEntidades()) {
-			//if(e.getNombre().contentEquals("ContactoIndividual"))
-				servPersistencia.borrarEntidad(e);
-			
-		}
-		*/
-		//List<Usuario> usuarios = AdaptadorUsuario.getUnicaInstancia().recuperarTodosUsuarios();
-				
 		ServicioPersistencia servPresistencia = FactoriaServicioPersistencia.getInstance(). getServicioPersistencia();
-			for(Entidad e : servPresistencia.recuperarEntidades()) {/*
-				if(servPresistencia.recuperarPropiedadEntidad(e, "nombre").equals("1")) {
-					servPresistencia.eliminarPropiedadEntidad(e, "gruposAdmin");
-					servPresistencia.anadirPropiedadEntidad(e, "gruposAdmin", "");
-				}*//*
-				System.out.println(e.getId());
-				int idReceptor = Integer.valueOf(servPresistencia.recuperarPropiedadEntidad(e, "receptor"));
-				System.out.println(idReceptor);
-				Entidad g = servPresistencia.recuperarEntidad(idReceptor);
-				System.out.println(servPresistencia.recuperarPropiedadEntidad(g, "mensajes"));
-				Grupo g = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(idReceptor);*/
+			for(Entidad e : servPresistencia.recuperarEntidades()) {
 				servPresistencia.borrarEntidad(e);
 			}
-				/*ContactoIndividual aux = (ContactoIndividual) c;
-				System.out.println(u.getNombre() + ", "+ aux.getId() + ", " + aux.getUsuario().getNombre());
-			*/
-		//new ActualizarCatalogoUsuarios(ControladorAppChat.getUnicaInstancia());
-		
-		
-		initialize();
+			
+			Usuario u1 = new Usuario("1", Date.from(Instant.now()), 1,"1","1","1");
+			Usuario u2 = new Usuario("2", Date.from(Instant.now()), 2,"2","2","2");
+			AdaptadorUsuario.getUnicaInstancia().registrarUsuario(u1);
+			AdaptadorUsuario.getUnicaInstancia().registrarUsuario(u2);
+			
+			ContactoIndividual ci = new ContactoIndividual("1", 1, u1);
+			AdaptadorContactoIndividual.getUnicaInstancia().registrarContactoIndividual(ci);
+			u2.addContacto(ci);
+			AdaptadorUsuario.getUnicaInstancia().modificarUsuario(u2);
+			
+			ContactoIndividual ci2 = new ContactoIndividual("2", 2, u2);
+			AdaptadorContactoIndividual.getUnicaInstancia().registrarContactoIndividual(ci2);
+			u1.addContacto(ci2);
+			AdaptadorUsuario.getUnicaInstancia().modificarUsuario(u1);
+			
+			Mensaje m1 = new Mensaje(".", LocalDateTime.now(), 0, u2, ci);
+			Mensaje m2 = new Mensaje(".", LocalDateTime.now(), 0, u2, ci2);
+			
+			AdaptadorMensaje.getUnicaInstancia().registrarMensaje(m1);
+			AdaptadorMensaje.getUnicaInstancia().registrarMensaje(m2);
+			
+			ci.addMensaje(m1);
+			ci2.addMensaje(m2);
+			
+			AdaptadorContactoIndividual.getUnicaInstancia().modificarContactoIndividual(ci);
+			AdaptadorContactoIndividual.getUnicaInstancia().modificarContactoIndividual(ci2);
+			System.out.println("DONE");
+				
 	}
 
 	/**

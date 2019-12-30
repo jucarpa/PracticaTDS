@@ -2,6 +2,7 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,8 +39,8 @@ public class ActualizarBBDD {
 	private static ActualizarBBDD unicaInstancia;
 	private List<PChatCI> panelesCI = new LinkedList<PChatCI>();
 	private List<PChatG> panelesG = new LinkedList<PChatG>();
-	private List<PCIUC> panelesCIUC = new LinkedList<PCIUC>();
-	private List<PGUC> panelesGUC = new LinkedList<PGUC>();
+	private HashMap<Integer, PCIUC> panelesCIUC = new HashMap<Integer, PCIUC>();
+	private HashMap<Integer, PGUC> panelesGUC = new HashMap<Integer, PGUC>();
 	private List<PListaContactos> panelContactos = new LinkedList<PListaContactos>();
 	private List<PVistaPrincipal> pVP = new LinkedList<PVistaPrincipal>();
 	
@@ -81,20 +82,21 @@ public class ActualizarBBDD {
 		panelesG.remove(pC);
 	}
 	
-	public void addPanelCIUC(PCIUC pC) {
-		panelesCIUC.add(pC);
+	public int addPanelCIUC(PCIUC pC) {
+		panelesCIUC.put(pC.getContacto().getMovil(), pC);
+		return panelesCIUC.size() - 1;
 	}
 	
 	public void deletePanelCIUC(PCIUC pC) {
-		panelesCIUC.remove(pC);
+		panelesCIUC.remove(pC.getContacto().getMovil());
 	}
 	
 	public void addPanelGUC(PGUC pC) {
-		panelesGUC.add(pC);
+		panelesGUC.put(pC.getId(), pC);
 	}
 	
 	public void deletePanelGUC(PGUC pC) {
-		panelesGUC.remove(pC);
+		panelesGUC.remove(pC.getId());
 	}
 	
 	public void addPanelUltimosContactos(PListaContactos pU) {
@@ -114,11 +116,11 @@ public class ActualizarBBDD {
 			pC.update();
 		}
 		
-		for(PCIUC pC : panelesCIUC) {
+		for(PCIUC pC : panelesCIUC.values()) {
 			pC.update();
 		}
 		
-		for(PGUC pC : panelesGUC) {
+		for(PGUC pC : panelesGUC.values()) {
 			pC.update();
 		}
 		for (PListaContactos pC :panelContactos) {

@@ -1,4 +1,4 @@
-package componentes.Pulsador;
+package pulsador;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -19,13 +19,13 @@ public class Luz extends Canvas implements Serializable {
  
 	//atributos
 	private Vector encendidoListeners = new Vector(); 
-	private boolean bPulsado=false; 					//indica si el botï¿½n estï¿½ presionado o no
+	private boolean bPulsado=false; 					//indica si el botón está presionado o no
  
 	public Luz() { 
-		setSize(30,30); 					//tamaï¿½o inicial por defecto del pulsador
+		setSize(30,30); 					//tamaño inicial por defecto del pulsador
 		setMinimumSize(new Dimension(30,30));
 		repaint();
-		//Aï¿½adir eventos de ratï¿½n
+		//Añadir eventos de ratón
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				luzPressed(e);
@@ -37,10 +37,10 @@ public class Luz extends Canvas implements Serializable {
 	
 	public void paint(Graphics g) {
 		//public void paint(Graphics g) {
-		//obtener el tamaï¿½o del pulsador
+		//obtener el tamaño del pulsador
 		int ancho=getSize().width;
 		int alto=getSize().height;
-		//bloquear relaciï¿½n de aspecto
+		//bloquear relación de aspecto
 		if (ancho!=alto) {
 			if (ancho<alto) alto=ancho;
 			else ancho=alto;
@@ -48,8 +48,8 @@ public class Luz extends Canvas implements Serializable {
 		invalidate();
 		//repaint();
 		}
-		//int x=ancho/6; //grosor del botï¿½n
-		int grosor=3; //grosor del botï¿½n
+		//int x=ancho/6; //grosor del botón
+		int grosor=3; //grosor del botón
 		int anchuraBoton=ancho-grosor;
 		//int alturaBoton=alto-x;
 		int bordeBoton=anchuraBoton/5;

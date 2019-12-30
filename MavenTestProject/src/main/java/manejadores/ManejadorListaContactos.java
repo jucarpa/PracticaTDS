@@ -11,7 +11,6 @@ import controlador.ControladorAppChat;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
-import pruebas.OrdenarContactos;
 import vista.PCIUC;
 import vista.PGUC;
 import vista.PListaContactos;
@@ -33,12 +32,12 @@ public class ManejadorListaContactos {
 		List<Contacto> cOrdenados = OrdenarContactos.getUnicaInstancia().Bubble(cAOrdenar);
 		contactosOrdenadosOld = cOrdenados;
 		for(Contacto c : cOrdenados) {
-			
 			if(c.getClass() == ContactoIndividual.class) {
 				ContactoIndividual ci = (ContactoIndividual) c;
 			PCIUC aux = new PCIUC(ci.getMovil(),movilUA, listaContactos);
 			panel.add(aux);
 			panelesCI.put(ci.getId(), aux);
+			System.out.println(aux);
 			}
 			else {
 				Grupo g = (Grupo) c;
@@ -58,12 +57,16 @@ public class ManejadorListaContactos {
 			PCIUC pCIUC = new PCIUC(aux.getMovil(),movilUA, listaContactos);
 			panelesCI.put(aux.getId(), pCIUC);
 			panel.add(pCIUC);
+			panel.repaint();
+			panel.validate();
 			
 		} else {
 			Grupo g = (Grupo) c;
 			PGUC aux = new PGUC(g.getNombre(), movilUA, listaContactos);
 			panelesG.put(g.getId(), aux);
 			panel.add(aux);
+			panel.repaint();
+			panel.validate();
 		}
 		nContactos += 1;
 	}
@@ -76,8 +79,9 @@ public class ManejadorListaContactos {
 	}
 	
 	public void removeCI(ContactoIndividual ci) {
-		panelesCI.get(ci.getId()).setVisible(false);
+		System.out.println(panelesCI.get(ci.getId()));
 		panelesCI.get(ci.getId()).removeUpdate();
+		panelesCI.get(ci.getId()).setVisible(false);
 		panelesCI.remove(ci.getId());
 		nContactos -= 1;
 	}

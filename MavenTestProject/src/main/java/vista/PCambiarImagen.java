@@ -17,7 +17,7 @@ import controlador.ControladorAppChat;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
-public class VCambiarImagen extends JPanel{
+public class PCambiarImagen extends JPanel{
 
 	private JPanel contentPane;
 
@@ -25,7 +25,7 @@ public class VCambiarImagen extends JPanel{
 	 * Launch the application.
 	 */
 
-	public VCambiarImagen(PVistaPrincipal ventana) {
+	public PCambiarImagen(PVistaPrincipal ventana) {
 		
 		//Creamos el objeto JFileChooser
 		JFileChooser fc=new JFileChooser();

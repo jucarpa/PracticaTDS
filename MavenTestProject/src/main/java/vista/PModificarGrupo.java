@@ -39,18 +39,19 @@ public class PModificarGrupo extends JPanel {
 	private ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
 	private Map<String, ContactoIndividual>contactosseleccionados =  new HashMap<String, ContactoIndividual>();
 	private List<ContactoIndividual> contactosAntiguos = new LinkedList<ContactoIndividual>();
+	private Grupo grupo;
 	/**
 	 * Create the panel.
 	 */
 	public PModificarGrupo(PVistaPrincipal ventana, String nombreGrupo, int movilUA) {
-		Grupo grupo = controlador.getGrupo(nombreGrupo, movilUA);
+		grupo = controlador.getGrupo(nombreGrupo, movilUA);
 		setPreferredSize(new Dimension(370, 450));
 		setSize(new Dimension(370, 450));
 		setMinimumSize(new Dimension(370, 450));
 		setMaximumSize(new Dimension(370, 450));
 		setLayout(null);
 		
-		textField = new JTextField();
+		textField = new JTextField(nombreGrupo);
 		textField.setBounds(184, 301, 116, 22);
 		add(textField);
 		textField.setColumns(10);
@@ -120,12 +121,15 @@ public class PModificarGrupo extends JPanel {
 					JOptionPane.PLAIN_MESSAGE);
 			} else {
 				ArrayList<ContactoIndividual> contactos = new ArrayList<ContactoIndividual>(contactosseleccionados.values());
+				System.out.println(contactos.toString());
+				System.out.println(grupo.getContactos());
 				contactosAntiguos = grupo.getContactos();
 				grupo.setContactos(contactos);
 				grupo.setNombre(textField.getText());
 				controlador.modificarGrupo(grupo, contactosAntiguos);
 				ventana.setContactoSeleccionado(grupo, 2);
 				ventana.modificarContacto(grupo, 2);
+				ventana.showOpcionesContacto();
 				JOptionPane.showMessageDialog(ventana, "Grupo Modificado", "Modificar Grupo",
 						JOptionPane.PLAIN_MESSAGE);
 				}
@@ -134,7 +138,7 @@ public class PModificarGrupo extends JPanel {
 		
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ventana.cambioPanelContacto(2);
+				ventana.setContactoSeleccionado(grupo, 2);
 			}
 		});
 		
@@ -177,6 +181,7 @@ public class PModificarGrupo extends JPanel {
 		}
 		for(ContactoIndividual c : grupo.getContactos()) {
 			contactos.add(c);
+			contactosseleccionados.put(c.getNombre(), c);
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			model.addRow(new Object[]{c.getNombre()});
 		}

@@ -1,5 +1,6 @@
 package persistencia;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,13 +43,6 @@ public class AdaptadorMensaje implements IAdaptadorMensajeDAO {
 			return;
 		AdaptadorUsuario aU = AdaptadorUsuario.getUnicaInstancia();
 		aU.registrarUsuario(mensaje.getEmisor());
-		if (mensaje.getReceptor().getClass() == Grupo.class) {
-			AdaptadorGrupo aG = AdaptadorGrupo.getUnicaInstancia();
-			aG.registrarGrupo((Grupo) mensaje.getReceptor());
-		} else {
-			AdaptadorContactoIndividual aCI = AdaptadorContactoIndividual.getUnicaInstancia();
-			aCI.registrarContactoIndividual((ContactoIndividual) mensaje.getReceptor());
-		}
 
 		eMensaje = new Entidad();
 		eMensaje.setNombre("Mensaje");
@@ -88,7 +82,7 @@ public class AdaptadorMensaje implements IAdaptadorMensajeDAO {
 
 		Entidad eMensaje = servPersistencia.recuperarEntidad(codigo);
 		String texto = servPersistencia.recuperarPropiedadEntidad(eMensaje, "texto");
-		LocalTime hora = LocalTime.parse(servPersistencia.recuperarPropiedadEntidad(eMensaje, "hora"));
+		LocalDateTime hora = LocalDateTime.parse(servPersistencia.recuperarPropiedadEntidad(eMensaje, "hora"));
 		int emoticono = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "emoticono"));
 
 		Mensaje mensaje = new Mensaje(texto, hora, emoticono);

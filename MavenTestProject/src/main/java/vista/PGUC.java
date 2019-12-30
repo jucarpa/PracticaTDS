@@ -45,10 +45,14 @@ public class PGUC extends JPanel{
 	private JLabel lblFecha;
 	private JLabel lblTexto;
 	private int movilUA;
+	private PListaContactos ventana;
+	private int id;
 	public PGUC(String nombreGrupo, int movilUsuario, PListaContactos ventana) {
-		ActualizarBBDD.getUnicaInstancia().addPanelGUC(this);
+		this.ventana = ventana;
 		c = controlador.getGrupo(nombreGrupo, movilUsuario);
+		ActualizarBBDD.getUnicaInstancia().addPanelGUC(this);
 		movilUA = movilUsuario;
+		id = c.getId();
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		setPreferredSize(new Dimension(260, 50));
 		setIgnoreRepaint(true);
@@ -126,7 +130,14 @@ public class PGUC extends JPanel{
 	}
 	
 	public void update() {
+		try {
 		c = ControladorAppChat.getUnicaInstancia().getGrupoPorId(c.getId(), movilUA);
+		}catch(NullPointerException e) {c = null;}
+		if(c == null) {
+			removeUpdate();
+			this.setVisible(false);
+			ventana.pGUCEliminado(id);
+		} else {
 		lblNombre.setText(c.getNombre());
 		try {
 			Mensaje ultMensaje = c.getMensajes().get(c.getMensajes().size());			
@@ -136,10 +147,14 @@ public class PGUC extends JPanel{
 				else
 					lblTexto.setIcon(new ImageIcon(BubbleText.getEmoji(ultMensaje.getEmoticon()).getImage().getScaledInstance(15,15, Image.SCALE_SMOOTH)));
 		} catch (Exception e) {}
-		
+		}
 	}
 	
 	public void removeUpdate() {
 		ActualizarBBDD.getUnicaInstancia().deletePanelGUC(this);
+	}
+	
+	public int getId() {
+		return id;
 	}
 }

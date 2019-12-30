@@ -92,4 +92,8 @@ public class PListaContactos extends JPanel {
 	public void update() {
 		manejador.update();
 	}
+	
+	public void pGUCEliminado(int id) {
+		ventana.pGUCEliminado(id);
+	}
 }

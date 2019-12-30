@@ -50,7 +50,7 @@ public class PChatG extends JPanel {
 	private int nMensajes;
 	private int idG;
 	private int on;
-	private VentanaEmoticonos ventanaEmoticonos;
+	private PEmoticonos ventanaEmoticonos;
 	/**
 	 * Create the panel.
 	 */
@@ -73,7 +73,7 @@ public class PChatG extends JPanel {
 		i = emoji.getImage();
 		emoji= new ImageIcon(i.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		
-		ventanaEmoticonos = new VentanaEmoticonos();
+		ventanaEmoticonos = new PEmoticonos();
 		ventanaEmoticonos.setBounds(0, 180, 118, 194);
 		add(ventanaEmoticonos);
 		
@@ -193,7 +193,10 @@ public class PChatG extends JPanel {
 	
 	public void update() {
 		Grupo g = ControladorAppChat.getUnicaInstancia().getGrupoPorId(idG, movilUA);
-		nMensajes = ManejadorChatG.getUnicaInstancia().update(nMensajes, g.getMensajes(), movilUA, panel);
+		if(g != null)
+			nMensajes = ManejadorChatG.getUnicaInstancia().update(nMensajes, g.getMensajes(), movilUA, panel);
+		else 
+			removeUpdate();
 	}
 	
 	public void removeUpdate() {
@@ -206,5 +209,9 @@ public class PChatG extends JPanel {
 		ventanaEmoticonos.setVisible(false);
 		on = 0;
 		nMensajes +=1;
+	}
+	
+	public int getIDG() {
+		return idG;
 	}
 }

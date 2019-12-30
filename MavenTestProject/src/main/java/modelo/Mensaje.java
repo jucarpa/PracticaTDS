@@ -1,17 +1,19 @@
 package modelo;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Mensaje {
 
 	private String texto;
-	private LocalTime hora;
+	private LocalDateTime hora;
 	private int emoticon;
 	private int id;
 	private Usuario emisor;
 	private Contacto receptor;
 
-	public Mensaje(String texto, LocalTime hora, int emoticon, Usuario emisor, Contacto receptor) {
+	public Mensaje(String texto, LocalDateTime hora, int emoticon, Usuario emisor, Contacto receptor) {
 		super();
 		this.texto = texto;
 		this.hora = hora;
@@ -20,7 +22,7 @@ public class Mensaje {
 		this.receptor = receptor;
 	}
 
-	public Mensaje(String texto, LocalTime hora, int emoticon) {
+	public Mensaje(String texto, LocalDateTime hora, int emoticon) {
 		super();
 		this.texto = texto;
 		this.hora = hora;
@@ -51,11 +53,11 @@ public class Mensaje {
 		this.texto = texto;
 	}
 
-	public LocalTime getHora() {
+	public LocalDateTime getHora() {
 		return hora;
 	}
 
-	public void setHora(LocalTime hora) {
+	public void setHora(LocalDateTime hora) {
 		this.hora = hora;
 	}
 

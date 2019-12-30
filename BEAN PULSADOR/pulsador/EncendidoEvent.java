@@ -1,4 +1,4 @@
-package componentes.Pulsador;
+package pulsador;
 
 import java.util.EventObject;
 

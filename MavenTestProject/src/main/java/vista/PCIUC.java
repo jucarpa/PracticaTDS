@@ -45,12 +45,13 @@ public class PCIUC extends JPanel {
 	private JLabel lblTexto;
 	private int movilUA;
 	private Component horizontalStrut;
+	private int pos;
 	public PCIUC(int movilContacto, int movilUsuario, PListaContactos ventana) {
 		c = controlador.getContactoIndividual(movilContacto, movilUsuario);
 		
 		System.out.println(c.getUsuario().getNombre());
 		movilUA = movilUsuario;
-		ActualizarBBDD.getUnicaInstancia().addPanelCIUC(this);
+		pos = ActualizarBBDD.getUnicaInstancia().addPanelCIUC(this);
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		setPreferredSize(new Dimension(260, 50));
 		setIgnoreRepaint(true);
@@ -146,5 +147,9 @@ public class PCIUC extends JPanel {
 	
 	public void removeUpdate() {
 		ActualizarBBDD.getUnicaInstancia().deletePanelCIUC(this);
+	}
+	
+	public ContactoIndividual getContacto() {
+		return c;
 	}
 }

@@ -128,8 +128,9 @@ public class PCrearGrupo extends JPanel {
 				Grupo c = ControladorAppChat.getUnicaInstancia().registrarGrupo(textField.getText(), contactosCod, movilUA);
 				JOptionPane.showMessageDialog(ventana, "Grupo Registrado", "Registrar Grupo",
 						JOptionPane.PLAIN_MESSAGE);
-				ventana.setContactoSeleccionado(c, 2);
 				ventana.addPanelContacto(c, 2);
+				ventana.setContactoSeleccionado(c, 2);
+				
 				
 				}
 			}

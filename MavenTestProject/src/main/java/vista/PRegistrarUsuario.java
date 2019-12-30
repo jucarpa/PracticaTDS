@@ -225,7 +225,7 @@ public class PRegistrarUsuario extends JPanel {
 		/*Manejador bot�n volver*/
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ventana.setContentPane(jpanelAnterior);
+				ventana.cambioPanelLogin();
 				ventana.setTitle("Login App Char");	
 				ventana.revalidate();
 			}

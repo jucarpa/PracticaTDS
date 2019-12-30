@@ -24,7 +24,7 @@ import java.awt.Point;
 import java.awt.Color;
 import java.awt.Component;
 
-public class VentanaEmoticonos extends JPanel {
+public class PEmoticonos extends JPanel {
 
 	private int nEmoticonos;
 	private JButton lbl_0;
@@ -41,17 +41,17 @@ public class VentanaEmoticonos extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public VentanaEmoticonos(PChatG vG) {
+	public PEmoticonos(PChatG vG) {
 		this();
 		this.vG = vG;
 	}
 	
-	public VentanaEmoticonos(PChatCI vCI) {
+	public PEmoticonos(PChatCI vCI) {
 		this();
 		this.vCI = vCI;
 	}
 	
-	public VentanaEmoticonos() {
+	public PEmoticonos() {
 		setBackground(Color.WHITE);
 		nEmoticonos = 5;
 		ImageIcon im0 = BubbleText.getEmoji(0);

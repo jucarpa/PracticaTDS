@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import tds.BubbleText;
-import vista.VentanaEmoticonos;
+import vista.PEmoticonos;
 
 public class PruebaCHat extends JFrame {
 
@@ -41,7 +41,7 @@ public class PruebaCHat extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		System.out.println(BubbleText.MAXICONO);
-		contentPane.add(new VentanaEmoticonos());
+		contentPane.add(new PEmoticonos());
 	}
 
 }

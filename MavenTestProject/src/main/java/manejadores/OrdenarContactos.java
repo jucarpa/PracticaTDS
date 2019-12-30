@@ -1,5 +1,6 @@
-package pruebas;
+package manejadores;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,8 @@ public class OrdenarContactos {
 	public List<Contacto> Bubble(List<Contacto> contactos) {
 		 for (int i = 1; i < contactos.size(); i++) {
 			 for (int j = 0 ; j < contactos.size() - 1; j++) {
-				 LocalTime horaJ = null;
-				 LocalTime horaJ1 = null;
+				 LocalDateTime horaJ = null;
+				 LocalDateTime horaJ1 = null;
 				 if(contactos.get(j).getMensajes().size() != 0) {
 					 horaJ = contactos.get(j).getMensajes().get(contactos.get(j).getMensajes().size() - 1).getHora();
 				 }

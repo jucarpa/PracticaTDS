@@ -90,7 +90,6 @@ public class PLoginUsuario extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				String auxUsuario = usuario.getText().trim();
 				String auxContrasena = contrasena.getText().trim();
-				System.out.println("Falluco?");
 				if (auxUsuario.isEmpty() || auxContrasena.isEmpty())
 					lalerta.setVisible(true);
 				else {

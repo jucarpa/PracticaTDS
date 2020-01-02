@@ -100,6 +100,7 @@ public class PCrearContacto extends JPanel {
 							Integer.valueOf(textTelefono.getText()), movilUA);
 					JOptionPane.showMessageDialog(ventana, "Contacto Creado Correctamente", "Contacto Creado Correctamente",
 							JOptionPane.PLAIN_MESSAGE);
+					ventana.showOpcionesContacto();
 					ventana.setContactoSeleccionado(ci, 1);
 					ventana.addPanelContacto(ci, 1);
 				}else JOptionPane.showMessageDialog(ventana, "Este numero ya estaba registrado o no existe dicho Usuario", "Registrar Contacto",

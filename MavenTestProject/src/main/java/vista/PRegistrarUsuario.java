@@ -254,8 +254,7 @@ public class PRegistrarUsuario extends JPanel {
 						} else JOptionPane.showMessageDialog(ventana,
 								"No se ha podido llevar a cabo el registro.\n",
 								"Registro",
-								JOptionPane.ERROR_MESSAGE);
-						ventana.setTitle("Login Gestor Eventos");	
+								JOptionPane.ERROR_MESSAGE);	
 				}
 			} 
 		});

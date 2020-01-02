@@ -115,8 +115,6 @@ public class ControladorAppChat implements IMensajeListener{
 	}
 	
 	public boolean existeContacto(int movil, int movilUA) {
-		if(CatalogoUsuarios.getUnicaInstancia().getUsuario(movil) == null)
-			return true;
 		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
 		return usuarioActual.getCIPorNumero(movil) != null;
 	}
@@ -125,14 +123,12 @@ public class ControladorAppChat implements IMensajeListener{
 		Grupo g = adaptadorGrupo.recuperarGrupo(iDReceptor);
 		Mensaje mensaje = null;
 		Usuario usuarioActual = CatalogoUsuarios.getUnicaInstancia().getUsuario(movilUA);
+		g = usuarioActual.getGrupoPorNombre(g.getNombre());
 		mensaje = new Mensaje(texto, LocalDateTime.now(), emoticono, usuarioActual, g);
 		adaptadorMensaje.registrarMensaje(mensaje);
 		g.addMensaje(mensaje);
 		adaptadorGrupo.modificarGrupo(g);
-		adaptadorUsuario.modificarUsuario(usuarioActual);
-		for (ContactoIndividual ci : g.getContactos()) {
-			adaptadorUsuario.modificarUsuario(ci.getUsuario());
-		}
+		//adaptadorUsuario.modificarUsuario(usuarioActual);
 		return mensaje;
 	}
 	public Mensaje registrarMensajeCI(String texto, int emoticono, int movilReceptor, int movilUA) {

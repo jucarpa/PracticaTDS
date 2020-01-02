@@ -52,7 +52,7 @@ public class PVistaPrincipal extends JPanel {
 	private JMenu mnIconoUsuario, mnEstado, mnOpciones, mnInfoCuenta, mnBusqueda, mnEliminaciones;
 	private JMenuItem mntmImagen, mntmNombreUsuario, mntmSaludo, mntmEstado, mntmCrearContacto, mntmCrearGrupo,
 			mntmModificarGrupo, mntmCambiarImagen, mntmCambiarSaludo, mntmMostrarContactos, mntmConvertirseEnPremium,
-			mntmEliminarMensajes, mntmEliminarContacto, mntmEstadisticas, mntmGenerarPDF, mntmInfoMovilusuario;
+			mntmEliminarMensajes, mntmEliminarContacto, mntmEstadisticas, mntmGenerarPDF, mntmInfoMovilusuario, mntmInfoNombreUsuario;
 	private JPanel panel_2;
 	private JPanel panel_3;
 	private JPanel panel_4;
@@ -144,7 +144,7 @@ public class PVistaPrincipal extends JPanel {
 		mntmEstadisticas = new JMenuItem("Estadisticas");
 		mntmEstadisticas.setForeground(new Color(255, 215, 0));
 		mntmEstadisticas.setFont(new Font("Rockwell", Font.ITALIC, 14));
-		mnOpciones.add(mntmEstadisticas);
+		//mnOpciones.add(mntmEstadisticas);
 		
 		mntmGenerarPDF = new JMenuItem("Generar PDF");
 		mntmGenerarPDF.setForeground(new Color(255, 215, 0));
@@ -162,7 +162,9 @@ public class PVistaPrincipal extends JPanel {
 		mnInfoCuenta = new JMenu("Info Cuenta");
 		mnInfoCuenta.setActionCommand("Info Cuenta");
 		menuBar.add(mnInfoCuenta);
+		mntmInfoNombreUsuario = new JMenuItem();
 		mntmInfoMovilusuario = new JMenuItem();
+		mnInfoCuenta.add(mntmInfoNombreUsuario);
 		mnInfoCuenta.add(mntmInfoMovilusuario);
 		mntmInfoMovilusuario.setVisible(false);
 
@@ -203,6 +205,7 @@ public class PVistaPrincipal extends JPanel {
 		splitPane.setLeftComponent(panelUtlimosContactos);
 		add(splitPane, BorderLayout.CENTER);
 		JPanel pAux = new JPanel();
+		pAux.setBackground(new Color(51, 204, 102));
 		splitPane.setRightComponent(pAux);
 
 		Usuario usuario = ControladorAppChat.getUnicaInstancia().getUsuario(movilUA);
@@ -430,14 +433,19 @@ public class PVistaPrincipal extends JPanel {
 			Image im = iC.getImage();
 			iC = new ImageIcon(im.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 			mnInfoCuenta.setIcon(iC);
-			mnInfoCuenta.setText(aux.getNombre());
+			mnInfoCuenta.setText("");
+			mntmInfoNombreUsuario.setText(aux.getNombre());
 			mntmInfoMovilusuario.setText(aux.getMovil() + "");
 			mntmInfoMovilusuario.setVisible(true);
 			
 			luz.setContacto(aux.getMovil());
 		} else {
-			mnInfoCuenta.setIcon(null);
-			mnInfoCuenta.setText(c.getNombre());
+			ImageIcon iU = new ImageIcon(VMain.class.getResource("/imagenes/ImagenGrupoDef.png"));
+			Image im = iU.getImage();
+			iU = new ImageIcon(im.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+			mnInfoCuenta.setIcon(iU);
+			mnInfoCuenta.setText("");
+			mntmInfoNombreUsuario.setText(c.getNombre());
 			panelActual = new PChatG((Grupo)c, movilUA);
 			splitPane.setRightComponent(panelActual);
 		}

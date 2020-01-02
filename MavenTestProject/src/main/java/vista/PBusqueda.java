@@ -19,7 +19,7 @@ public class PBusqueda extends JPanel {
 		
 		for(Contacto c : u.getContactos()) {
 			for(Mensaje m : c.getMensajes()) {
-				if(m.getTexto().equals(texto)) {
+				if(m.getTexto().contains(texto)) {
 					add(new ItemBusqueda(m));
 				}
 			}

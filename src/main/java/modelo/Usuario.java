@@ -44,7 +44,7 @@ public class Usuario implements Serializable{
 		this.email = email;
 		premium = false;
 		contactos = new ArrayList<Contacto>();
-		imagen = "D:\\Proyecto TDS\\src\\main\\java\\imagenes\\ImagenUsuarioDef.png";
+		imagen = "D:\\Proyeccto TDS Clone\\src\\main\\java\\imagenes\\ImagenUsuarioDef.png";
 		saludo = "Hola AppChat!";
 	}
 	

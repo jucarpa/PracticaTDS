@@ -92,7 +92,7 @@ public class CatalogoUsuarios {
 			.findAny().orElse(null);
 	}
 	
-	public Usuario login(String login, String pass) {
+	public Usuario loginUsuario(String login, String pass) {
 		Usuario sol = usuarios.get(login);
 		if(sol.isPassword(pass))
 			return sol;

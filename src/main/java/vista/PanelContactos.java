@@ -37,7 +37,7 @@ public class PanelContactos extends JPanel implements  PropertyChangeListener{
 		anyadirContactos();
 		
 		//Anyadimos el panel como listener para eliminar/crear nuevo Contacto
-		ControladorAppChat.getUnicaInstancia().getUsuario().addUsuarioChangeListener(this);
+		ControladorAppChat.getUnicaInstancia().addUsuarioChangeListener(this);
 	}
 	
 	private void crearPanel() {

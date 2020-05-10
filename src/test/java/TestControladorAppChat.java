@@ -104,13 +104,14 @@ public class TestControladorAppChat {
 
 	@Test
 	public void testLogin() {
-		assertTrue(controlador.login("Prueba1", "Prueba1"));
+		assertTrue(controlador.loginUsuario("Prueba1", "Prueba1"));
 	}
 
 	@Test
 	public void testModificarCI() {
 		String nNombre = "Cambio de Nombre";
-		controlador.modificarCI(nNombre, 123, auxCI);
+		controlador.setContacto(auxCI);
+		controlador.modificarCI(nNombre, 123);
 		
 		String nombre = adaptadorCI.recuperarContactoIndividual(auxCI.getId()).getNombre();
 		
@@ -120,7 +121,8 @@ public class TestControladorAppChat {
 	@Test
 	public void testModificarGrupo() {
 		String nNombre = "Cambio de Nombre";
-		controlador.modificarGrupo(nNombre,new ArrayList<ContactoIndividual>(), auxG);
+		controlador.setContacto(auxG);
+		controlador.modificarGrupo(nNombre,new ArrayList<ContactoIndividual>());
 		
 		String nombre = adaptadorGrupo.recuperarGrupo(auxG.getId()).getNombre();
 		

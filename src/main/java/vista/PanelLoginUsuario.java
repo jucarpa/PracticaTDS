@@ -148,7 +148,7 @@ public class PanelLoginUsuario extends JPanel {
 			return false;
 		}
 		
-		if(!ControladorAppChat.getUnicaInstancia().login(login, pass)) {
+		if(!ControladorAppChat.getUnicaInstancia().loginUsuario(login, pass)) {
 			lAlerta2.setVisible(true);
 			return false;
 		}

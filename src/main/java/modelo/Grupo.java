@@ -60,7 +60,9 @@ public class Grupo extends Contacto {
 		return admin.equals(u);
 	}
 	
-	
+	public String getNombreAdmin() {
+		return admin.getNombre();
+	}
 	//Devuelve los Usuarios de los Contactos
 	public List<Usuario> getUsuarios() {
 		return contactos.stream()

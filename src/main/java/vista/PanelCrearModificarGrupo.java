@@ -31,11 +31,12 @@ public class PanelCrearModificarGrupo extends JPanel {
 	private JButton btnDerecha, btnIzquierda, btnAceptar, btnCancelar;
 	
 	private int modificar;
-	private Grupo grupo;
+	private ControladorAppChat controlador;
 	
-	public PanelCrearModificarGrupo(PanelVistaPrincipal v) {
+	public PanelCrearModificarGrupo(PanelVistaPrincipal v, int n) {
 		ventana = v;
 		modificar = 0;
+		controlador = ControladorAppChat.getUnicaInstancia();
 		
 		Dimension d = new Dimension(315,480);
 		setSize(d);
@@ -45,13 +46,11 @@ public class PanelCrearModificarGrupo extends JPanel {
 		
 		crearPanel();
 		iniciar();
-	}
-	
-	public PanelCrearModificarGrupo(PanelVistaPrincipal v, Grupo g) {
-		this(v);
-		grupo = g;
-		modificar = 1;
-		initModificado();
+		
+		if(n == 1) {
+			modificar = 1;
+			initModificado();
+		}
 	}
 	
 	private void crearPanel() {
@@ -130,7 +129,7 @@ public class PanelCrearModificarGrupo extends JPanel {
 	private void iniciar() {
 		
 		//Obtenemos los Contactos
-		List<Contacto> contactos = ControladorAppChat.getUnicaInstancia().getContactos();
+		List<Contacto> contactos = controlador.getContactos();
 		DefaultTableModel modelIzq = (DefaultTableModel) tablaIzq.getModel();
 		//Para cada contacto que sea un ContactoIndividual
 		//Se añade a la tabla de la Izquierda
@@ -171,7 +170,7 @@ public class PanelCrearModificarGrupo extends JPanel {
 	//Eliminamos de la derecha los que están en la izquierda;
 	private void initModificado() {
 		DefaultTableModel modelDer = (DefaultTableModel) tablaDer.getModel();
-		List<ContactoIndividual> contactosG = grupo.getContactos();
+		List<ContactoIndividual> contactosG = controlador.getContactosGrupoActual();
 		contactosG.stream()
 		.forEach(c -> modelDer.addRow(new Object[] {c.getNombre()}));
 		
@@ -183,7 +182,7 @@ public class PanelCrearModificarGrupo extends JPanel {
 			.filter(c -> c.esNombre(aux))
 			.forEach(c -> modelIzq.removeRow(pos));
 		}
-		textNombreGrupo.setText(grupo.getNombre());
+		textNombreGrupo.setText(controlador.getNombreContacto());
 	}
 	
 	
@@ -196,7 +195,7 @@ public class PanelCrearModificarGrupo extends JPanel {
 		
 		for(int i = 0; i < modelDer.getRowCount(); i++) {
 			String nombre = (String) modelDer.getValueAt(i, 0);
-			ContactoIndividual aux = ControladorAppChat.getUnicaInstancia().getContacto(nombre);
+			ContactoIndividual aux = controlador.getContacto(nombre);
 			sol.add(aux);
 		}
 		String nombreGrupo = textNombreGrupo.getText().trim();
@@ -206,12 +205,12 @@ public class PanelCrearModificarGrupo extends JPanel {
 					"Registrar Grupo",JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			if(modificar == 0) {
-				Grupo g = ControladorAppChat.getUnicaInstancia().crearGrupo(nombreGrupo, sol);
-				ventana.contactoSeleccionado(g);
+				Grupo g = controlador.crearGrupo(nombreGrupo, sol);
+				ventana.contactoSeleccionado();
 			}
 			else {
-				Grupo g = ControladorAppChat.getUnicaInstancia().modificarGrupo(nombreGrupo, sol, grupo);
-				ventana.contactoSeleccionado(g);
+				Grupo g = controlador.modificarGrupo(nombreGrupo, sol);
+				ventana.contactoSeleccionado();
 			
 			}
 		}

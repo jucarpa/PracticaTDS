@@ -49,7 +49,7 @@ public class PanelContacto extends JPanel implements PropertyChangeListener{
 		infoContacto();
 		
 		c.addContactoChangeListener(this);
-		ControladorAppChat.getUnicaInstancia().getUsuario().addUsuarioChangeListener(this);
+		ControladorAppChat.getUnicaInstancia().addUsuarioChangeListener(this);
 	}
 	
 	private void crearPanel() {
@@ -105,7 +105,8 @@ public class PanelContacto extends JPanel implements PropertyChangeListener{
 		
 		//Botono invisible que al pulsar al Panel Muestra El Chat del Contacto
 		btnNewButton.addActionListener(e -> {
-			ventana.contactoSeleccionado(contacto);
+			ControladorAppChat.getUnicaInstancia().setContacto(contacto);
+			ventana.contactoSeleccionado();
 		});
 		
 		
@@ -182,7 +183,7 @@ public class PanelContacto extends JPanel implements PropertyChangeListener{
 				if(oContacto.equals(contacto) 
 						&& nContacto == null) {
 					contacto.removeContactoChangeListener(this);
-					ControladorAppChat.getUnicaInstancia().getUsuario().removeUsuarioChangeListener(this);
+					ControladorAppChat.getUnicaInstancia().removeUsuarioChangeListener(this);
 					setVisible(false);
 				}
 			}	

@@ -40,9 +40,8 @@ public class PanelCrearModificarContacto extends JPanel {
 	
 	//SII == 0, es un Contacto a crear;
 	private int modificar;
-	private ContactoIndividual contacto;
 	
-	public PanelCrearModificarContacto(PanelVistaPrincipal v) {
+	public PanelCrearModificarContacto(PanelVistaPrincipal v, int n) {
 		Dimension d = new Dimension(315, 480);
 		setSize(d);
 		setMinimumSize(d);
@@ -52,14 +51,12 @@ public class PanelCrearModificarContacto extends JPanel {
 		controlador = ControladorAppChat.getUnicaInstancia();
 		modificar = 0;
 		crearPanel();
-	}
-	
-	public PanelCrearModificarContacto(PanelVistaPrincipal v, ContactoIndividual c) {
-		this(v);
-		contacto = c;
-		modificar = 1;
-		initModificar();
 		
+		if(n == 1) {
+			modificar = 1;
+			initModificar();
+			
+		}
 	}
 	
 	private void crearPanel() {
@@ -146,11 +143,11 @@ public class PanelCrearModificarContacto extends JPanel {
 				String nombre = tNombre.getText().trim();
 				int movil = Integer.valueOf(tNumeroTelefono.getText().trim());
 				if(modificar == 0) {
-					ContactoIndividual ci = controlador.crearCI(nombre, movil);
-					ventana.contactoSeleccionado(ci);
+					controlador.crearCI(nombre, movil);
+					ventana.contactoSeleccionado();
 				}else {
-					ContactoIndividual ci = controlador.modificarCI(nombre, movil,contacto);
-					ventana.contactoSeleccionado(ci);
+					controlador.modificarCI(nombre, movil);
+					ventana.contactoSeleccionado();
 				}
 			}
 				
@@ -196,8 +193,8 @@ public class PanelCrearModificarContacto extends JPanel {
 	//Metodo que escribe los datos del Contacto
 	private void initModificar() {
 		rotulo.setText("Modificar Contacto");
-		String nombre = contacto.getNombre();
-		int numero = contacto.getMovil();
+		String nombre = controlador.getNombreContacto();
+		int numero = controlador.getNumeroContacto();
 		tNombre.setText(nombre);
 		tNumeroTelefono.setText(numero + "");
 	}

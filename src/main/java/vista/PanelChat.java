@@ -40,18 +40,21 @@ public class PanelChat extends JPanel implements PropertyChangeListener {
 	private JTextField textField;
 	private int on = 0;
 	PanelEmoticonos ventanaEmoticonos;
+	private ControladorAppChat controlador;
 	
-	public PanelChat(Contacto c) {
+	public PanelChat() {
 		setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		Dimension d = new Dimension(310,450);
 		setMinimumSize(d);
 		setSize(d);
 		setMaximumSize(d);
 		
-		contacto = c;
+		controlador = ControladorAppChat.getUnicaInstancia();
+		
+		contacto = controlador.getContactoActual();
 		//Agregamos al PanelChat como oyente, para la actualización de mensajes
 		contacto.addContactoChangeListener(this);
-		ControladorAppChat.getUnicaInstancia().getUsuario().addUsuarioChangeListener(this);
+		controlador.addUsuarioChangeListener(this);
 		
 		crearPanel();
 	}
@@ -165,9 +168,8 @@ public class PanelChat extends JPanel implements PropertyChangeListener {
 	
 	//Cuando el Chat es Para ContactoIndividual
 	private void addMensajeCI(String texto, int emoticono, Usuario emisor) {
-		Usuario usuarioActual = ControladorAppChat.getUnicaInstancia().getUsuario();
 		BubbleText mensaje = null;
-		if(emisor.equals(usuarioActual)) {
+		if(controlador.esEmisor(emisor)) {
 			if(texto.isEmpty()) 
 				mensaje = new BubbleText(pChat, emoticono,
 						Color.GREEN,"", BubbleText.SENT, 18);
@@ -189,10 +191,8 @@ public class PanelChat extends JPanel implements PropertyChangeListener {
 	
 	//Cuando el Chat es para Grupo
 	private void addMensajeG(String texto, int emoticono, Usuario emisor) {
-		Usuario usuarioActual = ControladorAppChat.getUnicaInstancia().getUsuario();
 		BubbleText mensaje = null;
-		
-		if(emisor.equals(usuarioActual)) {
+		if(controlador.esEmisor(emisor)) {
 			if(texto.isEmpty()) 
 				mensaje = new BubbleText(pChat, emoticono,
 						Color.GREEN,"", BubbleText.SENT, 18);
@@ -203,8 +203,8 @@ public class PanelChat extends JPanel implements PropertyChangeListener {
 		}
 		else {
 			String nombreUsuario;
-			if(ControladorAppChat.getUnicaInstancia().existeContacto(emisor.getMovil()))
-				nombreUsuario = ControladorAppChat.getUnicaInstancia().getNombreContacto(emisor);
+			if(controlador.existeContacto(emisor.getMovil()))
+				nombreUsuario = controlador.getNombreContacto(emisor);
 			else
 				nombreUsuario = emisor.getMovil() + "";
 			
@@ -223,9 +223,9 @@ public class PanelChat extends JPanel implements PropertyChangeListener {
 	private void enviarMensaje(String texto) {
 		//Guardamos los mensajes ya sean en grupo o en ContactoIndividual
 		if(contacto instanceof Grupo) {
-			ControladorAppChat.getUnicaInstancia().crearMensajeG(texto, 0, (Grupo) contacto);
+			controlador.crearMensajeG(texto, 0, (Grupo) contacto);
 		} else { 
-			ControladorAppChat.getUnicaInstancia().crearMensajeCI(texto, 0, (ContactoIndividual) contacto);
+			controlador.crearMensajeCI(texto, 0, (ContactoIndividual) contacto);
 		}
 
 	}
@@ -235,9 +235,9 @@ public class PanelChat extends JPanel implements PropertyChangeListener {
 		ventanaEmoticonos.setVisible(false);
 		
 		if(contacto instanceof Grupo) {
-			ControladorAppChat.getUnicaInstancia().crearMensajeG("", emoticono, (Grupo) contacto);
+			controlador.crearMensajeG("", emoticono, (Grupo) contacto);
 		} else { 
-			ControladorAppChat.getUnicaInstancia().crearMensajeCI("", emoticono, (ContactoIndividual) contacto);
+			controlador.crearMensajeCI("", emoticono, (ContactoIndividual) contacto);
 		}
 		
 	}
@@ -267,7 +267,7 @@ public class PanelChat extends JPanel implements PropertyChangeListener {
 						&& nContacto == null) {
 					//Contacto ELIMINADO. Esto se envia desde usuario. PanelVistaPrincipal -> ControladorAppChat -> Usuario.removeContacto
 					contacto.removeContactoChangeListener(this);
-					ControladorAppChat.getUnicaInstancia().getUsuario().removeUsuarioChangeListener(this);
+					controlador.removeUsuarioChangeListener(this);
 					setVisible(false);
 				}
 			}

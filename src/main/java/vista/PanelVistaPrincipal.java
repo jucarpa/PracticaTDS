@@ -16,17 +16,17 @@ import javax.swing.JPanel;
 
 import com.itextpdf.text.DocumentException;
 
-import componentes.bin.parse.IParseListener;
-import componentes.bin.parse.Parse;
-import componentes.bin.parse.ParseEvent;
-import componentes.bin.pulsador.EncendidoEvent;
-import componentes.bin.pulsador.IEncendidoListener;
-import componentes.bin.pulsador.Luz;
 import controlador.ControladorActualizarUsuario;
 import controlador.ControladorAppChat;
 import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Grupo;
+import parse.IParseListener;
+import parse.Parse;
+import parse.ParseEvent;
+import pulsador.EncendidoEvent;
+import pulsador.IEncendidoListener;
+import pulsador.Luz;
 
 import java.awt.Color;
 import javax.swing.BoxLayout;
@@ -52,7 +52,6 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 	private JPanel panelOld;
 	private JPanel panelOldOld;
 	
-	private Contacto contactoActual;
 	private ControladorAppChat controlador = ControladorAppChat.getUnicaInstancia();
 	
 	//Componentes creados por el Alumno
@@ -77,7 +76,7 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 		
 		
 		//Añadimos al Panel Como oyente del Usuario
-		controlador.getUsuario().addUsuarioChangeListener(this);
+		controlador.addUsuarioChangeListener(this);
 		//Como oyente del Componente Luz
 		luz.addEncendidoListener(this);
 		
@@ -202,7 +201,7 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 		String nombre = controlador.getNombre();
 		String urlImagen =controlador.getImagen();
 		
-		ImageIcon imIco = new ImageIcon(urlImagen);
+		ImageIcon imIco = new ImageIcon(VentanaMain.class.getResource(urlImagen));
 		Image im = imIco.getImage();
 		imIco = new ImageIcon(im.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		
@@ -255,12 +254,12 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 		});
 		
 		mniCrearContacto.addActionListener(e -> {
-			PanelCrearModificarContacto sol = new PanelCrearModificarContacto(this);
+			PanelCrearModificarContacto sol = new PanelCrearModificarContacto(this,0);
 			cambiarPanelDerecho(sol);
 		});
 		
 		mniCrearGrupo.addActionListener(e -> {
-			PanelCrearModificarGrupo sol = new PanelCrearModificarGrupo(this);
+			PanelCrearModificarGrupo sol = new PanelCrearModificarGrupo(this, 0);
 			cambiarPanelDerecho(sol);
 		});
 		
@@ -294,11 +293,11 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 	
 	private void crearListenersDerechos() {
 		mniModificarContacto.addActionListener(e -> {
-			if(contactoActual instanceof Grupo) {
-				PanelCrearModificarGrupo sol = new PanelCrearModificarGrupo(this, (Grupo) contactoActual);
+			if(controlador.isGrupo()) {
+				PanelCrearModificarGrupo sol = new PanelCrearModificarGrupo(this, 1);
 				cambiarPanelDerecho(sol);
 			} else {
-				PanelCrearModificarContacto sol = new PanelCrearModificarContacto(this, (ContactoIndividual) contactoActual);
+				PanelCrearModificarContacto sol = new PanelCrearModificarContacto(this, 1);
 				cambiarPanelDerecho(sol);
 			}
 		});
@@ -312,15 +311,14 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 		});
 		
 		mBuscar.addActionListener(e -> {
-			PanelBuscar pB = new PanelBuscar(contactoActual, this);
+			PanelBuscar pB = new PanelBuscar(this);
 			cambiarPanelDerecho(pB);
 		});
 	}
 	
 	private void accionEliminarMensajes() {
-		if(contactoActual instanceof Grupo) {
-			boolean esAdmin = controlador.esAdmin((Grupo) contactoActual);
-			if(!esAdmin) {
+		if(controlador.isGrupo()) {
+			if(!controlador.esAdmin()) {
 				JOptionPane.showMessageDialog( this, "Debes de ser el Administrador del Grupo.",
 						"Eliminar Mensajes",JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -331,14 +329,13 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 		
 		//Botón Sí
 		if(i == 0) {
-			controlador.eliminarMensajes(contactoActual);
+			controlador.eliminarMensajes();
 		}
 	}
 	
 	private void accionEliminarContacto() {
-		if(contactoActual instanceof Grupo) {
-			boolean esAdmin = controlador.esAdmin((Grupo) contactoActual);
-			if(!esAdmin) {
+		if(controlador.isGrupo()) {
+			if(!controlador.esAdmin()) {
 				JOptionPane.showMessageDialog( this, "Debes de ser el Administrador del Grupo.",
 						"Eliminar Contacto",JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -349,7 +346,7 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 		
 		//Botón Sí
 		if(i == 0) {
-			controlador.eliminarContacto(contactoActual);
+			controlador.eliminarContacto();
 			cambiarPanelDerecho(new JPanel());
 			
 		}
@@ -428,37 +425,35 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 	}
 	
 	//Metodo que es llamado desde PanelContacto al Seleccionar un Contacto//Al crearlo o al Modificarlo
-	public void contactoSeleccionado(Contacto c) {
-		PanelChat panelChat = new PanelChat(c);
-		contactoActual = c;
+	public void contactoSeleccionado() {
+		PanelChat panelChat = new PanelChat();
 		cambiarPanelDerecho(panelChat);
-		
-		if(contactoActual instanceof ContactoIndividual)
-			informacionContacto((ContactoIndividual) contactoActual);
+		if(controlador.isGrupo())
+			informacionContactoG();
 		else
-			informacionContacto((Grupo) contactoActual);
+			informacionContactoCI();
 	}
 	
 	//Informacion del Contacto en el MenuBar de la Derecha
 	//Llamada auxiliar del metodo contactoSeleccionado
-	private void informacionContacto(ContactoIndividual ci) {
-		ImageIcon imContacto = new ImageIcon(ci.getUsuario().getImagen());
+	private void informacionContactoCI() {
+		ImageIcon imContacto = new ImageIcon(VentanaMain.class.getResource(controlador.getImagenContacto()));
 		Image im = imContacto.getImage();
 		imContacto = new ImageIcon(im.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		mContacto.setIcon(imContacto);
-		mniNombreContacto.setText(ci.getNombre());;
-		mniMovilContacto.setText(ci.getMovil() + "");
+		mniNombreContacto.setText(controlador.getNombreContacto());;
+		mniMovilContacto.setText(controlador.getNumeroContacto() + "");
 	}
 	
 	//Usamos genericidad
-	private void informacionContacto(Grupo g ) {
+	private void informacionContactoG() {
 		ImageIcon imContacto = new ImageIcon(VentanaMain.class.getResource("/imagenes/ImagenGrupoDef.png"));
 		Image im = imContacto.getImage();
 		imContacto = new ImageIcon(im.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
 		mContacto.setIcon(imContacto);
 		
-		mniNombreContacto.setText(g.getNombre());
-		mniMovilContacto.setText("Admin: " + g.getAdmin().getNombre());
+		mniNombreContacto.setText(controlador.getNombreContacto());
+		mniMovilContacto.setText("Admin: " + controlador.getNombreAdminContacto());
 	}
 	
 	/*
@@ -494,7 +489,7 @@ public class PanelVistaPrincipal extends JPanel implements PropertyChangeListene
 	//Evento de Componente Parse
 	public void enteradoParse(EventObject e) {
 		ParseEvent event = (ParseEvent) e;
-		controlador.parse(event.getFichero(), event.getFormatDate(), event.getPlataforma(), contactoActual);
+		controlador.parse(event.getFichero(), event.getFormatDate(), event.getPlataforma());
 	}
 
 }

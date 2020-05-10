@@ -44,7 +44,7 @@ public class Usuario implements Serializable{
 		this.email = email;
 		premium = false;
 		contactos = new ArrayList<Contacto>();
-		imagen = "D:\\Proyeccto TDS Clone\\src\\main\\java\\imagenes\\ImagenUsuarioDef.png";
+		imagen = "/imagenes/ImagenUsuarioDef.png";
 		saludo = "Hola AppChat!";
 	}
 	
@@ -398,5 +398,13 @@ public class Usuario implements Serializable{
 		estado = sol;
 		oyentesUsuario.firePropertyChange("estado", null, sol);
 		return estado;
+	}
+	
+	public int getnumeroContactosIndividuales() {
+		return getContactosIndividuales().size();
+	}
+	
+	public int getnumeroGrupos() {
+		return getGrupos().size();
 	}
 }

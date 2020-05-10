@@ -32,14 +32,11 @@ public class PanelBuscar extends JPanel {
 	private JPanel panel;
 	private JTextField textField;
 	private JTextField textField_1;
-	
-	private Contacto contacto;
+	ControladorAppChat controlador;
 	private PanelVistaPrincipal ventana;
-	public PanelBuscar(Contacto c, PanelVistaPrincipal v) {
-		
-		contacto = c;
+	public PanelBuscar(PanelVistaPrincipal v) {
 		ventana = v;
-		
+		controlador = ControladorAppChat.getUnicaInstancia();
 		Dimension d = new Dimension(315, 480);
 		setSize(d);
 		setMinimumSize(d);
@@ -100,7 +97,7 @@ public class PanelBuscar extends JPanel {
 		
 		
 		//Si es un ContactoIndividual, no buscamos por Usuario
-		if(c instanceof ContactoIndividual)
+		if(!controlador.isGrupo())
 			panel_2.setVisible(false);
 		
 		panel = new JPanel();
@@ -134,12 +131,9 @@ public class PanelBuscar extends JPanel {
 	//Todos pueden ser null
 	private void accionAceptar(String nU, String t, Date ini, Date fin) {
 		IBuscar buscar = new BuscarCompuesto();
-		if (!nU.isEmpty()) {
-			Grupo g = (Grupo) contacto;
-			
-			Usuario u = ControladorAppChat.getUnicaInstancia().getUsuario(nU);
-			if(u != null && g.isContacto(u))
-				buscar.add(new BuscarUsuario(u));
+		if (!nU.isEmpty()) {			
+			if(controlador.esContacto())
+				buscar.add(new BuscarUsuario(controlador.getUsuario()));
 		}
 		
 		if(!t.isEmpty()) {
@@ -153,7 +147,7 @@ public class PanelBuscar extends JPanel {
 			buscar.add(new BuscarFechaFin(fin));
 		}
 		
-		List<Mensaje> sol = contacto.buscar(buscar);
+		List<Mensaje> sol = controlador.buscar(buscar);
 		sol.stream().forEach(m -> anyadirMensaje(m));
 	}
 	

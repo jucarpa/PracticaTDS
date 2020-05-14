@@ -117,7 +117,7 @@ public class PanelContacto extends JPanel implements PropertyChangeListener{
 		ImageIcon imIco = null;
 		if(contacto instanceof ContactoIndividual) {
 			Usuario usuarioContacto = ((ContactoIndividual) contacto).getUsuario();
-			String urlImagen = usuarioContacto.getImagen();
+			URL urlImagen = VentanaMain.class.getResource(usuarioContacto.getImagen());
 			imIco = new ImageIcon(urlImagen);
 		} else {
 			URL urlImagen = VentanaMain.class.getResource("/imagenes/ImagenGrupoDef.png");
